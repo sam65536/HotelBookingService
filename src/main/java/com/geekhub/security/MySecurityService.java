@@ -80,7 +80,9 @@ public class MySecurityService {
    public boolean canRemoveBooking(long bookingId, CustomUserDetail user) {
        Booking booking = bookings.findOne(bookingId);
        return (booking != null) && (user != null)
-            && ( (booking.getHotel().getManager().getId() == user.getUser().getId() )
-            || ( booking.getUser().getId() == user.getUser().getId()) );
+            && (
+                    ( booking.getHotel().getManager().getId() == user.getUser().getId() )
+                 || ( booking.getUser().getId() == user.getUser().getId() )
+            );
    }
 }
