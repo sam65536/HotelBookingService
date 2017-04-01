@@ -40,12 +40,12 @@ public class Hotel {
     private Map<Long, Room> rooms = new HashMap<>();
 
     @JsonManagedReference
-	@OneToMany(fetch = FetchType.EAGER, mappedBy="hotel", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy="hotel", orphanRemoval = true)
     @MapKeyColumn(name="id")
     private Map<Long, Comment> comments = new HashMap<>();
 
     @JsonManagedReference
-	@OneToMany(fetch = FetchType.EAGER, mappedBy="hotel", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy="hotel", orphanRemoval = true)
     @MapKeyColumn(name="id")
     private Map<Long, Image> images = new HashMap<>();
  
@@ -59,89 +59,89 @@ public class Hotel {
     	this.category = category;
     	this.status = false;
     }
-    
-    public String getAddress() {
-        return address;
-    }
 
-	public Category getCategory() {
-    	return category;
-    }
-
-	public Map<Long, Comment> getComments() {
-		return comments;
-	}
-    
     public long getId() {
         return id;
     }
 
-    public Map<Long, Image> getImages() {
-		return images;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-    public User getManager() {
-		return manager;
-	}
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public int getRating() {
         return rating;
     }
-    
-    public Map<Long, Room> getRooms() {
-		return rooms;
-	}
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-    
-    public void setCategory(Category category) {
-    	this.category = category;
-    }
-
-    public void setComments(Map<Long, Comment> comments) {
-		this.comments = comments;
-	}
-    
-    public void setId(long id) {
-        this.id = id;
-    }
-    
-    public void setImages(Map<Long, Image> images) {
-		this.images = images;
-	}
-    
-    public void setManager(User manager) {
-		this.manager = manager;
-	}
-
-	public void setName(String name) {
-        this.name = name;
-    }
-	
-	public void setRating(int rating) {
+    public void setRating(int rating) {
         this.rating = rating;
     }
 
-	public void setRooms(Map<Long, Room> rooms) {
-		this.rooms = rooms;
-	}
+    public boolean isStatus() {
+        return status;
+    }
 
-	@Override
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public User getManager() {
+        return manager;
+    }
+
+    public void setManager(User manager) {
+        this.manager = manager;
+    }
+
+    public Map<Long, Room> getRooms() {
+        return rooms;
+    }
+
+    public void setRooms(Map<Long, Room> rooms) {
+        this.rooms = rooms;
+    }
+
+    public Map<Long, Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Map<Long, Comment> comments) {
+        this.comments = comments;
+    }
+
+    public Map<Long, Image> getImages() {
+        return images;
+    }
+
+    public void setImages(Map<Long, Image> images) {
+        this.images = images;
+    }
+
+    @Override
     public String toString() {
     	return "Id: " + getId() + "\nName: " + getName() + "\nAddress: " + getAddress() + "\nRating: " + getRating() + "\nCategory: " + category.getName() + "\nManager: " + getManager();
     }
-
-	public boolean getStatus() {
-		return status;
-	}
-
-	public void setStatus(boolean status) {
-		this.status = status;
-	}
 }
