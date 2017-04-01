@@ -60,7 +60,7 @@ public class ApplicationController {
        return "comments/comment-moderating";
    }
 	
-   @RequestMapping(value="/admin")
+   @RequestMapping(value = "/admin")
    @AllowedForAdmin
    public String manageUsers(Model model) {
        model.addAttribute("users", users.findAll());
