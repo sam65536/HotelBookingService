@@ -15,14 +15,14 @@ import com.geekhub.security.AllowedForCommentModerator;
 @Controller
 public class ApplicationController {
 
-    private final HotelRepository hotels;
-    private final UserRepository users;
+   private final HotelRepository hotels;
+   private final UserRepository users;
 
-    @Autowired
-    public ApplicationController(HotelRepository hotels, UserRepository users) {
-        this.hotels = hotels;
-        this.users = users;
-    }
+   @Autowired
+   public ApplicationController(HotelRepository hotels, UserRepository users) {
+       this.hotels = hotels;
+       this.users = users;
+   }
 
    @RequestMapping(value = "/")
    public String root(Model model) {
@@ -40,18 +40,18 @@ public class ApplicationController {
        CustomUserDetail principal = (authentication != null) ? (CustomUserDetail) authentication.getPrincipal() : null;
        if (principal != null) {
            String authority = principal.getAuthorities().iterator().next().getAuthority();
-		   if ( authority.equals(("ROLE_ADMIN")) ) {
-		       return "redirect:/admin";
+              if ( authority.equals(("ROLE_ADMIN")) ) {
+		      return "redirect:/admin";
            } else if (authority.equals("ROLE_COMMENT_MODERATOR")) {
-		       return "redirect:/comments/moderation";
+		      return "redirect:/comments/moderation";
            } else if (authority.equals(("ROLE_USER"))) {
-               return "redirect:/users/me";
+              return "redirect:/users/me";
            } else if (authority.equals("ROLE_HOTEL_MANAGER")) {
-               return "redirect:/users/me";
+              return "redirect:/users/me";
            }
 	   }
        return "/";
-    }
+   }
 	
    @RequestMapping(value = "/comments/moderation")
    @AllowedForCommentModerator
