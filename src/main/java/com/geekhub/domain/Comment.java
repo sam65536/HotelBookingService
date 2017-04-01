@@ -18,10 +18,10 @@ public class Comment {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
-    private Date date;
-    private boolean isAnswer;
-    private boolean status;
-    private String text;
+	private Date date;
+	private boolean isAnswer;
+	private boolean status;
+	private String text;
 
 	@OneToOne
 	private Comment reply;
@@ -46,6 +46,46 @@ public class Comment {
 		this.isAnswer = false;
 	}
 
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	public boolean isAnswer() {
+		return isAnswer;
+	}
+
+	public void setAnswer(boolean answer) {
+		isAnswer = answer;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
+
 	public Comment getReply() {
 		return reply;
 	}
@@ -54,59 +94,19 @@ public class Comment {
 		this.reply = reply;
 	}
 
-	public Date getDate() {
-		return date;
-	}
-
 	public Hotel getHotel() {
 		return hotel;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public boolean getStatus() {
-		return status;
-	}
-
-	public String getText() {
-		return text;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setDate(Date date) {
-		this.date = date;
 	}
 
 	public void setHotel(Hotel hotel) {
 		this.hotel = hotel;
 	}
 
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public void setStatus(boolean status) {
-		this.status = status;
-	}
-
-	public void setText(String text) {
-		this.text = text;
+	public User getUser() {
+		return user;
 	}
 
 	public void setUser(User user) {
 		this.user = user;
-	}
-
-	public boolean getIsAnswer() {
-		return isAnswer;
-	}
-
-	public void setAnswer(boolean isAnswer) {
-		this.isAnswer = isAnswer;
 	}
 }
