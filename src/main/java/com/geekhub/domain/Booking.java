@@ -17,85 +17,85 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Entity
 public class Booking {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
 
-	private Date beginDate;
-	private Date endDate;
-	private boolean state;
+    private Date beginDate;
+    private Date endDate;
+    private boolean state;
 
-	@ManyToOne
-	private User user;
+    @ManyToOne
+    private User user;
 
-	@JsonManagedReference
-	@ManyToMany(fetch = FetchType.EAGER)
-	private Set<Room> rooms = new HashSet<>();
+    @JsonManagedReference
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Room> rooms = new HashSet<>();
 
-	public Booking() {
-	}
+    public Booking() {
+    }
 
-	public Booking(long id, Date beginDate, Date endDate, boolean state, User user) {
-		this.id = id;
-		this.beginDate = beginDate;
-		this.endDate = endDate;
-		this.user = user;
-		this.state = state;
-	}
+    public Booking(long id, Date beginDate, Date endDate, boolean state, User user) {
+        this.id = id;
+        this.beginDate = beginDate;
+        this.endDate = endDate;
+        this.user = user;
+        this.state = state;
+    }
 
-	public Hotel getHotel() {
-		return rooms.stream().findAny().get().getHotel();
-	}
+    public Hotel getHotel() {
+        return rooms.stream().findAny().get().getHotel();
+    }
 
-	public RoomType getRoomType() {
-		return rooms.stream().findAny().get().getType();
-	}
+    public RoomType getRoomType() {
+        return rooms.stream().findAny().get().getType();
+    }
 
-	public long getId() {
-		return id;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public Date getBeginDate() {
-		return beginDate;
-	}
+    public Date getBeginDate() {
+        return beginDate;
+    }
 
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
+    public void setBeginDate(Date beginDate) {
+        this.beginDate = beginDate;
+    }
 
-	public Date getEndDate() {
-		return endDate;
-	}
+    public Date getEndDate() {
+        return endDate;
+    }
 
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
 
-	public boolean isState() {
-		return state;
-	}
+    public boolean isState() {
+        return state;
+    }
 
-	public void setState(boolean state) {
-		this.state = state;
-	}
+    public void setState(boolean state) {
+        this.state = state;
+    }
 
-	public User getUser() {
-		return user;
-	}
+    public User getUser() {
+        return user;
+    }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-	public Set<Room> getRooms() {
-		return rooms;
-	}
+    public Set<Room> getRooms() {
+        return rooms;
+    }
 
-	public void setRooms(Set<Room> rooms) {
-		this.rooms = rooms;
-	}
+    public void setRooms(Set<Room> rooms) {
+        this.rooms = rooms;
+    }
 }
