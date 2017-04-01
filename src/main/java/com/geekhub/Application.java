@@ -49,25 +49,25 @@ public class Application implements CommandLineRunner {
        });
 
        for (Booking booking : bookings.findAll()) {
-	       Date begin = booking.getBeginDate();
-	       Date end = booking.getEndDate();
-	       List<Date> dates = new ArrayList<>();
-	       Calendar calendar = new GregorianCalendar();
-	       calendar.setTime(begin);
-	       while (calendar.getTime().getTime() <= end.getTime()) {
-	           Date result = calendar.getTime();
-	           dates.add(result);
-	           calendar.add(Calendar.DATE, 1);
-	       }
-	       Map<Date, Long> tmpMap = new HashMap<>();
-	       for (Date date : dates) {
-	           tmpMap.put(date, booking.getId());
+           Date begin = booking.getBeginDate();
+           Date end = booking.getEndDate();
+           List<Date> dates = new ArrayList<>();
+           Calendar calendar = new GregorianCalendar();
+           calendar.setTime(begin);
+           while (calendar.getTime().getTime() <= end.getTime()) {
+               Date result = calendar.getTime();
+               dates.add(result);
+               calendar.add(Calendar.DATE, 1);
+           }
+           Map<Date, Long> tmpMap = new HashMap<>();
+           for (Date date : dates) {
+               tmpMap.put(date, booking.getId());
 	       }
 	       for (Room room : booking.getRooms()) {
-	           room.setReservedDays(tmpMap);
-	           rooms.save(room);
-	       }
-	       bookings.save(booking);
+               room.setReservedDays(tmpMap);
+               rooms.save(room);
+           }
+           bookings.save(booking);
        }
    }
 }
