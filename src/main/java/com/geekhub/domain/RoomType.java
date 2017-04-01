@@ -13,7 +13,7 @@ public class RoomType {
 	private long id;
 
 	private String description;
-	private int occupancy;
+	private String occupancy;
 
 	public long getId() {
 		return id;
@@ -31,11 +31,11 @@ public class RoomType {
 		this.description = description;
 	}
 
-	public int getOccupancy() {
+	public String getOccupancy() {
 		return occupancy;
 	}
 
-	public void setOccupancy(int occupancy) {
+	public void setOccupancy(String occupancy) {
 		this.occupancy = occupancy;
 	}
 
