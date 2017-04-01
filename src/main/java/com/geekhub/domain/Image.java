@@ -24,6 +24,22 @@ public class Image {
 	@ManyToOne
 	private Hotel hotel;
 
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public Date getInsertionDate() {
+		return insertionDate;
+	}
+
+	public void setInsertionDate(Date insertionDate) {
+		this.insertionDate = insertionDate;
+	}
+
 	public String getPath() {
 		return path;
 	}
@@ -38,21 +54,5 @@ public class Image {
 
 	public void setHotel(Hotel hotel) {
 		this.hotel = hotel;
-	}
-
-	public Date getInsertionDate() {
-		return insertionDate;
-	}
-
-	public void setInsertionDate(Date insertionDate) {
-		this.insertionDate = insertionDate;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
 	}
 }
