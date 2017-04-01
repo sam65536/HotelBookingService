@@ -17,8 +17,8 @@ import javax.persistence.ManyToOne;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-@Entity
-public class Room implements Comparable<Object> {
+	@Entity
+	public class Room implements Comparable<Object> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -32,19 +32,19 @@ public class Room implements Comparable<Object> {
 	@ManyToOne
 	private Hotel hotel;
 
-    @JsonManagedReference
-    @ManyToOne
-    private RoomType type;
+	@JsonManagedReference
+	@ManyToOne
+	private RoomType type;
 	
 	@ElementCollection
 	private Map<Date, Long> reservedDays = new HashMap<>();
 	
 	@JsonBackReference
 	@ManyToMany(mappedBy="rooms")
-    private Set<Booking> bookings = new HashSet<>();
+	private Set<Booking> bookings = new HashSet<>();
 	
 	public Set<Booking> getBookings() {
-	    return bookings;
+		return bookings;
 	}
 
 	public void setBookings(Set<Booking> bookings) {
@@ -52,17 +52,16 @@ public class Room implements Comparable<Object> {
 	}
 
 	public Room() {
-    }
-	
-	public Room (long id, int floor, String roomNumber, RoomType type, Hotel hotel, int price) {
-		this.floor = floor;
-		this.id = id;
-		this.roomNumber = roomNumber;
-		this.type = type;
-		this.hotel = hotel;
-		this.setPrice(price);
 	}
-	
+
+	public Room(int floor, int price, String roomNumber, Hotel hotel, RoomType type) {
+		this.floor = floor;
+		this.price = price;
+		this.roomNumber = roomNumber;
+		this.hotel = hotel;
+		this.type = type;
+	}
+
 	public long getId() {
 		return id;
 	}
@@ -79,12 +78,28 @@ public class Room implements Comparable<Object> {
 		this.floor = floor;
 	}
 
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
+	}
+
 	public String getRoomNumber() {
 		return roomNumber;
 	}
 
 	public void setRoomNumber(String roomNumber) {
 		this.roomNumber = roomNumber;
+	}
+
+	public Hotel getHotel() {
+		return hotel;
+	}
+
+	public void setHotel(Hotel hotel) {
+		this.hotel = hotel;
 	}
 
 	public RoomType getType() {
@@ -103,24 +118,8 @@ public class Room implements Comparable<Object> {
 		this.reservedDays = reservedDays;
 	}
 
-	public Hotel getHotel() {
-		return hotel;
-	}
-
-	public void setHotel(Hotel hotel) {
-	    this.hotel = hotel;
-	}
-
-	public int getPrice() {
-		return price;
-	}
-
-	public void setPrice(int price) {
-		this.price = price;
-	}
-
 	@Override
-	public int compareTo(Object o) {		
-		return getRoomNumber().compareTo(((Room) o).getRoomNumber());
+	public int compareTo(Object o) {
+		return getRoomNumber().compareTo( ((Room) o).getRoomNumber() );
 	}
 }
