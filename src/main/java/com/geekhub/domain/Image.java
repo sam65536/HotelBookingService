@@ -13,14 +13,14 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @Entity
 public class Image {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long id;
 
-    private Date insertionDate;
-    private String path;
+	private Date insertionDate;
+	private String path;
 
-    @JsonBackReference
+	@JsonBackReference
 	@ManyToOne
 	private Hotel hotel;
 
