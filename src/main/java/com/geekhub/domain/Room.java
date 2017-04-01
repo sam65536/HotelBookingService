@@ -40,7 +40,7 @@ public class Room implements Comparable<Object> {
     private Map<Date, Long> reservedDays = new HashMap<>();
 	
     @JsonBackReference
-    @ManyToMany(mappedBy="rooms")
+    @ManyToMany(mappedBy = "rooms")
     private Set<Booking> bookings = new HashSet<>();
 
     public Room() {
