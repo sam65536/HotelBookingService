@@ -35,12 +35,12 @@ public class User {
     private Authority authority;
 
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.EAGER, mappedBy="user", orphanRemoval = true)
-    @MapKeyColumn(name="id")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true)
+    @MapKeyColumn(name = "id")
     private Map<Long, Comment> comments = new HashMap<>();
 	
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.EAGER, mappedBy="manager", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "manager", orphanRemoval = true)
     private Set<Hotel> hotels = new HashSet<>();
 
     public User() {
