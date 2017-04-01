@@ -20,106 +20,106 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Entity
 public class Room implements Comparable<Object> {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
 	
-	private int floor;
-	private int price;
-	private String roomNumber;
+    private int floor;
+    private int price;
+    private String roomNumber;
 
-	@JsonManagedReference
-	@ManyToOne
-	private Hotel hotel;
+    @JsonManagedReference
+    @ManyToOne
+    private Hotel hotel;
 
-	@JsonManagedReference
-	@ManyToOne
-	private RoomType type;
+    @JsonManagedReference
+    @ManyToOne
+    private RoomType type;
 	
-	@ElementCollection
-	private Map<Date, Long> reservedDays = new HashMap<>();
+    @ElementCollection
+    private Map<Date, Long> reservedDays = new HashMap<>();
 	
-	@JsonBackReference
-	@ManyToMany(mappedBy="rooms")
-	private Set<Booking> bookings = new HashSet<>();
-	
-	public Set<Booking> getBookings() {
-		return bookings;
-	}
+    @JsonBackReference
+    @ManyToMany(mappedBy="rooms")
+    private Set<Booking> bookings = new HashSet<>();
 
-	public void setBookings(Set<Booking> bookings) {
-		this.bookings = bookings;
-	}
+    public Room() {
+    }
 
-	public Room() {
-	}
+    public Room(int floor, int price, String roomNumber, Hotel hotel, RoomType type) {
+        this.floor = floor;
+        this.price = price;
+        this.roomNumber = roomNumber;
+        this.hotel = hotel;
+        this.type = type;
+    }
 
-	public Room(int floor, int price, String roomNumber, Hotel hotel, RoomType type) {
-		this.floor = floor;
-		this.price = price;
-		this.roomNumber = roomNumber;
-		this.hotel = hotel;
-		this.type = type;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public long getId() {
-		return id;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public int getFloor() {
+        return floor;
+    }
 
-	public int getFloor() {
-		return floor;
-	}
+    public void setFloor(int floor) {
+        this.floor = floor;
+    }
 
-	public void setFloor(int floor) {
-		this.floor = floor;
-	}
+    public int getPrice() {
+        return price;
+    }
 
-	public int getPrice() {
-		return price;
-	}
+    public void setPrice(int price) {
+        this.price = price;
+    }
 
-	public void setPrice(int price) {
-		this.price = price;
-	}
+    public String getRoomNumber() {
+        return roomNumber;
+    }
 
-	public String getRoomNumber() {
-		return roomNumber;
-	}
+    public void setRoomNumber(String roomNumber) {
+        this.roomNumber = roomNumber;
+    }
 
-	public void setRoomNumber(String roomNumber) {
-		this.roomNumber = roomNumber;
-	}
+    public Hotel getHotel() {
+        return hotel;
+    }
 
-	public Hotel getHotel() {
-		return hotel;
-	}
+    public void setHotel(Hotel hotel) {
+        this.hotel = hotel;
+    }
 
-	public void setHotel(Hotel hotel) {
-		this.hotel = hotel;
-	}
+    public RoomType getType() {
+        return type;
+    }
 
-	public RoomType getType() {
-		return type;
-	}
+    public void setType(RoomType type) {
+        this.type = type;
+    }
 
-	public void setType(RoomType type) {
-		this.type = type;
-	}
+    public Map<Date, Long> getReservedDays() {
+        return reservedDays;
+    }
 
-	public Map<Date, Long> getReservedDays() {
-		return reservedDays;
-	}
+    public void setReservedDays(Map<Date, Long> reservedDays) {
+        this.reservedDays = reservedDays;
+    }
 
-	public void setReservedDays(Map<Date, Long> reservedDays) {
-		this.reservedDays = reservedDays;
-	}
+    public Set<Booking> getBookings() {
+        return bookings;
+    }
 
-	@Override
-	public int compareTo(Object o) {
-		return getRoomNumber().compareTo( ((Room) o).getRoomNumber() );
-	}
+    public void setBookings(Set<Booking> bookings) {
+        this.bookings = bookings;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return getRoomNumber().compareTo( ((Room) o).getRoomNumber() );
+    }
 }
