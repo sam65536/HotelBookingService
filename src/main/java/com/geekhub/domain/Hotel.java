@@ -92,7 +92,7 @@ public class Hotel {
         this.rating = rating;
     }
 
-    public boolean isStatus() {
+    public boolean getStatus() {
         return status;
     }
 
