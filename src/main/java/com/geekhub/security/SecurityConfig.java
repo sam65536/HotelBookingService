@@ -19,38 +19,38 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    public static PasswordEncoder encoder = new BCryptPasswordEncoder();
+   public static PasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    @Autowired
-    DataSource dataSource;
+   @Autowired
+   DataSource dataSource;
 
-   	@Autowired
-    UserDetailsService customUserDetailsService;
+   @Autowired
+   UserDetailsService customUserDetailsService;
 
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(customUserDetailsService).passwordEncoder(encoder);		
-	}
+   @Autowired
+   public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+       auth.userDetailsService(customUserDetailsService).passwordEncoder(encoder);
+   }
 
-    @Override
-	public void configure(final WebSecurity web) throws Exception {
-		web.ignoring()
-		.antMatchers("/static/**")
-		.antMatchers("/js/**")
-		.antMatchers("/css/**");
-	}
+   @Override
+   public void configure(final WebSecurity web) throws Exception {
+       web.ignoring()
+       .antMatchers("/static/**")
+       .antMatchers("/js/**")
+       .antMatchers("/css/**");
+   }
 
-	protected void configure(HttpSecurity http) throws Exception {
-		http
-		.formLogin()
-		.loginPage("/")
-		.defaultSuccessUrl("/signedin")	           
-		.failureUrl("/users/login?error")
-		.permitAll()
-		.and()
-		.logout()
-		.logoutSuccessUrl("/");
-		
-		http.authorizeRequests();
-	}	
+   protected void configure(HttpSecurity http) throws Exception {
+       http
+       .formLogin()
+       .loginPage("/")
+       .defaultSuccessUrl("/signedin")
+       .failureUrl("/users/login?error")
+       .permitAll()
+	   .and()
+       .logout()
+       .logoutSuccessUrl("/");
+
+       http.authorizeRequests();
+   }
 }
