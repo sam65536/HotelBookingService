@@ -12,7 +12,7 @@ public class CustomUserDetail implements UserDetails {
 	private Set<GrantedAuthority> authorities = null;
 
 	public User getUser() {
-		return user;
+	return user;
 	}
 
 	public void setUser(User user) {
@@ -21,7 +21,7 @@ public class CustomUserDetail implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return authorities;
+	return authorities;
 	}
 
 	public void setAuthorities(Set<GrantedAuthority> authorities) {
