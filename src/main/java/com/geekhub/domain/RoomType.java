@@ -39,6 +39,7 @@ public class RoomType {
 		this.occupancy = occupancy;
 	}
 
+	@Override
 	public String toString() {
 		return description;
 	}
