@@ -21,23 +21,23 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 public class User {
 	
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
 	private String email;
 	private String name;
-    private String password;
+	private String password;
 
 	@Column(unique = true)
 	private String username;
 
-    @ManyToOne
-    private Authority authority;
+	@ManyToOne
+	private Authority authority;
 
 	@JsonManagedReference
 	@OneToMany(fetch = FetchType.EAGER, mappedBy="user", orphanRemoval = true)
 	@MapKeyColumn(name="id")
-    private Map<Long, Comment> comments = new HashMap<>();
+	private Map<Long, Comment> comments = new HashMap<>();
 	
 	@JsonManagedReference
 	@OneToMany(fetch = FetchType.EAGER, mappedBy="manager", orphanRemoval = true)
@@ -46,14 +46,14 @@ public class User {
 	public User() {
 	}
 
-    public User(String email, String name, String password, String username) {
-        this.email = email;
-        this.name = name;
-        this.password = password;
-        this.username = username;
-    }
+	public User(String email, String name, String password, String username) {
+		this.email = email;
+		this.name = name;
+		this.password = password;
+		this.username = username;
+	}
 
-    public Iterable<Comment> getComments() {
+	public Iterable<Comment> getComments() {
 		return comments.values();
 	}
 
@@ -66,20 +66,20 @@ public class User {
 	}
 	
 	public long getId() {
-        return id;
-    }
+		return id;
+	}
 
-    public String getName() {
+	public String getName() {
 		return name;
 	}
 
-    public String getPassword() {
+	public String getPassword() {
 		return password;
 	}
 
 	public String getUsername() {
-        return username;
-    }
+		return username;
+	}
 
 	public void setComments(Map<Long, Comment> comments) {
 		this.comments = comments;
@@ -94,8 +94,8 @@ public class User {
 	}
 
 	public void setId(long id) {
-        this.id = id;
-    }
+		this.id = id;
+	}
 
 	public void setName(String name) {
 		this.name = name;
@@ -114,6 +114,6 @@ public class User {
 	}
 
 	public void setUsername(String username) {
-        this.username = username;
-    }
+		this.username = username;
+	}
 }
