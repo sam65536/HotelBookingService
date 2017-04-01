@@ -11,6 +11,7 @@ public class RoomType {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
+
 	private String description;
 	private int occupancy;
 
@@ -29,10 +30,6 @@ public class RoomType {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	public String toString() {
-		return description;
-	}
 
 	public int getOccupancy() {
 		return occupancy;
@@ -40,5 +37,9 @@ public class RoomType {
 
 	public void setOccupancy(int occupancy) {
 		this.occupancy = occupancy;
+	}
+
+	public String toString() {
+		return description;
 	}
 }
