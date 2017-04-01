@@ -62,7 +62,7 @@ public class Comment {
         this.date = date;
     }
 
-    public boolean isAnswer() {
+    public boolean getIsAnswer() {
         return isAnswer;
     }
 
@@ -70,7 +70,7 @@ public class Comment {
         isAnswer = answer;
     }
 
-    public boolean isStatus() {
+    public boolean getStatus() {
         return status;
     }
 
