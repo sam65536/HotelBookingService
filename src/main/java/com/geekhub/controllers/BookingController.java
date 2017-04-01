@@ -205,7 +205,7 @@ public class BookingController {
 		while(ithotels.hasNext()){
 			Hotel hotel = ithotels.next();
 
-			if(hotel.isStatus())
+			if(hotel.getStatus())
 			{
 				Map<Long, Room> rooms = hotel.getRooms();
 				int counter = 0;
@@ -357,5 +357,4 @@ public class BookingController {
 		CustomUserDetail myUser= (CustomUserDetail) auth.getPrincipal(); 
 		return myUser.getUser();
 	}
-
 }

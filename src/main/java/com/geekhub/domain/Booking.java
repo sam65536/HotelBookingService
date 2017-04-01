@@ -30,11 +30,12 @@ public class Booking {
 	
 	@JsonManagedReference
 	@ManyToMany(fetch = FetchType.EAGER)
-	private Set<Room> rooms = new HashSet<Room>();
+	private Set<Room> rooms = new HashSet<>();
 	
-	public Booking(){}
+	public Booking() {
+	}
 	
-	public Booking(long id, Date beginDate, Date endDate, boolean state, User user){
+	public Booking(long id, Date beginDate, Date endDate, boolean state, User user) {
 		this.id = id;
 		this.beginDate = beginDate;
 		this.endDate = endDate;
@@ -42,17 +43,15 @@ public class Booking {
 		this.state = state;
 	}
 	
-	public Hotel getHotel()
-	{
-		return rooms.iterator().next().getHotel();
-	}
-	
-	public String getRoomType()
-	{
-		return rooms.iterator().next().getType().toString();
+	public Hotel getHotel() {
+		return rooms.stream().findAny().get().getHotel();
 	}
 
-	public long getId() {
+	public RoomType getRoomType() {
+	    return rooms.stream().findAny().get().getType();
+    }
+
+    public long getId() {
 		return id;
 	}
 
@@ -76,7 +75,7 @@ public class Booking {
 		this.endDate = endDate;
 	}
 
-	public boolean isState() {
+	public boolean getState() {
 		return state;
 	}
 

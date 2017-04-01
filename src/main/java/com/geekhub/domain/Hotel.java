@@ -19,11 +19,11 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 public class Hotel {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    
-    private String name;    
+
     private String address;
+    private String name;
     private int rating;
     private boolean status;
     
@@ -37,19 +37,20 @@ public class Hotel {
     @JsonBackReference
     @OneToMany(fetch = FetchType.EAGER, mappedBy="hotel", orphanRemoval = true)
     @MapKeyColumn(name="id")
-    private Map<Long, Room> rooms = new HashMap<Long, Room>();
+    private Map<Long, Room> rooms = new HashMap<>();
 
     @JsonManagedReference
 	@OneToMany(fetch = FetchType.EAGER, mappedBy="hotel", orphanRemoval = true)
     @MapKeyColumn(name="id")
-    private Map<Long, Comment> comments = new HashMap<Long, Comment>();
+    private Map<Long, Comment> comments = new HashMap<>();
 
     @JsonManagedReference
 	@OneToMany(fetch = FetchType.EAGER, mappedBy="hotel", orphanRemoval = true)
     @MapKeyColumn(name="id")
-    private Map<Long, Image> images = new HashMap<Long, Image>();
+    private Map<Long, Image> images = new HashMap<>();
  
-    public Hotel() {}
+    public Hotel() {
+    }
     
     public Hotel(String name, String address, int rating, Category category, boolean status) {    	
     	this.name = name;
@@ -63,7 +64,7 @@ public class Hotel {
         return address;
     }
 
-	public Category getCategory(){
+	public Category getCategory() {
     	return category;
     }
 
@@ -99,7 +100,7 @@ public class Hotel {
         this.address = address;
     }
     
-    public void setCategory(Category category){
+    public void setCategory(Category category) {
     	this.category = category;
     }
 
@@ -136,7 +137,7 @@ public class Hotel {
     	return "Id: " + getId() + "\nName: " + getName() + "\nAddress: " + getAddress() + "\nRating: " + getRating() + "\nCategory: " + category.getName() + "\nManager: " + getManager();
     }
 
-	public boolean isStatus() {
+	public boolean getStatus() {
 		return status;
 	}
 
@@ -144,4 +145,3 @@ public class Hotel {
 		this.status = status;
 	}
 }
-

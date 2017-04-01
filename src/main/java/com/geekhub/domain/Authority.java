@@ -10,17 +10,11 @@ import javax.persistence.Id;
 public class Authority {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	
 	@Column(unique = true)
 	private String role;
-
-	public Authority() {}
-	
-	public Authority(String role) {
-		this.role = role;
-	}
 
 	public long getId() {
 		return id;

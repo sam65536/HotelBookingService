@@ -21,39 +21,39 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 public class User {
 	
 	@Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-	
+
+	private String email;
 	private String name;
-	
+    private String password;
+
 	@Column(unique = true)
 	private String username;
-	
-	private String password;
-	private String email;
-	
+
+    @ManyToOne
+    private Authority authority;
+
 	@JsonManagedReference
 	@OneToMany(fetch = FetchType.EAGER, mappedBy="user", orphanRemoval = true)
 	@MapKeyColumn(name="id")
-    private Map<Long, Comment> comments = new HashMap<Long, Comment>();
+    private Map<Long, Comment> comments = new HashMap<>();
 	
 	@JsonManagedReference
 	@OneToMany(fetch = FetchType.EAGER, mappedBy="manager", orphanRemoval = true)
-	private Set<Hotel> hotels = new HashSet<Hotel>();
-	
-	@ManyToOne
-	private Authority authority;
-	
-	public User() {}
+	private Set<Hotel> hotels = new HashSet<>();
 
-	public User(String name, String username, String password, String email) {
-		this.name = name;
-		this.username = username;
-		this.setPassword(password);
-		this.setEmail(email);
+	public User() {
 	}
-	
-	public Iterable<Comment> getComments() {
+
+    public User(String email, String name, String password, String username) {
+        this.email = email;
+        this.name = name;
+        this.password = password;
+        this.username = username;
+    }
+
+    public Iterable<Comment> getComments() {
 		return comments.values();
 	}
 

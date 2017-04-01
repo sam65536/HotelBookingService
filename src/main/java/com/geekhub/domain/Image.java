@@ -12,26 +12,17 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 public class Image {
-	
-	private String path;
-	
-	@JsonBackReference
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    private Date insertionDate;
+    private String path;
+
+    @JsonBackReference
 	@ManyToOne
 	private Hotel hotel;
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private long id;
-	
-	private Date insertionDate;
-	
-	public Image(){}
-	
-	public Image(String path, Hotel hotel, Date insertionDate){
-		this.path = path;
-		this.hotel = hotel;
-		this.insertionDate = insertionDate;
-	}
 
 	public String getPath() {
 		return path;

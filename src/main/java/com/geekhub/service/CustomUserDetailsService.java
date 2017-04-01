@@ -3,6 +3,7 @@ package com.geekhub.service;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.geekhub.domain.Authority;
 import com.geekhub.domain.CustomUserDetail;
 import com.geekhub.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,18 +21,20 @@ import com.geekhub.exceptions.UserNotFoundException;
 @Qualifier("customUserDetailsService")
 public class CustomUserDetailsService implements UserDetailsService {
 
+    private final UserRepository userRepository;
+
     @Autowired
-    private UserRepository userRepository;
+    public CustomUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public UserDetails loadUserByUsername(String name) throws UserNotFoundException {
-        // returns the get(0) of the user list obtained from the db
         User domainUser = userRepository.findByUsername(name);
-        String role = domainUser.getAuthority().getRole();
-        Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
-        
+        Authority authority = domainUser.getAuthority();
+        String role = authority.getRole();
+        Set<GrantedAuthority> authorities = new HashSet<>();
         authorities.add(new SimpleGrantedAuthority(role));
-
-        CustomUserDetail customUserDetail=new CustomUserDetail();
+        CustomUserDetail customUserDetail = new CustomUserDetail();
         customUserDetail.setUser(domainUser);
         customUserDetail.setAuthorities(authorities);
         return customUserDetail;

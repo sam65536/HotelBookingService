@@ -7,8 +7,8 @@
 	href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.1/css/bootstrap.min.css"
 	rel="stylesheet" media="screen" />
 </head>
-<body>
 
+<body>
 	<div th:include="fragments/header"></div>
 
 	<div class="container">
@@ -21,8 +21,8 @@
 				<tr>
 					<th>Id</th>
 					<th>Username</th>
-					<th>Begin date</th>
-					<th>End date</th>
+					<th>Date of Arrival</th>
+					<th>Date of Departure</th>
 					<th>Hotel</th>
 					<th>Type</th>
 					<th>Room Number</th>
@@ -44,8 +44,8 @@
 				<td><span th:text="${booking.hotel.name}"></span></td>
 				<td><span th:text="${booking.roomType}"></span></td>
 				<td>
-					<div th:each="r : ${booking.rooms}">
-						<span th:text="${r.roomNumber}"></span><br>
+					<div th:each="room : ${booking.rooms}">
+						<span th:text="${room.roomNumber}"></span><br>
 					</div>
 				</td>
 				<td><span th:if="${booking.state}"><i
@@ -60,4 +60,3 @@
 	</div>
 </body>
 </html>
-

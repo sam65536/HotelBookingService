@@ -18,41 +18,41 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
-public class Room implements Comparable<Object>{
+public class Room implements Comparable<Object> {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	
-	private int floor;	
+	private int floor;
+	private int price;
 	private String roomNumber;
-	
-	@JsonManagedReference
-	@ManyToOne
-	private RoomType type;
-	
+
 	@JsonManagedReference
 	@ManyToOne
 	private Hotel hotel;
-	
-	private int price;
+
+    @JsonManagedReference
+    @ManyToOne
+    private RoomType type;
 	
 	@ElementCollection
-	private Map<Date, Long> reservedDays = new HashMap<Date, Long>();
+	private Map<Date, Long> reservedDays = new HashMap<>();
 	
 	@JsonBackReference
 	@ManyToMany(mappedBy="rooms")
-	 private Set<Booking> bookings = new HashSet<Booking>();
+    private Set<Booking> bookings = new HashSet<>();
 	
 	public Set<Booking> getBookings() {
-		return bookings;
+	    return bookings;
 	}
 
 	public void setBookings(Set<Booking> bookings) {
 		this.bookings = bookings;
 	}
 
-	public Room() {}
+	public Room() {
+    }
 	
 	public Room (long id, int floor, String roomNumber, RoomType type, Hotel hotel, int price) {
 		this.floor = floor;
@@ -108,7 +108,7 @@ public class Room implements Comparable<Object>{
 	}
 
 	public void setHotel(Hotel hotel) {
-		this.hotel = hotel;
+	    this.hotel = hotel;
 	}
 
 	public int getPrice() {

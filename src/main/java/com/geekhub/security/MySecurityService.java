@@ -16,52 +16,70 @@ import com.geekhub.repositories.UserRepository;
 @Component("mySecurityService")
 public class MySecurityService {
 
-	@Autowired
-	HotelRepository hotels;
-	
-	@Autowired
-	UserRepository users;
-	
-	@Autowired
-	CommentRepository comments;
-	
-	@Autowired
-	BookingRepository bookings;
-	
-	public boolean canEditHotel(long hotel_id, CustomUserDetail user){
-		Hotel hotel = hotels.findOne(hotel_id);
-		return hotel != null && hotel.getManager() != null && user.getUser().getId() == hotel.getManager().getId();
+	private HotelRepository hotels;
+	private UserRepository users;
+	private CommentRepository comments;
+	private BookingRepository bookings;
+
+    @Autowired
+	public void setHotels(HotelRepository hotels) {
+        this.hotels = hotels;
+    }
+
+    @Autowired
+    public void setUsers(UserRepository users) {
+        this.users = users;
+    }
+
+    @Autowired
+    public void setComments(CommentRepository comments) {
+        this.comments = comments;
+    }
+
+    @Autowired
+    public void setBookings(BookingRepository bookings) {
+        this.bookings = bookings;
+    }
+
+    public boolean canEditHotel(long hotelId, CustomUserDetail user) {
+		Hotel hotel = hotels.findOne(hotelId);
+		return (hotel != null) && (hotel.getManager() != null)
+                && ( user.getUser().getId() == hotel.getManager().getId() );
 	}
 	
-	public boolean canEditHotel(long hotel_id, String s){
+	public boolean canEditHotel(long hotelId, String s) {
 		return false;
 	}
 	
-	public boolean canEditUser(long user_id, CustomUserDetail user){
-		User userTmp = users.findOne(user_id);
-		return userTmp != null && user.getUser() != null && user.getUser().getId() == userTmp.getId();
+	public boolean canEditUser(long userId, CustomUserDetail user) {
+		User userTmp = users.findOne(userId);
+		return (userTmp != null) && (user.getUser() != null)
+                && ( user.getUser().getId() == userTmp.getId() );
 	}
 	
-	public boolean canEditComment(long comment_id, CustomUserDetail user) {
-		Comment comment = comments.findOne(comment_id);
-		return comment != null && user != null && comment.getUser().getId() == user.getUser().getId();
+	public boolean canEditComment(long commentId, CustomUserDetail user) {
+		Comment comment = comments.findOne(commentId);
+		return (comment != null) && (user != null)
+                && ( comment.getUser().getId() == user.getUser().getId() );
 	}
 	
-	public boolean canReplyToComment(long id, long comment_id, CustomUserDetail user) {
+	public boolean canReplyToComment(long id, long commentId, CustomUserDetail user) {
 		Hotel hotel = hotels.findOne(id);
-		Comment comment = comments.findOne(comment_id);
-		return comment != null && user != null && comment.getStatus() 
-				&& !comment.getIsAnswer() && hotel != null && hotel.getManager().getId() == user.getUser().getId();
+		Comment comment = comments.findOne(commentId);
+		return (comment != null) && (user != null) && (comment.getStatus()) && (!comment.getIsAnswer())
+                && (hotel != null) && ( hotel.getManager().getId() == user.getUser().getId() );
 	}
 	
-	public boolean canApproveBooking(long booking_id, CustomUserDetail user) {
-		Booking booking = bookings.findOne(booking_id);
-		return booking != null && user != null && booking.getHotel().getManager().getId() == user.getUser().getId();
+	public boolean canApproveBooking(long bookingId, CustomUserDetail user) {
+		Booking booking = bookings.findOne(bookingId);
+		return (booking != null) && (user != null)
+                && ( booking.getHotel().getManager().getId() == user.getUser().getId() );
 	}
-	public boolean canRemoveBooking(long booking_id, CustomUserDetail user){
-		Booking booking = bookings.findOne(booking_id);
-		return booking != null && user != null 
-				&& (booking.getHotel().getManager().getId() == user.getUser().getId()
-				|| booking.getUser().getId() == user.getUser().getId());
+
+	public boolean canRemoveBooking(long bookingId, CustomUserDetail user) {
+		Booking booking = bookings.findOne(bookingId);
+		return (booking != null) && (user != null)
+                && ( (booking.getHotel().getManager().getId() == user.getUser().getId() )
+				|| ( booking.getUser().getId() == user.getUser().getId()) );
 	}
 }

@@ -15,14 +15,14 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 public class Comment {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
-	private String text;
-	private Date date;
-	private boolean status;
-	private boolean isAnswer;
-	
+    private Date date;
+    private boolean isAnswer;
+    private boolean status;
+    private String text;
+
 	@OneToOne
 	private Comment reply;
 		
@@ -34,7 +34,8 @@ public class Comment {
 	@ManyToOne
 	private User user;
 
-	public Comment() {}
+	public Comment() {
+	}
 
 	public Comment(String text, Date date, User user, boolean status, Hotel hotel) {
 		this.text = text;

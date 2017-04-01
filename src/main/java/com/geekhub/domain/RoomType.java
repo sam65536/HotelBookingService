@@ -9,17 +9,10 @@ import javax.persistence.Id;
 public class RoomType {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	private String description;
 	private int occupancy;
-	
-	protected RoomType() {}
-	
-	public RoomType(String description, int occupancy) {
-		this.description = description;
-		this.occupancy = occupancy;
-	}
 
 	public long getId() {
 		return id;

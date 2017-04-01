@@ -8,7 +8,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.geekhub.repositories.AuthorityRepository;
 import com.geekhub.repositories.BookingRepository;
 import com.geekhub.repositories.RoomRepository;
 import com.geekhub.repositories.UserRepository;
@@ -18,19 +17,26 @@ import java.util.*;
 @SpringBootApplication
 public class Application implements CommandLineRunner {
 
-	@Autowired
-	UserRepository users;
+	private UserRepository users;
+	private BookingRepository bookings;
+	private RoomRepository rooms;
 
-	@Autowired
-	AuthorityRepository authorities;
+    @Autowired
+	public void setUsers(UserRepository users) {
+        this.users = users;
+    }
 
-	@Autowired
-	BookingRepository bookings;
+    @Autowired
+    public void setBookings(BookingRepository bookings) {
+        this.bookings = bookings;
+    }
 
-	@Autowired
-	RoomRepository rooms;
+    @Autowired
+    public void setRooms(RoomRepository rooms) {
+        this.rooms = rooms;
+    }
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
 
@@ -45,7 +51,7 @@ public class Application implements CommandLineRunner {
 		for (Booking booking : bookings.findAll()) {
 			Date begin = booking.getBeginDate();
 			Date end = booking.getEndDate();
-			List<Date> dates = new ArrayList<Date>();
+			List<Date> dates = new ArrayList<>();
 			Calendar calendar = new GregorianCalendar();
 			calendar.setTime(begin);
 			while (calendar.getTime().getTime() <= end.getTime()) {
@@ -53,7 +59,7 @@ public class Application implements CommandLineRunner {
 				dates.add(result);
 				calendar.add(Calendar.DATE, 1);
 			}
-			Map<Date, Long> tmpMap = new HashMap<Date, Long>();
+			Map<Date, Long> tmpMap = new HashMap<>();
 			for (Date date : dates) {
 				tmpMap.put(date, booking.getId());
 			}
