@@ -44,7 +44,7 @@ public class MySecurityService {
    public boolean canEditHotel(long hotelId, CustomUserDetail user) {
        Hotel hotel = hotels.findOne(hotelId);
        return (hotel != null) && (hotel.getManager() != null)
-            && (user.getUser().getId() == hotel.getManager().getId());
+            && ( user.getUser().getId() == hotel.getManager().getId() );
    }
 
    public boolean canEditHotel(long hotelId, String s) {
@@ -54,32 +54,33 @@ public class MySecurityService {
    public boolean canEditUser(long userId, CustomUserDetail user) {
        User userTmp = users.findOne(userId);
        return (userTmp != null) && (user.getUser() != null)
-            && (user.getUser().getId() == userTmp.getId());
+            && ( user.getUser().getId() == userTmp.getId() );
    }
 
    public boolean canEditComment(long commentId, CustomUserDetail user) {
        Comment comment = comments.findOne(commentId);
        return (comment != null) && (user != null)
-            && (comment.getUser().getId() == user.getUser().getId());
+            && ( comment.getUser().getId() == user.getUser().getId() );
    }
 
    public boolean canReplyToComment(long id, long commentId, CustomUserDetail user) {
        Hotel hotel = hotels.findOne(id);
        Comment comment = comments.findOne(commentId);
-       return (comment != null) && (user != null) && (comment.getStatus()) && (!comment.getIsAnswer())
-            && (hotel != null) && (hotel.getManager().getId() == user.getUser().getId());
+       return (comment != null) && (user != null)
+            && (comment.getStatus()) && (!comment.getIsAnswer()) && (hotel != null)
+            && ( hotel.getManager().getId() == user.getUser().getId() );
    }
 
    public boolean canApproveBooking(long bookingId, CustomUserDetail user) {
        Booking booking = bookings.findOne(bookingId);
        return (booking != null) && (user != null)
-            && (booking.getHotel().getManager().getId() == user.getUser().getId());
+            && ( booking.getHotel().getManager().getId() == user.getUser().getId() );
    }
 
    public boolean canRemoveBooking(long bookingId, CustomUserDetail user) {
        Booking booking = bookings.findOne(bookingId);
        return (booking != null) && (user != null)
-            && ((booking.getHotel().getManager().getId() == user.getUser().getId())
-            || (booking.getUser().getId() == user.getUser().getId()));
+            && ( (booking.getHotel().getManager().getId() == user.getUser().getId() )
+            || ( booking.getUser().getId() == user.getUser().getId()) );
    }
 }
