@@ -16,25 +16,25 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Booking {
-	
+
 	@Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-	
+
 	private Date beginDate;
 	private Date endDate;
 	private boolean state;
-	
+
 	@ManyToOne
 	private User user;
-	
+
 	@JsonManagedReference
 	@ManyToMany(fetch = FetchType.EAGER)
 	private Set<Room> rooms = new HashSet<>();
-	
+
 	public Booking() {
 	}
-	
+
 	public Booking(long id, Date beginDate, Date endDate, boolean state, User user) {
 		this.id = id;
 		this.beginDate = beginDate;
@@ -42,16 +42,16 @@ public class Booking {
 		this.user = user;
 		this.state = state;
 	}
-	
+
 	public Hotel getHotel() {
 		return rooms.stream().findAny().get().getHotel();
 	}
 
 	public RoomType getRoomType() {
-	    return rooms.stream().findAny().get().getType();
-    }
+		return rooms.stream().findAny().get().getType();
+	}
 
-    public long getId() {
+	public long getId() {
 		return id;
 	}
 
@@ -75,7 +75,7 @@ public class Booking {
 		this.endDate = endDate;
 	}
 
-	public boolean getState() {
+	public boolean isState() {
 		return state;
 	}
 
