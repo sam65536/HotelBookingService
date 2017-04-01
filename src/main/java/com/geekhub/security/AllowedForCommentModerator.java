@@ -12,5 +12,5 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @Documented
 @PreAuthorize(AllowedForCommentModerator.condition)
 public @interface AllowedForCommentModerator {
-	String condition = "hasRole('ROLE_COMMENT_MODERATOR')";
+    String condition = "hasRole('ROLE_COMMENT_MODERATOR')";
 }

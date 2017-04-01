@@ -12,5 +12,5 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @Documented
 @PreAuthorize(AllowedForAdmin.condition)
 public @interface AllowedForAdmin {
-	String condition = "hasRole('ROLE_ADMIN')";
+    String condition = "hasRole('ROLE_ADMIN')";
 }

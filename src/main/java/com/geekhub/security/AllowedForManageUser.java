@@ -12,5 +12,5 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @Documented
 @PreAuthorize(AllowedForManageUser.condition)
 public @interface AllowedForManageUser {
-	String condition = "@mySecurityService.canEditUser(#id, principal) or " + AllowedForAdmin.condition;
+    String condition = "@mySecurityService.canEditUser(#id, principal) or " + AllowedForAdmin.condition;
 }
