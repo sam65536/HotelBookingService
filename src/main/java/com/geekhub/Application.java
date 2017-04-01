@@ -17,57 +17,57 @@ import java.util.*;
 @SpringBootApplication
 public class Application implements CommandLineRunner {
 
-	private UserRepository users;
-	private BookingRepository bookings;
-	private RoomRepository rooms;
+   private UserRepository users;
+   private BookingRepository bookings;
+   private RoomRepository rooms;
 
-    @Autowired
-	public void setUsers(UserRepository users) {
-        this.users = users;
-    }
+   @Autowired
+   public void setUsers(UserRepository users) {
+       this.users = users;
+   }
 
-    @Autowired
-    public void setBookings(BookingRepository bookings) {
-        this.bookings = bookings;
-    }
+   @Autowired
+   public void setBookings(BookingRepository bookings) {
+       this.bookings = bookings;
+   }
 
-    @Autowired
-    public void setRooms(RoomRepository rooms) {
-        this.rooms = rooms;
-    }
+   @Autowired
+   public void setRooms(RoomRepository rooms) {
+       this.rooms = rooms;
+   }
 
-    public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
-	}
+   public static void main(String[] args) {
+       SpringApplication.run(Application.class, args);
+   }
 
-	@Override
-	public void run(String... strings) {
-		users.findAll().forEach(user -> {
-			String password = user.getPassword();
-			user.setPassword(SecurityConfig.encoder.encode(password));
-			users.save(user);
-		});
+   @Override
+   public void run(String... strings) {
+	   users.findAll().forEach(user -> {
+		   String password = user.getPassword();
+		   user.setPassword(SecurityConfig.encoder.encode(password));
+		   users.save(user);
+	   });
 
-		for (Booking booking : bookings.findAll()) {
-			Date begin = booking.getBeginDate();
-			Date end = booking.getEndDate();
-			List<Date> dates = new ArrayList<>();
-			Calendar calendar = new GregorianCalendar();
-			calendar.setTime(begin);
-			while (calendar.getTime().getTime() <= end.getTime()) {
-				Date result = calendar.getTime();
-				dates.add(result);
-				calendar.add(Calendar.DATE, 1);
-			}
-			Map<Date, Long> tmpMap = new HashMap<>();
-			for (Date date : dates) {
-				tmpMap.put(date, booking.getId());
-			}
-			for (Room room : booking.getRooms()) {
-				room.setReservedDays(tmpMap);
-				rooms.save(room);
-			}
-			bookings.save(booking);
-		}
-	}
+	   for (Booking booking : bookings.findAll()) {
+		   Date begin = booking.getBeginDate();
+		   Date end = booking.getEndDate();
+		   List<Date> dates = new ArrayList<>();
+		   Calendar calendar = new GregorianCalendar();
+		   calendar.setTime(begin);
+		   while (calendar.getTime().getTime() <= end.getTime()) {
+			   Date result = calendar.getTime();
+			   dates.add(result);
+			   calendar.add(Calendar.DATE, 1);
+		   }
+		   Map<Date, Long> tmpMap = new HashMap<>();
+		   for (Date date : dates) {
+			   tmpMap.put(date, booking.getId());
+		   }
+		   for (Room room : booking.getRooms()) {
+			   room.setReservedDays(tmpMap);
+			   rooms.save(room);
+		   }
+		   bookings.save(booking);
+	   }
+   }
 }
