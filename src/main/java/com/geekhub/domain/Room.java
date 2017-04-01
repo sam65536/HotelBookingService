@@ -17,8 +17,8 @@ import javax.persistence.ManyToOne;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-	@Entity
-	public class Room implements Comparable<Object> {
+@Entity
+public class Room implements Comparable<Object> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
