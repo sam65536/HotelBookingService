@@ -12,5 +12,5 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @Documented
 @PreAuthorize(AllowedForManageComment.condition)
 public @interface AllowedForManageComment {
-    String condition = "@mySecurityService.canEditComment(#id_comment, principal) or " + AllowedForCommentModerator.condition;
+    String condition = "@mySecurityService.canEditComment(#commentId, principal) or " + AllowedForCommentModerator.condition;
 }

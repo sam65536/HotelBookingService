@@ -24,98 +24,96 @@ import com.geekhub.security.AllowedForCommentModerator;
 import com.geekhub.security.AllowedForManageComment;
 
 @Controller
-@RequestMapping(value="/hotels")
+@RequestMapping(value = "/hotels")
 public class CommentController {
-	
-	@Autowired
-	HotelRepository hotels;
-	
-	@Autowired
-	CommentRepository comments;
-	
-	@Autowired
-	UserRepository users;
-	
-	@RequestMapping(value="/{id}/comments/{comment_id}/reply", method = RequestMethod.POST)
-	@AllowedForApprovedComments
-	public String createReply(@ModelAttribute Comment reply, @PathVariable("id") long id, 
-			Model model, @PathVariable("comment_id") long comment_id){      	 
-		
-		Hotel hotel = hotels.findOne(id);
-		Comment comment = comments.findOne(comment_id);		
-		Date date = new Date();
-    	reply.setDate(date);
-    	reply.setUser(getCurrentUser());
-    	reply.setHotel(hotel);
-    	reply.setAnswer(true);
-    	reply.setStatus(false);
-    	comments.save(reply);    
-    	comment.setReply(reply);
-    	comments.save(comment);
-    	return "redirect:/hotels/{id}/comments";
-	}
-    
-    @RequestMapping(value="/{id}/comments", method = RequestMethod.POST)
-    public String createComment(@ModelAttribute Comment comment, @PathVariable("id") long id, Model model){
-    	Hotel hotel = hotels.findOne(id);
-    	
-    	Date date = new Date();
-    	comment.setDate(date);
-    	comment.setUser(getCurrentUser());
-    	comment.setHotel(hotel);
-    	comments.save(comment);    	
-    	return "redirect:/hotels/{id}";
+
+    private final HotelRepository hotels;
+    private final CommentRepository comments;
+    private final UserRepository users;
+
+    @Autowired
+    public CommentController(HotelRepository hotels, CommentRepository comments, UserRepository users) {
+        this.hotels = hotels;
+        this.comments = comments;
+        this.users = users;
     }
-    
-    @RequestMapping(value="/{id}/comments/new", method = RequestMethod.GET)
-    public String newComment(@ModelAttribute Comment comment, @PathVariable("id") long id, Model model){
-    	model.addAttribute("comment", new Comment());
-    	model.addAttribute("hotel", hotels.findOne(id));
-    	model.addAttribute("users", users.findAll());
-    	return "comments/create";
+
+    @RequestMapping(value = "/{id}/comments/{commentId}/reply", method = RequestMethod.POST)
+    @AllowedForApprovedComments
+    public String createReply(@ModelAttribute Comment reply, @PathVariable("id") long id,
+                              Model model, @PathVariable("commentId") long commentId) {
+        Hotel hotel = hotels.findOne(id);
+        Comment comment = comments.findOne(commentId);
+        Date date = new Date();
+        reply.setDate(date);
+        reply.setUser(getCurrentUser());
+        reply.setHotel(hotel);
+        reply.setAnswer(true);
+        reply.setStatus(false);
+        comments.save(reply);
+        comment.setReply(reply);
+        comments.save(comment);
+        return "redirect:/hotels/{id}/comments";
     }
-    
-    @RequestMapping(value="{id}/comments", method=RequestMethod.GET)
+
+    @RequestMapping(value = "/{id}/comments", method = RequestMethod.POST)
+    public String createComment(@ModelAttribute Comment comment, @PathVariable("id") long id, Model model) {
+        Hotel hotel = hotels.findOne(id);
+        Date date = new Date();
+        comment.setDate(date);
+        comment.setUser(getCurrentUser());
+        comment.setHotel(hotel);
+        comments.save(comment);
+        return "redirect:/hotels/{id}";
+    }
+
+    @RequestMapping(value = "/{id}/comments/new", method = RequestMethod.GET)
+    public String newComment(@ModelAttribute Comment comment, @PathVariable("id") long id, Model model) {
+        model.addAttribute("comment", new Comment());
+        model.addAttribute("hotel", hotels.findOne(id));
+        model.addAttribute("users", users.findAll());
+        return "comments/create";
+    }
+
+    @RequestMapping(value = "{id}/comments", method = RequestMethod.GET)
     public String showComments(@PathVariable("id") long id, Model model) {
-    	Hotel hotel = hotels.findOne(id);
-    	Iterable<Comment> hotel_comments = comments.getComments(id);
-    	
-    	model.addAttribute("comments", hotel_comments);
-    	model.addAttribute("hotel", hotel);
-    	model.addAttribute("reply", new Comment());
-    	model.addAttribute("users", users.findAll());
-    	return "comments/hotel-comments";
+        Hotel hotel = hotels.findOne(id);
+        Iterable<Comment> hotelComments = comments.getComments(id);
+        model.addAttribute("comments", hotelComments);
+        model.addAttribute("hotel", hotel);
+        model.addAttribute("reply", new Comment());
+        model.addAttribute("users", users.findAll());
+        return "comments/hotel-comments";
     }
-    
-    @RequestMapping(value="{id}/comments/{id_comment}/edit", method=RequestMethod.GET)
+
+    @RequestMapping(value = "{id}/comments/{commentId}/edit", method = RequestMethod.GET)
     @AllowedForManageComment
-    public String editComment(@PathVariable("id") long id, @PathVariable("id_comment") long id_comment, Model model) {
-    	
-    	Hotel hotel = hotels.findOne(id);
-    	model.addAttribute("hotel", hotel);
-    	model.addAttribute("comment", hotel.getComments().get(id_comment));
-    	return "comments/edit";
+    public String editComment(@PathVariable("id") long id, @PathVariable("coomentId") long commentId, Model model) {
+        Hotel hotel = hotels.findOne(id);
+        model.addAttribute("hotel", hotel);
+        model.addAttribute("comment", hotel.getComments().get(commentId));
+        return "comments/edit";
     }
-    
-    @RequestMapping(value="{id}/comments/{id_comment}/remove", method=RequestMethod.GET)
+
+    @RequestMapping(value = "{id}/comments/{commentId}/remove", method = RequestMethod.GET)
     @AllowedForManageComment
-    public String removeComment(@PathVariable("id") long id, @PathVariable("id_comment") long id_comment, Model model){    	
-    	comments.delete(id_comment);
-		return "redirect:/comments/moderation";	
+    public String removeComment(@PathVariable("id") long id, @PathVariable("commentId") long commentId, Model model) {
+        comments.delete(commentId);
+        return "redirect:/comments/moderation";
     }
-    
-    @RequestMapping(value="{id}/comments/{id_comment}/approve", method=RequestMethod.GET)
+
+    @RequestMapping(value = "{id}/comments/{commentId}/approve", method = RequestMethod.GET)
     @AllowedForCommentModerator
-    public String approveComment(@PathVariable("id") long id, @PathVariable("id_comment") long id_comment, Model model) {    	
-    	Comment comment = comments.findOne(id_comment);
-    	comment.setStatus(true);
-    	comments.save(comment);
-    	return "redirect:/comments/moderation";
+    public String approveComment(@PathVariable("id") long id, @PathVariable("commentId") long commentId, Model model) {
+        Comment comment = comments.findOne(commentId);
+        comment.setStatus(true);
+        comments.save(comment);
+        return "redirect:/comments/moderation";
     }
-    
-    private User getCurrentUser(){
-    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();    	    
-		CustomUserDetail myUser= (CustomUserDetail) auth.getPrincipal(); 
-		return myUser.getUser();
+
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetail myUser = (CustomUserDetail) authentication.getPrincipal();
+        return myUser.getUser();
     }
 }

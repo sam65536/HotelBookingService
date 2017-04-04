@@ -12,5 +12,5 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @Documented
 @PreAuthorize(AllowedForApprovedComments.condition)
 public @interface AllowedForApprovedComments {
-    String condition = "@mySecurityService.canReplyToComment(#id, #comment_id, principal)";
+    String condition = "@mySecurityService.canReplyToComment(#id, #commentId, principal)";
 }
