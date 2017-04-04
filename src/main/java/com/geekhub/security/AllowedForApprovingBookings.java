@@ -12,5 +12,5 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @Documented
 @PreAuthorize(AllowedForApprovingBookings.condition)
 public @interface AllowedForApprovingBookings {
-    String condition = "@mySecurityService.canApproveBooking(#booking_id, principal) or " + AllowedForHotelManager.condition;
+    String condition = "@mySecurityService.canApproveBooking(#bookingId, principal) or " + AllowedForHotelManager.condition;
 }

@@ -12,5 +12,5 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @Documented
 @PreAuthorize(AllowedForRemovingBookings.condition)
 public @interface AllowedForRemovingBookings {
-    String condition = "@mySecurityService.canRemoveBooking(#booking_id, principal)";
+    String condition = "@mySecurityService.canRemoveBooking(#bookingId, principal)";
 }
