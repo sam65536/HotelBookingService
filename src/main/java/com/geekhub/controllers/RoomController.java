@@ -35,13 +35,13 @@ public class RoomController {
 
 	@Autowired
 	public RoomController(HotelRepository hotels, RoomTypeRepository roomTypes, RoomRepository rooms, BookingRepository bookings) {
-		this.hotels = hotels;
-		this.roomTypes = roomTypes;
-		this.rooms = rooms;
-		this.bookings = bookings;
+        this.hotels = hotels;
+        this.roomTypes = roomTypes;
+        this.rooms = rooms;
+        this.bookings = bookings;
 	}
 
-	@RequestMapping(value = "{id}/rooms/new", method = RequestMethod.GET)
+    @RequestMapping(value = "{id}/rooms/new", method = RequestMethod.GET)
     @AllowedForManageHotel
     public String newRoom(@PathVariable("id") long id, Model model) {
     	Room rоом = new Room();
@@ -66,9 +66,9 @@ public class RoomController {
     	Hotel hotel = hotels.findOne(id);
     	Map<Long, Room> hotelRooms = hotel.getRooms();
     	Map<Integer, Room> rooms = new HashMap<>();
-    	for (Long entry : hotelRooms.keySet()) {
-    		Room room = hotelRooms.get(entry);
-    		rooms.put(Integer.parseInt(room.getRoomNumber()), room);
+    	for (Long roomsId : hotelRooms.keySet()) {
+    	    Room room = hotelRooms.get(roomsId);
+            rooms.put(Integer.parseInt(room.getRoomNumber()), room);
     	}
     	List<Room> orderedRooms = new ArrayList<>();
     	SortedSet<Integer> orderedSet = new TreeSet<>(rooms.keySet());
@@ -95,10 +95,10 @@ public class RoomController {
     public String removeRoom(@PathVariable("id") long id, @PathVariable("roomId") long roomId, Model model) {
     	Hotel hotel = hotels.findOne(id);
     	for(Booking booking : rooms.findOne(roomId).getBookings()) {
-    		bookings.delete(booking);
+    	    bookings.delete(booking);
     	}
     	rooms.delete(roomId);
     	model.addAttribute("hotel", hotel);
-		return "redirect:/hotels/{id}/rooms";	
+    	return "redirect:/hotels/{id}/rooms";
     }
 }
