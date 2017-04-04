@@ -28,18 +28,18 @@ import com.geekhub.security.AllowedForManageHotel;
 @RequestMapping(value = "/hotels")
 public class RoomController {
 
-	private final HotelRepository hotels;
-	private final RoomTypeRepository roomTypes;
-	private final RoomRepository rooms;
-	private final BookingRepository bookings;
+    private final HotelRepository hotels;
+    private final RoomTypeRepository roomTypes;
+    private final RoomRepository rooms;
+    private final BookingRepository bookings;
 
-	@Autowired
-	public RoomController(HotelRepository hotels, RoomTypeRepository roomTypes, RoomRepository rooms, BookingRepository bookings) {
+    @Autowired
+    public RoomController(HotelRepository hotels, RoomTypeRepository roomTypes, RoomRepository rooms, BookingRepository bookings) {
         this.hotels = hotels;
         this.roomTypes = roomTypes;
         this.rooms = rooms;
         this.bookings = bookings;
-	}
+    }
 
     @RequestMapping(value = "{id}/rooms/new", method = RequestMethod.GET)
     @AllowedForManageHotel
