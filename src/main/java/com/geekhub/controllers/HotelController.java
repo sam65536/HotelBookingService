@@ -87,7 +87,7 @@ public class HotelController {
         model.addAttribute("hotel", new Hotel());
         model.addAttribute("categories", categories.findAll());
         return "hotels/create";
-	}
+    }
 
     @RequestMapping(method = RequestMethod.POST)
     @AllowedForHotelManager
