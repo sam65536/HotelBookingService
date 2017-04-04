@@ -1,7 +1,6 @@
 package com.geekhub.controllers;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,119 +31,117 @@ import com.geekhub.exceptions.HotelNotFoundException;
 import com.geekhub.exceptions.UserNotFoundException;
 
 @Controller
-@RequestMapping(value="/users")
+@RequestMapping(value = "/users")
 public class UserController {
 
-	@Autowired
-	UserRepository users;
+	private final UserRepository users;
+	private final BookingRepository bookings;
+	private final AuthorityRepository authorities;
+	private final AuthenticationManager authenticationManager;
+	private final CustomUserDetailsService customUserDetailsService;
 
 	@Autowired
-	BookingRepository bookings;
-
-	@Autowired
-	AuthorityRepository authorities;
-
-	@Autowired 
-	private AuthenticationManager authMgr;
-
-	@Autowired 
-	private CustomUserDetailsService customUserDetailsSvc;
-
-	@RequestMapping(method=RequestMethod.GET)
-	@AllowedForAdmin
-	public String index(Model model) {
-		model.addAttribute("users", users.findAll());
-		return "users/index";
+    public UserController(UserRepository users, BookingRepository bookings, AuthorityRepository authorities,
+						  AuthenticationManager authMgr, CustomUserDetailsService customUserDetailsService) {
+	    this.users = users;
+	    this.bookings = bookings;
+	    this.authorities = authorities;
+		this.authenticationManager = authMgr;
+		this.customUserDetailsService = customUserDetailsService;
 	}
 
-	@RequestMapping(value="/new", method=RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
+    @AllowedForAdmin
+    public String index(Model model) {
+	    model.addAttribute("users", users.findAll());
+	    return "users/index";
+	}
+
+	@RequestMapping(value = "/new", method = RequestMethod.GET)
 	public String newHotel(Model model) {
 		model.addAttribute("user", new User());
 		return "users/create";
 	}
 
-	@RequestMapping(method=RequestMethod.POST)
-	public String saveIt(@ModelAttribute User user, Model model)
-	{
+	@RequestMapping(method = RequestMethod.POST)
+	public String saveIt(@ModelAttribute User user, Model model) {
 		try {
-			Authority authority = authorities.findByRole("ROLE_USER");
-			user.setAuthority(authority);
-			String pass = user.getPassword();
-			user.setPassword(SecurityConfig.encoder.encode(user.getPassword()));
-			users.save(user);
-			UserDetails userDetails = customUserDetailsSvc.loadUserByUsername(user.getUsername());
-			
-			UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, pass, userDetails.getAuthorities());
-			authMgr.authenticate(auth);
-			SecurityContextHolder.getContext().setAuthentication(auth);
-			return "redirect:/users/me";
+		    Authority authority = authorities.findByRole("ROLE_USER");user.setAuthority(authority);
+		    String password = user.getPassword();
+		    user.setPassword(SecurityConfig.encoder.encode(user.getPassword()));
+		    users.save(user);
+		    UserDetails userDetails = customUserDetailsService.loadUserByUsername(user.getUsername());
+		    UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
+		    authenticationManager.authenticate(auth);
+		    SecurityContextHolder.getContext().setAuthentication(auth);
+		    return "redirect:/users/me";
 		}
-		catch(Exception e){
-			return "error";
+		catch (Exception e) {
+		    return "error";
 		}
 	}
 
-	@RequestMapping(value="/login", method=RequestMethod.GET)
-	public String login(Model model) {
-		return "index";
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String login(Model model) {
+	    return "index";
 	}
 
-	@RequestMapping(value="{id}", method=RequestMethod.GET) 
-	@AllowedForManageUser
-	public String show(@PathVariable("id") long id, Model model) {
-		User user = users.findOne(id);
-		if( user == null )
-			throw new HotelNotFoundException();    	
-		model.addAttribute("user", user);    
-		model.addAttribute("bookings", getUserBookings(user.getId()));   
-		return "users/show";
+	@RequestMapping(value = "{id}", method = RequestMethod.GET)
+    @AllowedForManageUser
+    public String show(@PathVariable("id") long id, Model model) {
+	    User user = users.findOne(id);
+	    if (user == null) {
+            throw new HotelNotFoundException();
+        }
+        model.addAttribute("user", user);
+	    model.addAttribute("bookings", getUserBookings(user.getId()));
+	    return "users/show";
 	}
 
-	@RequestMapping(value="/me", method=RequestMethod.GET)
-	public String showActiveProfile(Model model) throws HotelNotFoundException {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();    	    
-		CustomUserDetail myUser= (CustomUserDetail) auth.getPrincipal();
+	@RequestMapping(value = "/me", method = RequestMethod.GET)
+    public String showActiveProfile(Model model) throws HotelNotFoundException {
+	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetail myUser= (CustomUserDetail) authentication.getPrincipal();
 		User user = users.findOne(myUser.getUser().getId());
-		model.addAttribute("bookings", getUserBookings(user.getId()));    	    	
+		model.addAttribute("bookings", getUserBookings(user.getId()));
 		model.addAttribute("user", user);
 		return "users/show";
 	}
 
-	public Iterable<Booking> getUserBookings(long user_id) {
-		Iterator<Booking> itbookings = bookings.findAll().iterator();
-		List<Booking> bookingsList = new ArrayList<Booking>();
-
-		while(itbookings.hasNext()) {
-			Booking b = itbookings.next();
-			if(b.getUser().getId() == user_id)
-				bookingsList.add(b);
+	public Iterable<Booking> getUserBookings(long userId) {
+		List<Booking> bookingsList = new ArrayList<>();
+		for (Booking booking : bookings.findAll()) {
+			if (booking.getUser().getId() == userId) {
+                bookingsList.add(booking);
+			}
 		}
 		return bookingsList;
-	}    
-
-	@RequestMapping(value="{id}/remove", method=RequestMethod.GET)
-	@AllowedForManageUser
-	public String remove(@PathVariable("id") long id, Model model) {
-		User user = users.findOne(id);    	
-		if( user == null )
-			throw new UserNotFoundException();    	
-		users.delete(user);
-		model.addAttribute("users", users.findAll());
-		return "users/index";
-	}  
-
-	@RequestMapping(value="{id}/edit", method=RequestMethod.GET)
-	public String edit(@PathVariable("id") long id, Model model) { 	
-		User user = users.findOne(id);
-		model.addAttribute("user", user);    	
-		model.addAttribute("authorities", authorities.findAll());
-		return "users/edit";
 	}
 
-	@RequestMapping(value="/{id}", method=RequestMethod.POST)
-	public String edit(@PathVariable("id") long id, @ModelAttribute User user, Model model) {
-		users.save(user);
-		model.addAttribute("user", user);
-		return "redirect:/admin";
-	}	
+	@RequestMapping(value = "{id}/remove", method = RequestMethod.GET)
+    @AllowedForManageUser
+    public String remove(@PathVariable("id") long id, Model model) {
+	    User user = users.findOne(id);
+	    if (user == null) {
+            throw new UserNotFoundException();
+        }
+        users.delete(user);
+	    model.addAttribute("users", users.findAll());
+	    return "users/index";
+	}
+
+	@RequestMapping(value = "{id}/edit", method = RequestMethod.GET)
+    public String edit(@PathVariable("id") long id, Model model) {
+        User user = users.findOne(id);
+        model.addAttribute("user", user);
+        model.addAttribute("authorities", authorities.findAll());
+        return "users/edit";
+    }
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    public String edit(@PathVariable("id") long id, @ModelAttribute User user, Model model) {
+	    users.save(user);
+	    model.addAttribute("user", user);
+	    return "redirect:/admin";
+	}
 }
