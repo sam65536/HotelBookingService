@@ -73,20 +73,20 @@ public class HotelController {
     @RequestMapping(method = RequestMethod.GET)
     public String index(Model model) {
         model.addAttribute("hotels", hotels.findAll());
-	    return "hotels/index";
+        return "hotels/index";
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = {"text/plain", "application/json"})
     public @ResponseBody Iterable<Hotel> indexJSON(Model model) {
-	    return hotels.findAll();
+        return hotels.findAll();
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.GET)
     @AllowedForHotelManager
     public String newHotel(Model model) {
-	    model.addAttribute("hotel", new Hotel());
-	    model.addAttribute("categories", categories.findAll());
-	    return "hotels/create";
+        model.addAttribute("hotel", new Hotel());
+        model.addAttribute("categories", categories.findAll());
+        return "hotels/create";
 	}
 
     @RequestMapping(method = RequestMethod.POST)
@@ -102,7 +102,7 @@ public class HotelController {
     public String show(@PathVariable("id") long id, Model model) {
         Hotel hotel = hotels.findOne(id);
         if (hotel == null) {
-            throw new HotelNotFoundException();
+           throw new HotelNotFoundException();
         }
         Iterable<Comment> hotelComments = comments.getComments(id);
         model.addAttribute("booking", new Booking());
@@ -113,7 +113,7 @@ public class HotelController {
         model.addAttribute("roomTypes", roomTypes.findAll());
         Map<Long, Room> rommsMap = hotel.getRooms();
         Map<RoomType, Room> roomsTypeMap= new HashMap<>();
-        for(Room room : rommsMap.values()) {
+        for (Room room : rommsMap.values()) {
             roomsTypeMap.put(room.getType(), room);
         }
         model.addAttribute("hotelRoomTypes", roomsTypeMap);
@@ -124,7 +124,7 @@ public class HotelController {
     public @ResponseBody Hotel showJSON(@PathVariable("id") long id, Model model) {
         Hotel hotel = hotels.findOne(id);
         if (hotel == null) {
-            throw new HotelNotFoundException();
+           throw new HotelNotFoundException();
         }
         return hotel;
     }
@@ -168,25 +168,25 @@ public class HotelController {
         return "redirect:/admin";
     }
 
-	@RequestMapping(value = "{id}/upload", method = RequestMethod.POST)
-	@AllowedForManageHotel
+    @RequestMapping(value = "{id}/upload", method = RequestMethod.POST)
+    @AllowedForManageHotel
     public String uploadImage(@PathVariable("id") long id, Model model, @RequestParam("files") MultipartFile files[]) {
-		if (files.length > 0) {
-            for (int i = 0; i < files.length; i++) {
-                MultipartFile file = files[i];
-                try {
-                    byte[] bytes = file.getBytes();
-                    String path = "src/main/resources/public/static/" + file.getOriginalFilename();
-                    BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(path)));
-                    stream.write(bytes);
-                    stream.close();
-                    Image image = new Image();
-                    image.setHotel(hotels.findOne(id));
-                    image.setInsertionDate(new Date());
-                    image.setPath(file.getOriginalFilename());
-                    images.save(image);
-                } catch (Exception e) {}
-            }
+        if (files.length > 0) {
+           for (int i = 0; i < files.length; i++) {
+               MultipartFile file = files[i];
+               try {
+                   byte[] bytes = file.getBytes();
+                   String path = "src/main/resources/public/static/" + file.getOriginalFilename();
+                   BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(path)));
+                   stream.write(bytes);
+                   stream.close();
+                   Image image = new Image();
+                   image.setHotel(hotels.findOne(id));
+                   image.setInsertionDate(new Date());
+                   image.setPath(file.getOriginalFilename());
+                   images.save(image);
+               } catch (Exception e) {}
+           }
         }
         return "redirect:/users/me";
     }
@@ -268,6 +268,6 @@ public class HotelController {
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetail myUser= (CustomUserDetail) authentication.getPrincipal();
-		return myUser.getUser();
+        return myUser.getUser();
     }
 }
