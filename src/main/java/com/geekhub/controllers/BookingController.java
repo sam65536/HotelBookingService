@@ -171,7 +171,6 @@ public class BookingController {
     @AllowedForRemovingBookings
     public String removeBooking(Model model, @PathVariable("bookingId") long bookingId,
                                 Authentication authentication) {
-
         Booking booking = bookings.findOne(bookingId);
         if (booking == null) {
             throw new BookingNotFoundException();
@@ -191,7 +190,6 @@ public class BookingController {
         CustomUserDetail principal = (authentication != null) ? (CustomUserDetail) authentication.getPrincipal() : null;
         if (principal != null) {
             String authority = (principal.getAuthorities().iterator().next()).getAuthority();
-
             if (authority.equals(("ROLE_USER"))) {
                 return "redirect:/users/me";
             }
