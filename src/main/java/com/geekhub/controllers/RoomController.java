@@ -25,82 +25,79 @@ import com.geekhub.repositories.RoomTypeRepository;
 import com.geekhub.security.AllowedForManageHotel;
 
 @Controller
-@RequestMapping(value="/hotels")
+@RequestMapping(value = "/hotels")
 public class RoomController {
 
-    @Autowired
-    HotelRepository hotels;
-    
-    @Autowired
-    RoomTypeRepository roomTypes;
-    
-    @Autowired
-    RoomRepository rooms;
-    
-    @Autowired
-    BookingRepository bookings;
+	private final HotelRepository hotels;
+	private final RoomTypeRepository roomTypes;
+	private final RoomRepository rooms;
+	private final BookingRepository bookings;
 
-    @RequestMapping(value="{id}/rooms/new", method=RequestMethod.GET)
+	@Autowired
+	public RoomController(HotelRepository hotels, RoomTypeRepository roomTypes, RoomRepository rooms, BookingRepository bookings) {
+		this.hotels = hotels;
+		this.roomTypes = roomTypes;
+		this.rooms = rooms;
+		this.bookings = bookings;
+	}
+
+	@RequestMapping(value = "{id}/rooms/new", method = RequestMethod.GET)
     @AllowedForManageHotel
     public String newRoom(@PathVariable("id") long id, Model model) {
-    	Room r = new Room();    	
+    	Room rоом = new Room();
     	model.addAttribute("hotel", hotels.findOne(id));
-    	model.addAttribute("room", r);
+    	model.addAttribute("room", rоом);
     	model.addAttribute("roomTypes", roomTypes.findAll());
     	return "rooms/create";
     }
 
-    @RequestMapping(value="{id}/rooms", method=RequestMethod.POST)
+    @RequestMapping(value = "{id}/rooms", method = RequestMethod.POST)
     @AllowedForManageHotel
     public String saveRoom(@PathVariable("id") long id, @ModelAttribute Room room, Model model) {  
     	Hotel hotel = hotels.findOne(id);    	
     	room.setHotel(hotel);    	
     	rooms.save(room);
-    	return "redirect:/hotels/"+id+"/rooms";
+    	return "redirect:/hotels/" + id + "/rooms";
     }
 
-    @RequestMapping(value="{id}/rooms", method=RequestMethod.GET)
+    @RequestMapping(value = "{id}/rooms", method = RequestMethod.GET)
     @AllowedForManageHotel
     public String showRooms(@PathVariable("id") long id, Model model) {
     	Hotel hotel = hotels.findOne(id);
-    	Map<Long, Room> hotel_rooms = hotel.getRooms();
-    	Map<Integer, Room> rooms = new HashMap<Integer, Room>();
-    	
-    	for(Long entry : hotel_rooms.keySet()){
-    		Room r = hotel_rooms.get(entry);
-    		rooms.put(Integer.parseInt(r.getRoomNumber()), r);
+    	Map<Long, Room> hotelRooms = hotel.getRooms();
+    	Map<Integer, Room> rooms = new HashMap<>();
+    	for (Long entry : hotelRooms.keySet()) {
+    		Room room = hotelRooms.get(entry);
+    		rooms.put(Integer.parseInt(room.getRoomNumber()), room);
     	}
-    	List<Room> orderedRooms = new ArrayList<Room>();
-    	SortedSet<Integer> orderedSet = new TreeSet<Integer>(rooms.keySet());
-    	for(Integer key : orderedSet)
-    		orderedRooms.add(rooms.get(key));
-    	
+    	List<Room> orderedRooms = new ArrayList<>();
+    	SortedSet<Integer> orderedSet = new TreeSet<>(rooms.keySet());
+    	for (Integer key : orderedSet) {
+    	    orderedRooms.add(rooms.get(key));
+        }
     	model.addAttribute("hotel", hotel);
     	model.addAttribute("orderedRooms",orderedRooms);
     	return "rooms/hotel-rooms";
     }
 
-    @RequestMapping(value="{id}/rooms/{id_room}/edit", method=RequestMethod.GET)
+    @RequestMapping(value = "{id}/rooms/{roomId}/edit", method = RequestMethod.GET)
     @AllowedForManageHotel
-    public String editRoom(@PathVariable("id") long id, @PathVariable("id_room") long id_room, Model model) {    	
+    public String editRoom(@PathVariable("id") long id, @PathVariable("roomId") long roomId, Model model) {
     	Hotel hotel = hotels.findOne(id);
     	model.addAttribute("hotel", hotel);
-    	model.addAttribute("room", hotel.getRooms().get(id_room));
+    	model.addAttribute("room", hotel.getRooms().get(roomId));
     	model.addAttribute("roomTypes", roomTypes.findAll()); 
     	return "rooms/edit";
     }
     
-    @RequestMapping(value="{id}/rooms/{id_room}/remove", method=RequestMethod.GET)
+    @RequestMapping(value = "{id}/rooms/{id_room}/remove", method = RequestMethod.GET)
     @AllowedForManageHotel
-    public String removeRoom(@PathVariable("id") long id, @PathVariable("id_room") long id_room, Model model)
-    {    	
+    public String removeRoom(@PathVariable("id") long id, @PathVariable("roomId") long roomId, Model model) {
     	Hotel hotel = hotels.findOne(id);
-    	
-    	for(Booking b : rooms.findOne(id_room).getBookings()) {
-    		bookings.delete(b);
+    	for(Booking booking : rooms.findOne(roomId).getBookings()) {
+    		bookings.delete(booking);
     	}
-    	
-    	rooms.delete(id_room);
+    	rooms.delete(roomId);
     	model.addAttribute("hotel", hotel);
 		return "redirect:/hotels/{id}/rooms";	
     }
