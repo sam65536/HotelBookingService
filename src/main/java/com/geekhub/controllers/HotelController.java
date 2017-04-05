@@ -204,14 +204,7 @@ public class HotelController {
         images.delete(image);
         return "redirect:/hotels/{id}/upload";
     }
-	
-    @RequestMapping(value = "/search", method = RequestMethod.GET)
-    public String searchHotel(Model model, @RequestParam("cityId") Long cityId) {
-        Iterable<Hotel> hotelsList = (cityId == null) ? hotels.findAll() : cities.findOne(cityId).getHotels().values();
-        model.addAttribute("hotels", hotelsList);
-        return "hotels/index";
-    }
-	
+
     @RequestMapping(value = "{id}/map", method = RequestMethod.POST)
     @AllowedForHotelManager
     public String hotelMap(@PathVariable("id") long id, Model model, @ModelAttribute Booking booking) {
