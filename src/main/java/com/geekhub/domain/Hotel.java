@@ -14,6 +14,8 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 public class Hotel {
@@ -26,7 +28,11 @@ public class Hotel {
     private String name;
     private int rating;
     private boolean status;
-    
+
+    @JsonBackReference
+    @ManyToOne
+    private City city;
+
     @ManyToOne
     private Category category;
     
@@ -35,37 +41,34 @@ public class Hotel {
     private User manager;
     
     @JsonBackReference
-    @OneToMany(fetch = FetchType.EAGER, mappedBy="hotel", orphanRemoval = true)
-    @MapKeyColumn(name="id")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "hotel", orphanRemoval = true)
+    @MapKeyColumn(name = "id")
     private Map<Long, Room> rooms = new HashMap<>();
 
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.EAGER, mappedBy="hotel", orphanRemoval = true)
-    @MapKeyColumn(name="id")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "hotel", orphanRemoval = true)
+    @MapKeyColumn(name = "id")
     private Map<Long, Comment> comments = new HashMap<>();
 
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.EAGER, mappedBy="hotel", orphanRemoval = true)
-    @MapKeyColumn(name="id")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "hotel", orphanRemoval = true)
+    @MapKeyColumn(name = "id")
     private Map<Long, Image> images = new HashMap<>();
  
-    public Hotel() {
-    }
-    
-    public Hotel(String name, String address, int rating, Category category, boolean status) {    	
-    	this.name = name;
-    	this.address = address;
-    	this.rating = rating;
-    	this.category = category;
-    	this.status = false;
-    }
-
     public long getId() {
         return id;
     }
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public City getCity() {
+        return city;
+    }
+
+    public void setCity(City city) {
+        this.city = city;
     }
 
     public String getAddress() {

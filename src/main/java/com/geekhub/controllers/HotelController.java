@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.geekhub.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,13 +36,6 @@ import com.geekhub.domain.Image;
 import com.geekhub.domain.Room;
 import com.geekhub.domain.RoomType;
 import com.geekhub.domain.User;
-import com.geekhub.repositories.BookingRepository;
-import com.geekhub.repositories.CategoryRepository;
-import com.geekhub.repositories.CommentRepository;
-import com.geekhub.repositories.HotelRepository;
-import com.geekhub.repositories.ImageRepository;
-import com.geekhub.repositories.RoomTypeRepository;
-import com.geekhub.repositories.UserRepository;
 import com.geekhub.security.AllowedForAdmin;
 import com.geekhub.security.AllowedForHotelManager;
 import com.geekhub.security.AllowedForManageHotel;
@@ -58,9 +52,12 @@ public class HotelController {
     private final ImageRepository images;
     private final CommentRepository comments;
     private final BookingRepository bookings;
+    private final CityRepository cities;
 
     @Autowired
-    public HotelController(HotelRepository hotels, CategoryRepository categories, RoomTypeRepository roomTypes, UserRepository users, ImageRepository images, CommentRepository comments, BookingRepository bookings) {
+    public HotelController(HotelRepository hotels, CategoryRepository categories, RoomTypeRepository roomTypes,
+                           UserRepository users, ImageRepository images, CommentRepository comments,
+                           BookingRepository bookings, CityRepository cities) {
         this.hotels = hotels;
         this.categories = categories;
         this.roomTypes = roomTypes;
@@ -68,6 +65,7 @@ public class HotelController {
         this.images = images;
         this.comments = comments;
         this.bookings = bookings;
+        this.cities = cities;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -208,13 +206,8 @@ public class HotelController {
     }
 	
     @RequestMapping(value = "/search", method = RequestMethod.GET)
-    public String searchHotel(Model model, @RequestParam("searchString") String searchString) {
-        List<Hotel> hotelsList = new ArrayList<>();
-        for (Hotel hotel : hotels.findAll()) {
-            if(hotel.getName().toLowerCase().contains(searchString.toLowerCase())) {
-                hotelsList.add(hotel);
-            }
-        }
+    public String searchHotel(Model model, @RequestParam("cityId") Long cityId) {
+        Iterable<Hotel> hotelsList = (cityId == null) ? hotels.findAll() : cities.findOne(cityId).getHotels().values();
         model.addAttribute("hotels", hotelsList);
         return "hotels/index";
     }

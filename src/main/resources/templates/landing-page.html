@@ -17,12 +17,17 @@
 			<h1>Welcome to Booking</h1>
 		</div>
 
-		<div class="searchbar">
-			<form class="navbar-form" role="search" action="/hotels/search" method="get">
+        <div class="searchbar">
+            <form class="navbar-form" role="search" action="/hotels/search" method="get">
 				<div class="form-group">
-					<input type="text" class="form-control" placeholder="Search" name="searchString">
-				</div>
-				<button type="submit" class="btn btn-default">
+                    <select name = "cityId" class="form-control">
+                        <option th:each="c : ${cities}"
+                                th:text="${c.name}"
+                                th:value="${c.id}">
+                        </option>
+                    </select>
+                </div>
+				<button type="submit" class="btn btn-default" >
 					<span class="glyphicon glyphicon-search"></span>
 				</button>
 			</form>

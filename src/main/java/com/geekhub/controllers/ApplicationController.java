@@ -1,5 +1,6 @@
 package com.geekhub.controllers;
 
+import com.geekhub.repositories.CityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -17,16 +18,19 @@ public class ApplicationController {
 
    private final HotelRepository hotels;
    private final UserRepository users;
+   private final CityRepository cities;
 
    @Autowired
-   public ApplicationController(HotelRepository hotels, UserRepository users) {
+   public ApplicationController(HotelRepository hotels, UserRepository users, CityRepository cities) {
        this.hotels = hotels;
        this.users = users;
+       this.cities = cities;
    }
 
    @RequestMapping(value = "/")
    public String root(Model model) {
        model.addAttribute("hotels", hotels.findAll());
+       model.addAttribute("cities", cities.findAll());
        return "landing-page";
    }
 	

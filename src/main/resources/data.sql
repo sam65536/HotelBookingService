@@ -39,12 +39,23 @@ insert into `user` (id, email, name, password, username, authority_id) values (1
 insert into `user` (id, email, name, password, username, authority_id) values (14, 'mfranklin8@cbc.ca', 'Matthew Franklin', 'c72DCVcD', 'mfranklin8', 1);
 insert into `user` (id, email, name, password, username, authority_id) values (15, 'ajackson9@adobe.com', 'Amy Jackson', 'LxIhudJ', 'ajackson9', 1);
 
-INSERT INTO hotel (id, address, name, rating, category_id, manager_id, status)
+INSERT INTO city (id, name) VALUES (1, "Lisbon");
+INSERT INTO city (id, name) VALUES (2, "Atlanta");
+INSERT INTO city (id, name) VALUES (3, "New York");
+INSERT INTO city (id, name) VALUES (4, "San Francisco");
+INSERT INTO city (id, name) VALUES (5, "Las Vegas");
+INSERT INTO city (id, name) VALUES (6, "Quebec");
+INSERT INTO city (id, name) VALUES (7, "London");
+INSERT INTO city (id, name) VALUES (8, "Barcelona");
+INSERT INTO city (id, name) VALUES (9, "Tel Aviv");
+INSERT INTO city (id, name) VALUES (10, "Tokyo");
+
+INSERT INTO hotel (id, address, name, rating, category_id, city_id, manager_id, status)
 VALUES
-(1, 'Rua Castilho 149, Lisbon','Intercontinental', 5, 1, 4, true),
-(2, 'Av. D. Joao II, Lisbon','Tryp', 4, 2, 4, true),
-(3, 'Rua da Madalena 96, Lisbon','Holiday Inn', 2, 3, 5, true),
-(4, 'Avenida dos Combatentes, Lisbon', 'Marriott', 5, 5, 5, false);
+(1, 'Rua Castilho 149, Lisbon', 'Intercontinental', 5, 1, 1, 4, true),
+(2, 'Av. D. Joao II, Lisbon', 'Tryp', 4, 2, 1, 4, true),
+(3, 'Rua da Madalena 96, Lisbon', 'Holiday Inn', 2, 3, 1, 5, true),
+(4, 'Avenida dos Combatentes, Lisbon', 'Marriott', 5, 5, 1, 5, false);
 
 insert into room (id, floor, room_number, hotel_id, type_id, price) values (1, 1, '101', 1, 1, 50);
 insert into room (id, floor, room_number, hotel_id, type_id, price) values (2, 1, '102', 1, 2, 75);
@@ -87,8 +98,7 @@ insert into room (id, floor, room_number, hotel_id, type_id, price) values (38, 
 insert into room (id, floor, room_number, hotel_id, type_id, price) values (39, 2, '204', 4, 1, 50);
 insert into room (id, floor, room_number, hotel_id, type_id, price) values (40, 2, '205', 4, 2, 75);
 
-INSERT INTO comment (id, `date`, status, text, hotel_id, user_id, is_answer)
-VALUES
+INSERT INTO comment (id, `date`, status, text, hotel_id, user_id, is_answer) VALUES
 (1, '2016-08-30 19:05:00',TRUE,'The best thing about this hotel were the owners. They were lovely friendly people. Giovanni asked us what he could cook for us. In no time we had a delicious pasta all amatriciana and a mixed meat dish. It was very nice.', 1, 3, false),
 (2, '2016-10-18 15:10:00',TRUE,'Really helpful staff, studio room was perfect.', 1, 6, false),
 (3, '2016-10-20 16:43:00',FALSE,'We loved the nice quiet location, the wonderful hospitality of the proprietor and superbly attentive staff. Breakfast always well presented and varied. Beautiful apartment with excellent facilities!', 1, 3, false),
