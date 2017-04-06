@@ -38,7 +38,7 @@ public class Room implements Comparable<Object> {
 	
     @ElementCollection
     private Map<Date, Long> reservedDays = new HashMap<>();
-	
+
     @JsonBackReference
     @ManyToMany(mappedBy = "rooms")
     private Set<Booking> bookings = new HashSet<>();
@@ -118,6 +118,18 @@ public class Room implements Comparable<Object> {
         this.bookings = bookings;
     }
 
+    public int getCapacity() {
+        return Integer.parseInt(type.getOccupancy());
+    }
+
+    public boolean isAvailable(Date beginDate, Date endDate) {
+       for (Date date : this.getReservedDays().keySet()) {
+           if (date.equals(beginDate) || (date.equals(endDate))) {
+               return true;
+           }
+       }
+       return false;
+    }
     @Override
     public int compareTo(Object o) {
         return getRoomNumber().compareTo( ((Room) o).getRoomNumber() );

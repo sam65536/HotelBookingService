@@ -1,4 +1,4 @@
-package com.geekhub.service;
+package com.geekhub.services;
 
 import java.util.HashSet;
 import java.util.Set;

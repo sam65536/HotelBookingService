@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.geekhub.domain.Authority;
 import com.geekhub.domain.Booking;
 import com.geekhub.domain.CustomUserDetail;
-import com.geekhub.service.CustomUserDetailsService;
+import com.geekhub.services.CustomUserDetailsService;
 import com.geekhub.domain.User;
 import com.geekhub.repositories.AuthorityRepository;
 import com.geekhub.repositories.BookingRepository;

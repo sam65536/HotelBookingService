@@ -8,7 +8,7 @@ function ($scope, $http, $compile)
 	{		
 		$scope.roomTypes = data;
 	});
-	$('#search').click(function(){
+	$('#search').click(function() {
 		var checkin = $('#start').val();
 		var checkout = $('#end').val();
 		var rooms = $('#rooms').val();
@@ -54,7 +54,7 @@ function ($scope, $http, $compile)
 				}
 			});
 		}
-		else{
+		else {
 			alert("All fields need to be filled!");
 		}
 		
