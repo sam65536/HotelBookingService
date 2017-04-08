@@ -1,10 +1,14 @@
 package com.geekhub.domain;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -37,7 +41,7 @@ public class Room implements Comparable<Object> {
     private RoomType type;
 	
     @ElementCollection
-    private Map<Date, Long> reservedDays = new HashMap<>();
+    private Map<LocalDate, Long> reservedDays = new HashMap<>();
 
     @JsonBackReference
     @ManyToMany(mappedBy = "rooms")
@@ -102,11 +106,11 @@ public class Room implements Comparable<Object> {
         this.type = type;
     }
 
-    public Map<Date, Long> getReservedDays() {
+    public Map<LocalDate, Long> getReservedDays() {
         return reservedDays;
     }
 
-    public void setReservedDays(Map<Date, Long> reservedDays) {
+    public void setReservedDays(Map<LocalDate, Long> reservedDays) {
         this.reservedDays = reservedDays;
     }
 
@@ -122,14 +126,14 @@ public class Room implements Comparable<Object> {
         return Integer.parseInt(type.getOccupancy());
     }
 
-    public boolean isAvailable(Date beginDate, Date endDate) {
-       for (Date date : getReservedDays().keySet()) {
-           if (date.equals(beginDate) || (date.equals(endDate))) {
-               return false;
-           }
-       }
-       return true;
+    public boolean isAvailable(LocalDate start, LocalDate end) {
+        long reservedDays = Stream.iterate(start, date -> date.plusDays(1))
+                .limit(ChronoUnit.DAYS.between(start, end) + 1)
+                .filter(localDate -> getReservedDays().keySet().contains(localDate))
+                .count();
+       return (reservedDays == 0);
     }
+
     @Override
     public int compareTo(Object o) {
         return getRoomNumber().compareTo( ((Room) o).getRoomNumber() );

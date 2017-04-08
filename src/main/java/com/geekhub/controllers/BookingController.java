@@ -1,19 +1,16 @@
 package com.geekhub.controllers;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
+import com.geekhub.services.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -49,19 +46,21 @@ public class BookingController {
     private final HotelRepository hotels;
     private final UserRepository users;
     private final RoomTypeRepository roomTypes;
+    private final BookingService bookingService;
 
     @Autowired
-    public BookingController(BookingRepository bookings, HotelRepository hotels, UserRepository users, RoomTypeRepository roomTypes) {
+    public BookingController(BookingRepository bookings, HotelRepository hotels, UserRepository users, RoomTypeRepository roomTypes, BookingService bookingService) {
         this.bookings = bookings;
         this.hotels = hotels;
         this.users = users;
         this.roomTypes = roomTypes;
+        this.bookingService = bookingService;
     }
 
     @RequestMapping(method = RequestMethod.GET)
     @AllowedForHotelManager
     public String index(Model model) {
-        User user = getCurrentUser();
+        User user = bookingService.getCurrentUser();
         List<Booking> bookingList = new ArrayList<>();
         for (Booking booking : bookings.findAll()) {
             if (booking.getHotel().getManager().getId() == user.getId()) {
@@ -82,13 +81,13 @@ public class BookingController {
         long firstRoomType = 1;
         int numberRooms = 2;
         Booking booking = new Booking();
-        booking.setBeginDate(new Date(1448713320000L));
-        booking.setEndDate(new Date(1449145320000L));
+        booking.setBeginDate(LocalDate.parse("2016-02-28"));
+        booking.setEndDate(LocalDate.parse("2016-03-02"));
         RoomType currentRoomType = roomTypes.findOne(firstRoomType);
-        List<Date> dates = getDates(booking);
+        List<LocalDate> dates = bookingService.getBookingDays(booking);
         booking.setUser(users.findOne((long) 1));
         Hotel hotel = hotels.findOne(hotelId);
-        List<Room> availableRooms = getAvailableRooms(numberRooms, hotel, currentRoomType, booking, dates);
+        List<Room> availableRooms = bookingService.getAvailableRooms(numberRooms, hotel, currentRoomType, booking, dates);
         Set<Room> roomsBooking = new HashSet<>(availableRooms);
         booking.setRooms(roomsBooking);
         bookings.save(booking);
@@ -102,10 +101,10 @@ public class BookingController {
                            @ModelAttribute("numberRooms") int numberRooms,
                            @ModelAttribute("roomType") long roomType, Authentication authentication) {
         RoomType currentRoomType = roomTypes.findOne(roomType);
-        List<Date> dates = getDates(booking);
-        booking.setUser(getCurrentUser());
+        List<LocalDate> dates = bookingService.getBookingDays(booking);
+        booking.setUser(bookingService.getCurrentUser());
         Hotel hotel = hotels.findOne(hotelId);
-        List<Room> availableRooms = getAvailableRooms(numberRooms, hotel, currentRoomType, booking, dates);
+        List<Room> availableRooms = bookingService.getAvailableRooms(numberRooms, hotel, currentRoomType, booking, dates);
         Set<Room> bookedRooms = new HashSet<>(availableRooms);
         booking.setRooms(bookedRooms);
         bookings.save(booking);
@@ -113,7 +112,8 @@ public class BookingController {
         CustomUserDetail principal = (authentication != null) ? (CustomUserDetail) authentication.getPrincipal() : null;
         if (principal != null) {
             String authority = (principal.getAuthorities().iterator().next()).getAuthority();
-            if (authority.equals("ROLE_USER") || authority.equals("ROLE_COMMENT_MODERATOR")
+            if (authority.equals("ROLE_USER")
+                    || authority.equals("ROLE_COMMENT_MODERATOR")
                     || authority.equals("ROLE_ADMIN")) {
                 return "redirect:/users/me";
             }
@@ -134,8 +134,8 @@ public class BookingController {
                               @RequestParam("roomType") long roomType,
                               @RequestParam("numberRooms") int numberRooms) {
         RoomType currentRoomType = roomTypes.findOne(roomType);
-        List<Date> dates = getDates(booking);
-        List<Room> availableRooms = getAvailableRooms(numberRooms, currentRoomType, dates);
+        List<LocalDate> dates = bookingService.getBookingDays(booking);
+        List<Room> availableRooms = bookingService.getAvailableRooms(numberRooms, currentRoomType, dates);
         model.addAttribute("rooms", availableRooms);
         model.addAttribute("booking", booking);
         model.addAttribute("roomType", currentRoomType);
@@ -144,14 +144,14 @@ public class BookingController {
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.GET, produces = {"text/plain", "application/json"})
-    public @ResponseBody Iterable<Room> searchRoomsJSON(Date checkin, Date checkout, String rooms, long roomType) {
+    public @ResponseBody Iterable<Room> searchRoomsJSON(LocalDate checkin, LocalDate checkout, String rooms, long roomType) {
         int numberRooms = Integer.parseInt(rooms);
         Booking booking = new Booking();
         booking.setBeginDate(checkin);
         booking.setEndDate(checkout);
         RoomType currentRoomType = roomTypes.findOne(roomType);
-        List<Date> dates = getDates(booking);
-        List<Room> availableRooms = getAvailableRooms(numberRooms, currentRoomType, dates);
+        List<LocalDate> dates = bookingService.getBookingDays(booking);
+        List<Room> availableRooms = bookingService.getAvailableRooms(numberRooms, currentRoomType, dates);
         return availableRooms;
     }
 
@@ -169,8 +169,7 @@ public class BookingController {
 
     @RequestMapping(value = "/{bookingId}/remove", method = RequestMethod.GET)
     @AllowedForRemovingBookings
-    public String removeBooking(Model model, @PathVariable("bookingId") long bookingId,
-                                Authentication authentication) {
+    public String removeBooking(Model model, @PathVariable("bookingId") long bookingId, Authentication authentication) {
         Booking booking = bookings.findOne(bookingId);
         if (booking == null) {
             throw new BookingNotFoundException();
@@ -179,9 +178,9 @@ public class BookingController {
         Iterator<Room> iterator = rooms.iterator();
         while (iterator.hasNext()) {
             Room room = iterator.next();
-            Map<Date, Long> daysReserved = room.getReservedDays();
-            List<Date> dates = getDates(booking);
-            for (Date date : dates) {
+            Map<LocalDate, Long> daysReserved = room.getReservedDays();
+            List<LocalDate> dates = bookingService.getBookingDays(booking);
+            for (LocalDate date : dates) {
                 daysReserved.remove(date);
             }
             room.setReservedDays(daysReserved);
@@ -195,80 +194,5 @@ public class BookingController {
             }
         }
         return "redirect:/bookings";
-    }
-
-    private List<Date> getDates(Booking booking) {
-        List<Date> dates = new ArrayList<>();
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(booking.getBeginDate());
-        while (calendar.getTime().getTime() <= booking.getEndDate().getTime()) {
-            Date result = calendar.getTime();
-            dates.add(result);
-            calendar.add(Calendar.DATE, 1);
-        }
-        return dates;
-    }
-
-    private User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetail myUser = (CustomUserDetail) authentication.getPrincipal();
-        return myUser.getUser();
-    }
-
-    private List<Room> getAvailableRooms(int numberRooms, Hotel hotel, RoomType roomType, Booking booking, List<Date> dates) {
-        Map<Long, Room> roomsFromHotel = hotel.getRooms();
-        List<Room> availableRooms = new ArrayList<>();
-        int counter = 1;
-        for (Long hotelRoomsId : roomsFromHotel.keySet()) {
-            Room room = roomsFromHotel.get(hotelRoomsId);
-            Map<Date, Long> roomBookings = room.getReservedDays();
-            boolean found = false;
-            for (Date day : dates) {
-                if (roomBookings.get(day) != null) {
-                    found = true;
-                    break;
-                }
-            }
-            if ((!found) && (room.getType() == roomType) && (counter <= numberRooms)) {
-                availableRooms.add(room);
-                for (Date date : dates) {
-                    roomBookings.put(date, booking.getId());
-                }
-                counter++;
-            } else if (counter > numberRooms) {
-                break;
-            }
-        }
-        return availableRooms;
-    }
-
-    private List<Room> getAvailableRooms(int numberRooms, RoomType roomType, List<Date> dates) {
-        List<Room> availableRooms = new ArrayList<>();
-        for (Hotel hotel : hotels.findAll()) {
-            if (hotel.getStatus()) {
-                Map<Long, Room> rooms = hotel.getRooms();
-                int counter = 0;
-                Room currentRoom = null;
-                for (Entry<Long, Room> roomsEntry : rooms.entrySet()) {
-                    Room room = roomsEntry.getValue();
-                    Map<Date, Long> roomBookings = room.getReservedDays();
-                    boolean found = false;
-                    for (Date day : dates) {
-                        if (roomBookings.get(day) != null) {
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found && room.getType().getDescription().equals(roomType.getDescription())) {
-                        counter++;
-                        currentRoom = room;
-                    }
-                }
-                if (counter >= numberRooms) {
-                    availableRooms.add(currentRoom);
-                }
-            }
-        }
-        return availableRooms;
     }
 }

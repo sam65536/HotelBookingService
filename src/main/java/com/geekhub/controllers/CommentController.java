@@ -1,6 +1,6 @@
 package com.geekhub.controllers;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -44,7 +44,7 @@ public class CommentController {
                               Model model, @PathVariable("commentId") long commentId) {
         Hotel hotel = hotels.findOne(id);
         Comment comment = comments.findOne(commentId);
-        Date date = new Date();
+        LocalDateTime date = LocalDateTime.now();
         reply.setDate(date);
         reply.setUser(getCurrentUser());
         reply.setHotel(hotel);
@@ -59,7 +59,7 @@ public class CommentController {
     @RequestMapping(value = "/{id}/comments", method = RequestMethod.POST)
     public String createComment(@ModelAttribute Comment comment, @PathVariable("id") long id, Model model) {
         Hotel hotel = hotels.findOne(id);
-        Date date = new Date();
+        LocalDateTime date = LocalDateTime.now();
         comment.setDate(date);
         comment.setUser(getCurrentUser());
         comment.setHotel(hotel);

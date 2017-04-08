@@ -2,7 +2,9 @@ package com.geekhub;
 
 import com.geekhub.domain.Booking;
 import com.geekhub.domain.Room;
+import com.geekhub.domain.User;
 import com.geekhub.security.SecurityConfig;
+import com.geekhub.services.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -12,6 +14,7 @@ import com.geekhub.repositories.BookingRepository;
 import com.geekhub.repositories.RoomRepository;
 import com.geekhub.repositories.UserRepository;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @SpringBootApplication
@@ -20,6 +23,7 @@ public class Application implements CommandLineRunner {
    private UserRepository users;
    private BookingRepository bookings;
    private RoomRepository rooms;
+   private BookingService bookingService;
 
    @Autowired
    public void setUsers(UserRepository users) {
@@ -36,31 +40,28 @@ public class Application implements CommandLineRunner {
        this.rooms = rooms;
    }
 
+   @Autowired
+   public void setBookingService(BookingService bookingService) {
+        this.bookingService = bookingService;
+   }
+
    public static void main(String[] args) {
        SpringApplication.run(Application.class, args);
    }
 
    @Override
    public void run(String... strings) {
-       users.findAll().forEach(user -> {
+
+       for (User user : users.findAll()) {
            String password = user.getPassword();
            user.setPassword(SecurityConfig.encoder.encode(password));
            users.save(user);
-       });
+       }
 
        for (Booking booking : bookings.findAll()) {
-           Date begin = booking.getBeginDate();
-           Date end = booking.getEndDate();
-           List<Date> dates = new ArrayList<>();
-           Calendar calendar = new GregorianCalendar();
-           calendar.setTime(begin);
-           while (calendar.getTime().getTime() <= end.getTime()) {
-               Date result = calendar.getTime();
-               dates.add(result);
-               calendar.add(Calendar.DATE, 1);
-           }
-           Map<Date, Long> tmpMap = new HashMap<>();
-           for (Date date : dates) {
+           List<LocalDate> bookingDays = bookingService.getBookingDays(booking);
+           Map<LocalDate, Long> tmpMap = new HashMap<>();
+           for (LocalDate date : bookingDays) {
                tmpMap.put(date, booking.getId());
 	       }
 	       for (Room room : booking.getRooms()) {

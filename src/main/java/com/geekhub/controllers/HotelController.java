@@ -3,21 +3,13 @@ package com.geekhub.controllers;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import com.geekhub.repositories.*;
+import com.geekhub.services.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -30,12 +22,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.geekhub.domain.Booking;
 import com.geekhub.domain.Comment;
-import com.geekhub.domain.CustomUserDetail;
 import com.geekhub.domain.Hotel;
 import com.geekhub.domain.Image;
 import com.geekhub.domain.Room;
 import com.geekhub.domain.RoomType;
-import com.geekhub.domain.User;
 import com.geekhub.security.AllowedForAdmin;
 import com.geekhub.security.AllowedForHotelManager;
 import com.geekhub.security.AllowedForManageHotel;
@@ -53,11 +43,12 @@ public class HotelController {
     private final CommentRepository comments;
     private final BookingRepository bookings;
     private final CityRepository cities;
+    private final HotelService hotelService;
 
     @Autowired
     public HotelController(HotelRepository hotels, CategoryRepository categories, RoomTypeRepository roomTypes,
                            UserRepository users, ImageRepository images, CommentRepository comments,
-                           BookingRepository bookings, CityRepository cities) {
+                           BookingRepository bookings, CityRepository cities, HotelService hotelService) {
         this.hotels = hotels;
         this.categories = categories;
         this.roomTypes = roomTypes;
@@ -66,6 +57,7 @@ public class HotelController {
         this.comments = comments;
         this.bookings = bookings;
         this.cities = cities;
+        this.hotelService = hotelService;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -91,7 +83,7 @@ public class HotelController {
     @RequestMapping(method = RequestMethod.POST)
     @AllowedForHotelManager
     public String saveIt(@ModelAttribute Hotel hotel, Model model) {
-        hotel.setManager(getCurrentUser());
+        hotel.setManager(hotelService.getCurrentUser());
         hotels.save(hotel);
         model.addAttribute("hotel", hotel);
         return "redirect:/hotels";
@@ -182,7 +174,7 @@ public class HotelController {
                    stream.close();
                    Image image = new Image();
                    image.setHotel(hotels.findOne(id));
-                   image.setInsertionDate(new Date());
+                   image.setInsertionDate(LocalDateTime.now());
                    image.setPath(file.getOriginalFilename());
                    images.save(image);
                } catch (Exception e) {}
@@ -213,49 +205,7 @@ public class HotelController {
         model.addAttribute("beginDate", booking.getBeginDate());
         model.addAttribute("endDate", booking.getEndDate());
         model.addAttribute("hotel", hotels.findOne(id));
-        model.addAttribute("occupancy", getOccupancy(hotels.findOne(id), booking.getBeginDate(), booking.getEndDate()));
+        model.addAttribute("occupancy", hotelService.getOccupancy(hotels.findOne(id), booking.getBeginDate(), booking.getEndDate()));
         return "hotels/map";
-    }
-
-    private Map<Room, Map<Date, Boolean>> getOccupancy(Hotel hotel, Date begining, Date end) {
-        List<Date> dates = new LinkedList<>();
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(begining);
-        while (calendar.getTime().getTime() <= end.getTime()) {
-            Date result = calendar.getTime();
-            dates.add(result);
-            calendar.add(Calendar.DATE, 1);
-        }
-        Map<Room, Map<Date, Boolean>> result = new TreeMap<>();
-        for (Room room : hotel.getRooms().values()) {
-            Map<Date, Long> reservedDays = room.getReservedDays();
-            Map<Date, Boolean> roomOccupied = new TreeMap<>();
-            for (Date date : dates) {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                String formatDate = simpleDateFormat.format(date);
-                for (Date reservedDate : reservedDays.keySet()) {
-                    String day = simpleDateFormat.format(reservedDate);
-                    if (formatDate.equals(day)) {
-                        roomOccupied.put(date, true);
-                    }
-                    else {
-                        if (!(roomOccupied.containsKey(date) && roomOccupied.get(date))) {
-                            roomOccupied.put(date, false);
-                        }
-                    }
-                }
-                if (reservedDays.isEmpty()) {
-                    roomOccupied.put(date, false);
-                }
-            }
-            result.put(room, roomOccupied);
-        }
-        return result;
-    }
-	
-    private User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetail myUser= (CustomUserDetail) authentication.getPrincipal();
-        return myUser.getUser();
     }
 }

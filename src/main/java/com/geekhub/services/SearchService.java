@@ -5,6 +5,7 @@ import com.geekhub.repositories.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -18,7 +19,7 @@ public class SearchService {
         this.rooms = rooms;
     }
 
-    public List<Room> searchAvailableRooms(Long hotelId, Integer persons, Date startDate, Date endDate) {
+    public List<Room> searchAvailableRooms(Long hotelId, Integer persons, LocalDate startDate, LocalDate endDate) {
         List<Room> roomsList = new ArrayList<>((Collection<? extends Room>) rooms.findAll());
         List<Room> result = roomsList.stream()
                 .filter(room -> (room.getHotel().getId() == hotelId))

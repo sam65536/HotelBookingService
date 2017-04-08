@@ -1,18 +1,14 @@
 package com.geekhub.domain;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.geekhub.utils.LocalDateConverter;
 
 @Entity
 public class Booking {
@@ -21,8 +17,14 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private Date beginDate;
-    private Date endDate;
+    @Convert(converter = LocalDateConverter.class)
+    @JsonFormat(pattern = "YYYY-MM-DD")
+    private LocalDate beginDate;
+
+    @Convert(converter = LocalDateConverter.class)
+    @JsonFormat(pattern = "YYYY-MM-DD")
+    private LocalDate endDate;
+
     private boolean state;
 
     @ManyToOne
@@ -35,7 +37,7 @@ public class Booking {
     public Booking() {
     }
 
-    public Booking(long id, Date beginDate, Date endDate, boolean state, User user) {
+    public Booking(long id, LocalDate beginDate, LocalDate endDate, boolean state, User user) {
         this.id = id;
         this.beginDate = beginDate;
         this.endDate = endDate;
@@ -59,23 +61,23 @@ public class Booking {
         this.id = id;
     }
 
-    public Date getBeginDate() {
+    public LocalDate getBeginDate() {
         return beginDate;
     }
 
-    public void setBeginDate(Date beginDate) {
+    public void setBeginDate(LocalDate beginDate) {
         this.beginDate = beginDate;
     }
 
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
-    public boolean isState() {
+    public boolean getState() {
         return state;
     }
 

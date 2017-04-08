@@ -1,15 +1,11 @@
 package com.geekhub.domain;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.geekhub.utils.LocalDateTimeConverter;
 
 @Entity
 public class Comment {
@@ -18,7 +14,9 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private Date date;
+    @Convert(converter = LocalDateTimeConverter.class)
+    private LocalDateTime date;
+
     private boolean isAnswer;
     private boolean status;
     private String text;
@@ -37,7 +35,7 @@ public class Comment {
     public Comment() {
     }
 
-    public Comment(String text, Date date, User user, boolean status, Hotel hotel) {
+    public Comment(String text, LocalDateTime date, User user, boolean status, Hotel hotel) {
         this.text = text;
         this.date = date;
         this.user = user;
@@ -54,11 +52,11 @@ public class Comment {
         this.id = id;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

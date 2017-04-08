@@ -139,19 +139,19 @@ VALUES
 (8, '2017-03-22 15:00:00', 4, 'marriott.jpg'),
 (9, '2017-03-22 15:00:00', 4, 'marriott2.jpg');
 
-insert into booking (id, begin_date, end_date, state, user_id) values (1, '2017-03-25 12:00:00', '2017-04-25 12:00:00', TRUE, 15);
-insert into booking (id, begin_date, end_date, state, user_id) values (2, '2017-03-18 12:00:00', '2017-04-11 12:00:00', TRUE, 9);
-insert into booking (id, begin_date, end_date, state, user_id) values (3, '2017-03-29 14:00:00', '2017-04-11 11:00:00', TRUE, 3);
-insert into booking (id, begin_date, end_date, state, user_id) values (4, '2017-03-31 02:16:13', '2017-04-13 05:30:55', false, 3);
-insert into booking (id, begin_date, end_date, state, user_id) values (5, '2017-04-05 16:53:12', '2017-04-15 14:04:27', false, 6);
-insert into booking (id, begin_date, end_date, state, user_id) values (6, '2017-04-15 15:43:32', '2017-04-20 21:49:40', false, 8);
-insert into booking (id, begin_date, end_date, state, user_id) values (7, '2017-04-02 20:22:39', '2017-04-12 16:22:16', true, 9);
-insert into booking (id, begin_date, end_date, state, user_id) values (8, '2017-04-12 08:12:25', '2017-04-15 05:40:48', true, 11);
-insert into booking (id, begin_date, end_date, state, user_id) values (9, '2017-04-23 08:48:20', '2017-04-30 10:16:14', false, 4);
-insert into booking (id, begin_date, end_date, state, user_id) values (10, '2017-04-27 01:27:44', '2017-05-07 05:31:19', false, 3);
-insert into booking (id, begin_date, end_date, state, user_id) values (11, '2017-04-19 09:44:00', '2017-04-22 00:10:38', true, 12);
-insert into booking (id, begin_date, end_date, state, user_id) values (12, '2017-04-16 21:35:09', '2017-04-20 10:18:16', true, 13);
-insert into booking (id, begin_date, end_date, state, user_id) values (13, '2017-04-28 20:26:30', '2017-05-01 05:10:56', true, 14);
+insert into booking (id, begin_date, end_date, state, user_id) values (1, '2017-03-25', '2017-04-25', TRUE, 15);
+insert into booking (id, begin_date, end_date, state, user_id) values (2, '2017-03-18', '2017-04-11', TRUE, 9);
+insert into booking (id, begin_date, end_date, state, user_id) values (3, '2017-03-29', '2017-04-11', TRUE, 3);
+insert into booking (id, begin_date, end_date, state, user_id) values (4, '2017-03-31', '2017-04-13', false, 3);
+insert into booking (id, begin_date, end_date, state, user_id) values (5, '2017-04-05', '2017-04-15', false, 6);
+insert into booking (id, begin_date, end_date, state, user_id) values (6, '2017-04-15', '2017-04-20', false, 8);
+insert into booking (id, begin_date, end_date, state, user_id) values (7, '2017-04-02', '2017-04-12', true, 9);
+insert into booking (id, begin_date, end_date, state, user_id) values (8, '2017-04-12', '2017-04-15', true, 11);
+insert into booking (id, begin_date, end_date, state, user_id) values (9, '2017-04-23', '2017-04-30', false, 4);
+insert into booking (id, begin_date, end_date, state, user_id) values (10, '2017-04-27', '2017-05-07', false, 3);
+insert into booking (id, begin_date, end_date, state, user_id) values (11, '2017-04-19', '2017-04-22', true, 12);
+insert into booking (id, begin_date, end_date, state, user_id) values (12, '2017-04-16', '2017-04-20', true, 13);
+insert into booking (id, begin_date, end_date, state, user_id) values (13, '2017-04-28', '2017-05-01', true, 14);
 
 insert into booking_rooms (bookings_id, rooms_id) values (1, 1);
 insert into booking_rooms (bookings_id, rooms_id) values (2, 2);

@@ -44,16 +44,16 @@ public class RoomController {
     @RequestMapping(value = "{id}/rooms/new", method = RequestMethod.GET)
     @AllowedForManageHotel
     public String newRoom(@PathVariable("id") long id, Model model) {
-    	Room rоом = new Room();
+    	Room room = new Room();
     	model.addAttribute("hotel", hotels.findOne(id));
-    	model.addAttribute("room", rоом);
+    	model.addAttribute("room", room);
     	model.addAttribute("roomTypes", roomTypes.findAll());
     	return "rooms/create";
     }
 
     @RequestMapping(value = "{id}/rooms", method = RequestMethod.POST)
     @AllowedForManageHotel
-    public String saveRoom(@PathVariable("id") long id, @ModelAttribute Room room, Model model) {  
+    public String saveRoom(@PathVariable("id") long id, @ModelAttribute Room room) {
     	Hotel hotel = hotels.findOne(id);    	
     	room.setHotel(hotel);    	
     	rooms.save(room);
@@ -94,7 +94,7 @@ public class RoomController {
     @AllowedForManageHotel
     public String removeRoom(@PathVariable("id") long id, @PathVariable("roomId") long roomId, Model model) {
     	Hotel hotel = hotels.findOne(id);
-    	for(Booking booking : rooms.findOne(roomId).getBookings()) {
+    	for (Booking booking : rooms.findOne(roomId).getBookings()) {
     	    bookings.delete(booking);
     	}
     	rooms.delete(roomId);

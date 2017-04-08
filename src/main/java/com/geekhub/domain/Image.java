@@ -1,14 +1,11 @@
 package com.geekhub.domain;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.geekhub.utils.LocalDateTimeConverter;
 
 @Entity
 public class Image {
@@ -17,7 +14,9 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private Date insertionDate;
+    @Convert(converter = LocalDateTimeConverter.class)
+    private LocalDateTime insertionDate;
+
     private String path;
 
     @JsonBackReference
@@ -32,11 +31,11 @@ public class Image {
         this.id = id;
     }
 
-    public Date getInsertionDate() {
+    public LocalDateTime getInsertionDate() {
         return insertionDate;
     }
 
-    public void setInsertionDate(Date insertionDate) {
+    public void setInsertionDate(LocalDateTime insertionDate) {
         this.insertionDate = insertionDate;
     }
 
