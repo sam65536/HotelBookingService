@@ -123,12 +123,12 @@ public class Room implements Comparable<Object> {
     }
 
     public boolean isAvailable(Date beginDate, Date endDate) {
-       for (Date date : this.getReservedDays().keySet()) {
+       for (Date date : getReservedDays().keySet()) {
            if (date.equals(beginDate) || (date.equals(endDate))) {
-               return true;
+               return false;
            }
        }
-       return false;
+       return true;
     }
     @Override
     public int compareTo(Object o) {

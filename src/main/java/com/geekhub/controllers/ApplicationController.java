@@ -29,7 +29,7 @@ public class ApplicationController {
 
    @RequestMapping(value = "/")
    public String root(Model model) {
-       model.addAttribute("hotels", hotels.findAll());
+       model.addAttribute("hotels", cities.findOne((long) 1).getHotels().values());
        model.addAttribute("cities", cities.findAll());
        return "landing-page";
    }

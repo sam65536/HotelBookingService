@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <script th:src="@{|/js/jquery.js|}"></script>
+    <script th:src="@{|/js/pikaday.js|}"></script>
+    <link rel="stylesheet" th:href="@{|/css/pikaday.css|}" />
+</head>
+<body>
+<div th:fragment="searchbar">
+    <form class="navbar-form" role="search" action="/search/rooms" method="get">
+        <div class="form-group">
+            <div class="row-fluid">
+                <label>City:</label>
+                <select id = "cityId" class="form-control" name="cityId">
+                    <option th:each="c : ${cities}"
+                            th:text="${c.name}"
+                            th:value="${c.id}">
+                    </option>
+                </select>
+
+                <label>Hotel:</label>
+                <select id = "hotels" class="form-control span2" name="hotelId">
+                    <option th:each="h : ${hotels}"
+                            th:text="${h.name}"
+                            th:value="${h.id}">
+                    </option>
+                </select>
+
+                <label>Persons:</label>
+                <select id = "persons" class="form-control span3" name="persons">
+                    <option th:text="1" th:value="1"></option>
+                    <option th:text="2" th:value="2"></option>
+                    <option th:text="3" th:value="3"></option>
+                    <option th:text="4" th:value="4"></option>
+                    <option th:text="5" th:value="5"></option>
+                    <option th:text="6" th:value="6"></option>
+                </select>
+
+                <div style="display: inline-block">
+                    <label for="start"><i class='glyphicon glyphicon-calendar'></i> Check-in:</label>
+                    <input type="text" class="form-control" id="start" name="beginDate"/>
+                </div>
+
+                <div style="display: inline-block">
+                    <label for="end"><i class='glyphicon glyphicon-calendar'></i> Check-out:</label>
+                    <input type="text" class="form-control" id="end" name="endDate"/>
+                </div>
+
+            </div>
+        </div>
+        <button class="btn btn-default" type="submit">
+            <span class="glyphicon glyphicon-search"></span>
+        </button>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#cityId').change(function () {
+            var cityId = $("select#cityId").val();
+            $.get('/search/ajax/' + cityId, function (response) {
+                var select = $('#hotels');
+                select.find('option').remove();
+                $.each(response, function (index, value) {
+                    $('<option>').val(index).text(value).appendTo(select);
+                });
+            });
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    var startDate,
+        endDate,
+        updateStartDate = function() {
+            startPicker.setStartRange(startDate);
+            endPicker.setStartRange(startDate);
+            endPicker.setMinDate(startDate);
+        },
+        updateEndDate = function() {
+            startPicker.setEndRange(endDate);
+            startPicker.setMaxDate(endDate);
+            endPicker.setEndRange(endDate);
+        },
+        startPicker = new Pikaday({
+            field: document.getElementById('start'),
+            minDate: new Date(),
+            maxDate: new Date(2020, 12, 31),
+            onSelect: function() {
+                startDate = this.getDate();
+                updateStartDate();
+            }
+        }),
+        endPicker = new Pikaday({
+            field: document.getElementById('end'),
+            minDate: new Date(),
+            maxDate: new Date(2020, 12, 31),
+            onSelect: function() {
+                endDate = this.getDate();
+                updateEndDate();
+            }
+        }),
+        _startDate = startPicker.getDate(),
+        _endDate = endPicker.getDate();
+
+    if (_startDate) {
+        startDate = _startDate;
+        updateStartDate();
+    }
+
+    if (_endDate) {
+        endDate = _endDate;
+        updateEndDate();
+    }
+</script>
+</body>
+</html>

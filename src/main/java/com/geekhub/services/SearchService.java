@@ -1,6 +1,5 @@
 package com.geekhub.services;
 
-import com.geekhub.domain.Hotel;
 import com.geekhub.domain.Room;
 import com.geekhub.repositories.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +18,9 @@ public class SearchService {
         this.rooms = rooms;
     }
 
-    public List<Room> searchAvailableRooms(long hotelId, int persons, Date startDate, Date endDate) {
-        List<Room> result = new ArrayList<>((Collection<? extends Room>) rooms.findAll());
-        result.stream()
+    public List<Room> searchAvailableRooms(Long hotelId, Integer persons, Date startDate, Date endDate) {
+        List<Room> roomsList = new ArrayList<>((Collection<? extends Room>) rooms.findAll());
+        List<Room> result = roomsList.stream()
                 .filter(room -> (room.getHotel().getId() == hotelId))
                 .filter(room -> (room.getCapacity() >= persons))
                 .filter(room -> (room.isAvailable(startDate, endDate)))

@@ -145,8 +145,6 @@ public class Hotel {
 
     @Override
     public String toString() {
-    	return "Id: " + getId() + "\nName: " + getName() + "\nAddress: "
-                + getAddress() + "\nRating: " + getRating() + "\nCategory: "
-                + category.getName() + "\nManager: " + getManager();
+    	return getName();
     }
 }

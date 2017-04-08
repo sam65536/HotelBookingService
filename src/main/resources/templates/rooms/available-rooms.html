@@ -1,22 +1,15 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Hotel List</title>
+    <title>Available rooms</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet" media="screen"/>
 </head>
 <body>
-
 <div th:include="fragments/header"></div>
-
 <div class="container">
-    <div th:include="hotels/show :: hotel-header" class="page-header"></div>
-
-    <div class="container">
-        <h2>Available rooms</h2>
+    <div th:include="fragments/searchbar"></div>
+    <h3>Available rooms</h3>
         <table class="table">
             <thead>
                 <tr>
@@ -27,19 +20,16 @@
                 </tr>
             </thead>
             <tbody>
-            <div th:each="room : ${rooms}">
-            <tr>
-                <td>${room.hotel.name}</td>
-                <td>${room.roomNumber}</td>
-                <td>${room.price + ' €/night'}</td>
-                <td><span
-                        th:each="i : ${#numbers.sequence(1, room.occupancy)}"><i
-                        class="glyphicon glyphicon-user"></i></span></td>
+            <tr th:each="room : ${rooms}">
+                <td><a th:text="${room.hotel.name}" th:href="@{|/hotels/${room.hotel.id}|}"></a></td>
+                <td th:text="${room.roomNumber}"></td>
+                <td th:text="${room.price + ' €/night'}"></td>
+                <td><span th:each="i  : ${#numbers.sequence(1, room.type.occupancy)}">
+                    <i class="glyphicon glyphicon-user"></i></span></td>
+                <td><a th:text="Book" class="btn btn-default" th:href="@{|/bookings/new/${room.hotel.id}/|}"></a></td>
             </tr>
-            </div>
             </tbody>
         </table>
-    </div>
 </div>
 </body>
 </html>

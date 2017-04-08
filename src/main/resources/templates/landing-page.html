@@ -2,20 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>Homepage</title>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
-<script th:src="@{|/js/searchcontroller.js|}"></script>
-<script th:src="@{|/js/jquery.js|}"></script>
-<script th:src="@{|/js/pikaday.js|}"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
 <link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet" media="screen" />
 <link rel="stylesheet" type="text/css" th:href="@{|/css/general.css|}" />
-<link rel="stylesheet" th:href="@{|/css/pikaday.css|}" />
-<style>
-    label {
-        font-family: 'Arial', Arial, serif;
-        font-size: 100%;
-    }
-</style>
 </head>
 <body>
 	<div th:include="fragments/header"></div>
@@ -24,54 +14,11 @@
 			<h1>Welcome to Booking</h1>
 		</div>
 
-        <div class="searchbar">
-            <form ng-controller="searchCtrl" class="navbar-form" role="search" action="#search" method="get">
-				<div class="form-group">
-					<div class="row-fluid">
-                        <label>City:</label>
-                        <select id = "cityId" class="form-control">
-                            <option th:each="c : ${cities}"
-                                th:text="${c.name}"
-                                th:value="${c.id}">
-                            </option>
-                        </select>
+        <div th:include="fragments/searchbar"></div>
 
-                        <label>Hotel:</label>
-                        <select id = "hotels" class="form-control span2">
-                            <option>Hotel</option>
-                        </select>
+        <hr/>
 
-                        <label>Persons:</label>
-                        <select id = "persons" class="form-control span3">
-                            <option th:text="1"></option>
-                            <option th:text="2"></option>
-                            <option th:text="3"></option>
-                            <option th:text="4"></option>
-                            <option th:text="5"></option>
-                            <option th:text="6"></option>
-                        </select>
-
-                        <div style="display: inline-block">
-                            <label for="start"><i class='glyphicon glyphicon-calendar'></i> Check-in:</label>
-                            <input type="text" class="form-control" id="start"/>
-                        </div>
-
-                        <div style="display: inline-block">
-                            <label for="end"><i class='glyphicon glyphicon-calendar'></i> Check-out:</label>
-                            <input type="text" class="form-control" id="end"/>
-                        </div>
-
-                    </div>
-				</div>
-				<button id="search" type="submit" class="btn btn-default" >
-					<span class="glyphicon glyphicon-search"></span>
-				</button>
-			</form>
-		</div>
-		
-		<hr/>
-
-		<div id="main">
+		<div>
 			<div class="col-md-4" th:each="hotel, hstat : ${hotels}"
 				th:unless="${hstat.index > 2}">
 				<h3 align="center">
@@ -90,71 +37,8 @@
 				<br>
 				<div class="text-center">
 					<a class="seehotel btn btn-default" th:href="@{|/hotels/${hotel.id}|}">See more info</a>
-				</div>
-			</div>
+				</div></div>
 		</div>
 	</div>
-    <script>
-        $(document).ready(function() {
-
-            $('#cityId').change(function(event) {
-                var cityId = $("select#cityId").val();
-                $.get('/ajax/' + cityId, function(response) {
-
-                    var select = $('#hotels');
-                    select.find('option').remove();
-                    $.each(response, function(index, value) {
-                        $('<option>').val(value).text(value).appendTo(select);
-                    });
-                });
-            });
-        });
-    </script>
-
-    <script type="text/javascript">
-        var startDate,
-            endDate,
-            updateStartDate = function() {
-                startPicker.setStartRange(startDate);
-                endPicker.setStartRange(startDate);
-                endPicker.setMinDate(startDate);
-            },
-            updateEndDate = function() {
-                startPicker.setEndRange(endDate);
-                startPicker.setMaxDate(endDate);
-                endPicker.setEndRange(endDate);
-            },
-            startPicker = new Pikaday({
-                field: document.getElementById('start'),
-                minDate: new Date(),
-                maxDate: new Date(2020, 12, 31),
-                onSelect: function() {
-                    startDate = this.getDate();
-                    updateStartDate();
-                }
-            }),
-            endPicker = new Pikaday({
-                field: document.getElementById('end'),
-                minDate: new Date(),
-                maxDate: new Date(2020, 12, 31),
-                onSelect: function() {
-                    endDate = this.getDate();
-                    updateEndDate();
-                }
-            }),
-            _startDate = startPicker.getDate(),
-            _endDate = endPicker.getDate();
-
-        if (_startDate) {
-            startDate = _startDate;
-            updateStartDate();
-        }
-
-        if (_endDate) {
-            endDate = _endDate;
-            updateEndDate();
-        }
-    </script>
 </body>
 </html>
-
