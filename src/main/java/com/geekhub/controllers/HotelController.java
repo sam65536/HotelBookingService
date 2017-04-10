@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.geekhub.repositories.*;
+import com.geekhub.repositories.City.CityRepository;
 import com.geekhub.services.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
