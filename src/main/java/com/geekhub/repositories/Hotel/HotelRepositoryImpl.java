@@ -1,6 +1,10 @@
 package com.geekhub.repositories.Hotel;
 
 import com.geekhub.domain.*;
+import com.geekhub.repositories.Category.CategoryRowMapper;
+import com.geekhub.repositories.Comment.CommentRowMapper;
+import com.geekhub.repositories.Image.ImageRowMapper;
+import com.geekhub.repositories.Room.RoomRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -29,13 +33,7 @@ public class HotelRepositoryImpl implements HotelRepository {
         List<Hotel> hotels = this.jdbcTemplate.query(sql, new HotelRowMapper());
         for (Hotel hotel : hotels) {
             List<Image> images = this.jdbcTemplate.query(
-                    "SELECT image.id, image.path FROM image WHERE image.hotel_id=" + hotel.getId(),
-                    (rs, rowNum) -> {
-                        Image image = new Image();
-                        image.setId(rs.getLong("id"));
-                        image.setPath(rs.getString("path"));
-                        return image;
-                    });
+                    "SELECT image.id, image.insertion_date, image.path FROM image WHERE image.hotel_id=" + hotel.getId(), new ImageRowMapper());
             Map<Long, Image> imagesMap = images.stream().collect(
                     Collectors.toMap(image -> image.getId(), image -> image));
             hotel.setImages(imagesMap);
@@ -49,43 +47,21 @@ public class HotelRepositoryImpl implements HotelRepository {
         List<Hotel> hotels = this.jdbcTemplate.query(sql, new HotelRowMapper());
 
         List<Room> rooms = this.jdbcTemplate.query(
-                "SELECT room.id, room.floor, room.price, room.room_number FROM room WHERE room.hotel_id=" + id,
-                (rs, rowNum) -> {
-                    Room room = new Room();
-                    room.setId(rs.getLong("id"));
-                    room.setFloor(rs.getInt("floor"));
-                    room.setPrice(rs.getInt("price"));
-                    room.setRoomNumber(rs.getString("room_number"));
-                    return room;
-                });
+                "SELECT room.id, room.floor, room.price, room.room_number FROM room " +
+                        "WHERE room.hotel_id=" + id, new RoomRowMapper());
         Map<Long, Room> roomsMap = rooms.stream().collect(
                 Collectors.toMap(room -> room.getId(), room -> room));
         hotels.get(0).setRooms(roomsMap);
 
         List<Comment> comments = this.jdbcTemplate.query(
                 "SELECT comment.id, comment.date, comment.is_answer, comment.status, comment.text" +
-                        " FROM comment WHERE comment.hotel_id=" + id,
-                (rs, rowNum) -> {
-                    Comment comment = new Comment();
-                    comment.setId(rs.getLong("id"));
-                    comment.setDate(rs.getTimestamp("date").toLocalDateTime());
-                    comment.setAnswer(rs.getBoolean("is_answer"));
-                    comment.setStatus(rs.getBoolean("status"));
-                    comment.setText(rs.getString("text"));
-                    return comment;
-                });
+                        " FROM comment WHERE comment.hotel_id=" + id, new CommentRowMapper());
         Map<Long, Comment>commentsMap = comments.stream().collect(
                 Collectors.toMap(image -> image.getId(), image -> image));
         hotels.get(0).setComments(commentsMap);
 
         List<Image> images = this.jdbcTemplate.query(
-                "SELECT image.id, image.path FROM image WHERE image.hotel_id=" + id,
-                (rs, rowNum) -> {
-                    Image image = new Image();
-                    image.setId(rs.getLong("id"));
-                    image.setPath(rs.getString("path"));
-                    return image;
-                });
+                "SELECT image.id, image.path FROM image WHERE image.hotel_id=" + id, new ImageRowMapper());
         Map<Long, Image> imagesMap = images.stream().collect(
                 Collectors.toMap(image -> image.getId(), image -> image));
         hotels.get(0).setImages(imagesMap);
@@ -93,13 +69,7 @@ public class HotelRepositoryImpl implements HotelRepository {
         List<Category> categories = this.jdbcTemplate.query(
                 "SELECT hotel.category_id, category.name FROM hotel\n" +
                         "LEFT JOIN category ON category.id=hotel.category_id\n" +
-                        "WHERE hotel.id=" + id,
-                (rs, rowNum) -> {
-                    Category category = new Category();
-                    category.setId(rs.getLong("category_id"));
-                    category.setName(rs.getString("name"));
-                    return category;
-                });
+                        "WHERE hotel.id=" + id, new CategoryRowMapper());
         hotels.get(0).setCategory(categories.get(0));
 
         List<City> cities = this.jdbcTemplate.query(

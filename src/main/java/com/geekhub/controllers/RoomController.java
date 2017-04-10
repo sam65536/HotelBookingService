@@ -7,7 +7,10 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.geekhub.repositories.Booking.BookingRepository;
 import com.geekhub.repositories.Hotel.HotelRepository;
+import com.geekhub.repositories.Room.RoomRepository;
+import com.geekhub.repositories.RoomType.RoomTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,9 +22,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.geekhub.domain.Booking;
 import com.geekhub.domain.Hotel;
 import com.geekhub.domain.Room;
-import com.geekhub.repositories.BookingRepository;
-import com.geekhub.repositories.RoomRepository;
-import com.geekhub.repositories.RoomTypeRepository;
 import com.geekhub.security.AllowedForManageHotel;
 
 @Controller
@@ -95,7 +95,7 @@ public class RoomController {
     public String removeRoom(@PathVariable("id") long id, @PathVariable("roomId") long roomId, Model model) {
     	Hotel hotel = hotels.findOne(id);
     	for (Booking booking : rooms.findOne(roomId).getBookings()) {
-    	    bookings.delete(booking);
+    	    bookings.delete(booking.getId());
     	}
     	rooms.delete(roomId);
     	model.addAttribute("hotel", hotel);

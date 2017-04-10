@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.geekhub.repositories.Authority.AuthorityRepository;
+import com.geekhub.repositories.Booking.BookingRepository;
+import com.geekhub.repositories.User.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,8 +24,6 @@ import com.geekhub.domain.Booking;
 import com.geekhub.domain.CustomUserDetail;
 import com.geekhub.services.CustomUserDetailsService;
 import com.geekhub.domain.User;
-import com.geekhub.repositories.BookingRepository;
-import com.geekhub.repositories.UserRepository;
 import com.geekhub.security.AllowedForAdmin;
 import com.geekhub.security.AllowedForManageUser;
 import com.geekhub.security.SecurityConfig;
@@ -119,18 +119,18 @@ public class UserController {
 
     @RequestMapping(value = "{id}/remove", method = RequestMethod.GET)
     @AllowedForManageUser
-    public String remove(@PathVariable("id") long id, Model model) {
+    public String remove(@PathVariable("id") Long id, Model model) {
         User user = users.findOne(id);
         if (user == null) {
             throw new UserNotFoundException();
         }
-        users.delete(user);
+        users.delete(user.getId());
         model.addAttribute("users", users.findAll());
         return "users/index";
 	}
 
     @RequestMapping(value = "{id}/edit", method = RequestMethod.GET)
-    public String edit(@PathVariable("id") long id, Model model) {
+    public String edit(@PathVariable("id") Long id, Model model) {
         User user = users.findOne(id);
         model.addAttribute("user", user);
         model.addAttribute("authorities", authorities.findAll());
@@ -138,7 +138,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
-    public String edit(@PathVariable("id") long id, @ModelAttribute User user, Model model) {
+    public String edit(@PathVariable("id") Long id, @ModelAttribute User user, Model model) {
         users.save(user);
         model.addAttribute("user", user);
         return "redirect:/admin";

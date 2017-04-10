@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.geekhub.utils.LocalDateTimeConverter;
 
 @Entity
 public class Comment {
@@ -14,9 +13,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime date;
-
     private boolean isAnswer;
     private boolean status;
     private String text;

@@ -8,7 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.geekhub.repositories.Booking.BookingRepository;
 import com.geekhub.repositories.Hotel.HotelRepository;
+import com.geekhub.repositories.RoomType.RoomTypeRepository;
+import com.geekhub.repositories.User.UserRepository;
 import com.geekhub.services.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -28,9 +31,6 @@ import com.geekhub.domain.Hotel;
 import com.geekhub.domain.Room;
 import com.geekhub.domain.RoomType;
 import com.geekhub.domain.User;
-import com.geekhub.repositories.BookingRepository;
-import com.geekhub.repositories.RoomTypeRepository;
-import com.geekhub.repositories.UserRepository;
 import com.geekhub.security.AllowedForApprovingBookings;
 import com.geekhub.security.AllowedForHotelManager;
 import com.geekhub.security.AllowedForRemovingBookings;
@@ -185,7 +185,7 @@ public class BookingController {
             }
             room.setReservedDays(daysReserved);
         }
-        bookings.delete(booking);
+        bookings.delete(booking.getId());
         CustomUserDetail principal = (authentication != null) ? (CustomUserDetail) authentication.getPrincipal() : null;
         if (principal != null) {
             String authority = (principal.getAuthorities().iterator().next()).getAuthority();

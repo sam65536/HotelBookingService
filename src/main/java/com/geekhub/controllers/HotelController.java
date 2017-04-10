@@ -8,8 +8,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.geekhub.repositories.*;
+import com.geekhub.repositories.Booking.BookingRepository;
+import com.geekhub.repositories.Category.CategoryRepository;
 import com.geekhub.repositories.City.CityRepository;
+import com.geekhub.repositories.Comment.CommentRepository;
 import com.geekhub.repositories.Hotel.HotelRepository;
+import com.geekhub.repositories.Image.ImageRepository;
+import com.geekhub.repositories.RoomType.RoomTypeRepository;
+import com.geekhub.repositories.User.UserRepository;
 import com.geekhub.services.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -146,7 +152,7 @@ public class HotelController {
     public String remove(@PathVariable("id") long id, Model model) {
         for (Room room : hotels.findOne(id).getRooms().values()) {
             for(Booking booking : room.getBookings()) {
-                bookings.delete(booking);
+                bookings.delete(booking.getId());
             }
         }
         hotels.delete(id);
@@ -197,7 +203,7 @@ public class HotelController {
     @AllowedForManageHotel
     public String deleteImage(@PathVariable("id") long id, @PathVariable("imageId") long imageId, Model model) {
         Image image = images.findOne(imageId);
-        images.delete(image);
+        images.delete(image.getId());
         return "redirect:/hotels/{id}/upload";
     }
 

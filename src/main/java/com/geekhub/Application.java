@@ -3,16 +3,15 @@ package com.geekhub;
 import com.geekhub.domain.Booking;
 import com.geekhub.domain.Room;
 import com.geekhub.domain.User;
+import com.geekhub.repositories.Booking.BookingRepository;
+import com.geekhub.repositories.Room.RoomRepository;
+import com.geekhub.repositories.User.UserRepository;
 import com.geekhub.security.SecurityConfig;
 import com.geekhub.services.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import com.geekhub.repositories.BookingRepository;
-import com.geekhub.repositories.RoomRepository;
-import com.geekhub.repositories.UserRepository;
 
 import java.time.LocalDate;
 import java.util.*;

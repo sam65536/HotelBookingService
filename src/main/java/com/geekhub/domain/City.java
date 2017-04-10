@@ -1,7 +1,5 @@
 package com.geekhub.domain;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import javax.persistence.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,11 +9,10 @@ public class City {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     private String name;
 
-    @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "city", orphanRemoval = true)
     private Map<Long, Hotel> hotels = new HashMap<>();
 

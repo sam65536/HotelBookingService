@@ -9,13 +9,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 public class Hotel {
@@ -29,7 +26,6 @@ public class Hotel {
     private int rating;
     private boolean status;
 
-    @JsonBackReference
     @ManyToOne
     private City city;
 
@@ -42,17 +38,14 @@ public class Hotel {
     
     @JsonBackReference
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "hotel", orphanRemoval = true)
-    @MapKeyColumn(name = "id")
     private Map<Long, Room> rooms = new HashMap<>();
 
     @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "hotel", orphanRemoval = true)
-    @MapKeyColumn(name = "id")
     private Map<Long, Comment> comments = new HashMap<>();
 
     @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "hotel", orphanRemoval = true)
-    @MapKeyColumn(name = "id")
     private Map<Long, Image> images = new HashMap<>();
  
     public long getId() {

@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.geekhub.utils.LocalDateTimeConverter;
 
 @Entity
 public class Image {
@@ -14,9 +13,7 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime insertionDate;
-
     private String path;
 
     @JsonBackReference

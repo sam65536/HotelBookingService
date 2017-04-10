@@ -6,25 +6,17 @@ import java.util.Set;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.geekhub.utils.LocalDateConverter;
 
 @Entity
 public class Booking {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
-    @Convert(converter = LocalDateConverter.class)
-    @JsonFormat(pattern = "YYYY-MM-DD")
     private LocalDate beginDate;
-
-    @Convert(converter = LocalDateConverter.class)
-    @JsonFormat(pattern = "YYYY-MM-DD")
     private LocalDate endDate;
-
     private boolean state;
 
     @ManyToOne
@@ -53,11 +45,11 @@ public class Booking {
         return rooms.stream().findAny().get().getType();
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
