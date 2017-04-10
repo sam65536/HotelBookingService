@@ -8,22 +8,18 @@ import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-@Entity
 public class Booking {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     private Long id;
 
     private LocalDate beginDate;
     private LocalDate endDate;
     private boolean state;
 
-    @ManyToOne
+
     private User user;
 
-    @JsonManagedReference
-    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Room> rooms = new HashSet<>();
 
     public Booking() {

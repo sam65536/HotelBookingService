@@ -1,19 +1,14 @@
 package com.geekhub.domain;
 
-import javax.persistence.*;
 import java.util.HashMap;
 import java.util.Map;
 
-@Entity
 public class City {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "city", orphanRemoval = true)
     private Map<Long, Hotel> hotels = new HashMap<>();
 
     public long getId() {

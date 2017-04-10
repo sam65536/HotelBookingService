@@ -2,23 +2,20 @@ package com.geekhub.domain;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-@Entity
 public class Image {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
-
+    private Long id;
     private LocalDateTime insertionDate;
     private String path;
 
     @JsonBackReference
-    @ManyToOne
     private Hotel hotel;
+
+    public Image(String path) {
+        this.path = path;
+    }
 
     public long getId() {
         return id;

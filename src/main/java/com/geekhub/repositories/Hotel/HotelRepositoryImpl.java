@@ -13,6 +13,8 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -56,7 +58,7 @@ public class HotelRepositoryImpl implements HotelRepository {
         List<Comment> comments = this.jdbcTemplate.query(
                 "SELECT comment.id, comment.date, comment.is_answer, comment.status, comment.text" +
                         " FROM comment WHERE comment.hotel_id=" + id, new CommentRowMapper());
-        Map<Long, Comment>commentsMap = comments.stream().collect(
+        Map<Long, Comment> commentsMap = comments.stream().collect(
                 Collectors.toMap(image -> image.getId(), image -> image));
         hotels.get(0).setComments(commentsMap);
 

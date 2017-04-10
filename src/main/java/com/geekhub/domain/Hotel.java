@@ -3,49 +3,29 @@ package com.geekhub.domain;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-@Entity
 public class Hotel {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
-
+    private Long id;
     private String address;
     private String name;
     private int rating;
     private boolean status;
-
-    @ManyToOne
     private City city;
-
-    @ManyToOne
     private Category category;
     
     @JsonBackReference
-    @ManyToOne
     private User manager;
     
     @JsonBackReference
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "hotel", orphanRemoval = true)
     private Map<Long, Room> rooms = new HashMap<>();
 
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "hotel", orphanRemoval = true)
     private Map<Long, Comment> comments = new HashMap<>();
 
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "hotel", orphanRemoval = true)
     private Map<Long, Image> images = new HashMap<>();
  
     public long getId() {

@@ -1,50 +1,32 @@
 package com.geekhub.domain;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-@Entity
 public class Room implements Comparable<Object> {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-	
     private int floor;
     private int price;
     private String roomNumber;
 
     @JsonManagedReference
-    @ManyToOne
     private Hotel hotel;
 
     @JsonManagedReference
-    @ManyToOne
     private RoomType type;
-	
-    @ElementCollection
+
     private Map<LocalDate, Long> reservedDays = new HashMap<>();
 
     @JsonBackReference
-    @ManyToMany(mappedBy = "rooms")
     private Set<Booking> bookings = new HashSet<>();
 
     public Room() {

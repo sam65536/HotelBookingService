@@ -2,31 +2,21 @@ package com.geekhub.domain;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-@Entity
 public class Comment {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
-
+    private Long id;
     private LocalDateTime date;
     private boolean isAnswer;
     private boolean status;
     private String text;
-
-    @OneToOne
     private Comment reply;
 		
     @JsonBackReference
-    @ManyToOne
     private Hotel hotel;
 	
     @JsonBackReference
-    @ManyToOne
     private User user;
 
     public Comment() {

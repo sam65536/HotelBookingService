@@ -20,21 +20,21 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> findAll() {
-        String sql = "SELECT id, email, name, password, username FROM user";
+        String sql = "SELECT id, email, name, password, username FROM \"user\"";
         List<User> users = this.jdbcTemplate.query(sql, new UserRowMapper());
         return users;
     }
 
     @Override
     public User findOne(Long id) {
-        String sql = "SELECT id, email, name, password, username FROM user WHERE id=" + id;
+        String sql = "SELECT id, email, name, password, username FROM \"user\" WHERE id=" + id;
         List<User> users = this.jdbcTemplate.query(sql, new UserRowMapper());
         return users.get(0);
     }
 
     @Override
     public User findByUsername(String username) {
-        String sql = "SELECT id, email, name, password, username FROM user WHERE username=" + username;
+        String sql = "SELECT id, email, name, password, username FROM \"user\" WHERE username=" + username;
         List<User> users = this.jdbcTemplate.query(sql, new UserRowMapper());
         return users.get(0);
     }
@@ -42,13 +42,13 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public void save(User user) {
         if (user.getId() == null) {
-            String sql = "INSERT INTO user" + "(id, email, name, password, username) " +
+            String sql = "INSERT INTO \"user\"" + "(id, email, name, password, username) " +
                     "VALUES (?, ?, ?, ?, ?)";
             this.jdbcTemplate.update(sql, new Object[]{user.getId(), user.getEmail(), user.getName(),
                             user.getPassword(), user.getUsername()});
         }
         else {
-            String sql = "UPDATE user SET email = ?, name = ?, password = ?, username = ? " +
+            String sql = "UPDATE \"user\" SET email = ?, name = ?, password = ?, username = ? " +
                     "WHERE id = " + user.getId();
             this.jdbcTemplate.update(sql, new Object[]{user.getEmail(), user.getName(),
                             user.getPassword(), user.getUsername()});
@@ -57,7 +57,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void delete(Long id) {
-        String sql = "DELETE FROM user WHERE id=" + id;
+        String sql = "DELETE FROM \"user\" WHERE id=" + id;
         this.jdbcTemplate.update(sql);
     }
 }
