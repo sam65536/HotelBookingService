@@ -2,6 +2,7 @@ package com.geekhub.controllers;
 
 import java.time.LocalDateTime;
 
+import com.geekhub.repositories.Hotel.HotelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,7 +18,6 @@ import com.geekhub.domain.CustomUserDetail;
 import com.geekhub.domain.Hotel;
 import com.geekhub.domain.User;
 import com.geekhub.repositories.CommentRepository;
-import com.geekhub.repositories.HotelRepository;
 import com.geekhub.repositories.UserRepository;
 import com.geekhub.security.AllowedForApprovedComments;
 import com.geekhub.security.AllowedForCommentModerator;

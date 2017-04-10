@@ -1,6 +1,7 @@
 package com.geekhub.controllers;
 
 import com.geekhub.repositories.City.CityRepository;
+import com.geekhub.repositories.Hotel.HotelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -8,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.geekhub.domain.CustomUserDetail;
-import com.geekhub.repositories.HotelRepository;
 import com.geekhub.repositories.UserRepository;
 import com.geekhub.security.AllowedForAdmin;
 import com.geekhub.security.AllowedForCommentModerator;
@@ -29,7 +29,7 @@ public class ApplicationController {
 
    @RequestMapping(value = "/")
    public String root(Model model) {
-       model.addAttribute("hotels", cities.findOne((long) 1).getHotels().values());
+       model.addAttribute("hotels", hotels.findAll());
        model.addAttribute("cities", cities.findAll());
        return "landing-page";
    }

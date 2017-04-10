@@ -3,6 +3,7 @@ package com.geekhub.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.geekhub.repositories.Authority.AuthorityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +22,6 @@ import com.geekhub.domain.Booking;
 import com.geekhub.domain.CustomUserDetail;
 import com.geekhub.services.CustomUserDetailsService;
 import com.geekhub.domain.User;
-import com.geekhub.repositories.AuthorityRepository;
 import com.geekhub.repositories.BookingRepository;
 import com.geekhub.repositories.UserRepository;
 import com.geekhub.security.AllowedForAdmin;

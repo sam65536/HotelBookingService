@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.geekhub.repositories.Hotel.HotelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +20,6 @@ import com.geekhub.domain.Booking;
 import com.geekhub.domain.Hotel;
 import com.geekhub.domain.Room;
 import com.geekhub.repositories.BookingRepository;
-import com.geekhub.repositories.HotelRepository;
 import com.geekhub.repositories.RoomRepository;
 import com.geekhub.repositories.RoomTypeRepository;
 import com.geekhub.security.AllowedForManageHotel;

@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.geekhub.repositories.*;
 import com.geekhub.repositories.City.CityRepository;
+import com.geekhub.repositories.Hotel.HotelRepository;
 import com.geekhub.services.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -148,7 +149,7 @@ public class HotelController {
                 bookings.delete(booking);
             }
         }
-        hotels.delete(hotels.findOne(id));
+        hotels.delete(id);
         return "redirect:/hotels";
     }
 	

@@ -1,5 +1,6 @@
 package com.geekhub.security;
 
+import com.geekhub.repositories.Hotel.HotelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +11,6 @@ import com.geekhub.domain.Hotel;
 import com.geekhub.domain.User;
 import com.geekhub.repositories.BookingRepository;
 import com.geekhub.repositories.CommentRepository;
-import com.geekhub.repositories.HotelRepository;
 import com.geekhub.repositories.UserRepository;
 
 @Component("mySecurityService")

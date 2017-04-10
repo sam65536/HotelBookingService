@@ -41,17 +41,17 @@ public class Hotel {
     private User manager;
     
     @JsonBackReference
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "hotel", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "hotel", orphanRemoval = true)
     @MapKeyColumn(name = "id")
     private Map<Long, Room> rooms = new HashMap<>();
 
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "hotel", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "hotel", orphanRemoval = true)
     @MapKeyColumn(name = "id")
     private Map<Long, Comment> comments = new HashMap<>();
 
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "hotel", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "hotel", orphanRemoval = true)
     @MapKeyColumn(name = "id")
     private Map<Long, Image> images = new HashMap<>();
  

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.geekhub.repositories.Hotel.HotelRepository;
 import com.geekhub.services.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -28,7 +29,6 @@ import com.geekhub.domain.Room;
 import com.geekhub.domain.RoomType;
 import com.geekhub.domain.User;
 import com.geekhub.repositories.BookingRepository;
-import com.geekhub.repositories.HotelRepository;
 import com.geekhub.repositories.RoomTypeRepository;
 import com.geekhub.repositories.UserRepository;
 import com.geekhub.security.AllowedForApprovingBookings;

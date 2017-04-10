@@ -17,7 +17,6 @@ public class City {
 
     @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "city", orphanRemoval = true)
-    @MapKeyColumn(name = "id")
     private Map<Long, Hotel> hotels = new HashMap<>();
 
     public long getId() {
