@@ -49,9 +49,9 @@
 				</tr>
 			</thead>
 			<tr th:each="room : ${rooms}">
-				<td><a th:href="@{|/hotels/${room.hotelId.id}|}" th:text="${room.hotelId.name}"></a></td>
+				<td><a th:href="@{|/hotels/${room.hotel.id}|}" th:text="${room.hotel.name}"></a></td>
 				<td><span th:text="${room.price}"></span> x <span th:text="${numberRooms}"></span></td>
-				<td><a th:text="Book" class="btn btn-default" th:href="@{|/bookings/new/${room.hotelId.id}/|}"></a></td>
+				<td><a th:text="Book" class="btn btn-default" th:href="@{|/bookings/new/${room.hotel.id}/|}"></a></td>
 			</tr>
 		</table>		
 	</div>

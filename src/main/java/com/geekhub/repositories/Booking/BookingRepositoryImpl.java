@@ -26,7 +26,7 @@ public class BookingRepositoryImpl implements BookingRepository {
     }
 
     @Override
-    public Booking findOne(Long id) {
+    public Booking findOne(long id) {
         String sql = "SELECT id, begin_date, end_date, state FROM booking WHERE id=" + id;
         List<Booking> bookings = this.jdbcTemplate.query(sql, new BookingRowMapper());
         return bookings.get(0);
@@ -50,7 +50,7 @@ public class BookingRepositoryImpl implements BookingRepository {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(long id) {
         String sql = "DELETE FROM booking WHERE id=" + id;
         this.jdbcTemplate.update(sql);
     }

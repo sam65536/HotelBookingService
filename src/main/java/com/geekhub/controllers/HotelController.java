@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.geekhub.repositories.Booking.BookingRepository;
@@ -13,6 +14,7 @@ import com.geekhub.repositories.City.CityRepository;
 import com.geekhub.repositories.Comment.CommentRepository;
 import com.geekhub.repositories.Hotel.HotelRepository;
 import com.geekhub.repositories.Image.ImageRepository;
+import com.geekhub.repositories.Room.RoomRepository;
 import com.geekhub.repositories.RoomType.RoomTypeRepository;
 import com.geekhub.repositories.User.UserRepository;
 import com.geekhub.services.HotelService;
@@ -44,6 +46,7 @@ public class HotelController {
 
     private final HotelRepository hotels;
     private final CategoryRepository categories;
+    private final RoomRepository rooms;
     private final RoomTypeRepository roomTypes;
     private final UserRepository users;
     private final ImageRepository images;
@@ -53,11 +56,12 @@ public class HotelController {
     private final HotelService hotelService;
 
     @Autowired
-    public HotelController(HotelRepository hotels, CategoryRepository categories, RoomTypeRepository roomTypes,
+    public HotelController(HotelRepository hotels, CategoryRepository categories, RoomRepository rooms, RoomTypeRepository roomTypes,
                            UserRepository users, ImageRepository images, CommentRepository comments,
                            BookingRepository bookings, CityRepository cities, HotelService hotelService) {
         this.hotels = hotels;
         this.categories = categories;
+        this.rooms = rooms;
         this.roomTypes = roomTypes;
         this.users = users;
         this.images = images;
@@ -102,17 +106,18 @@ public class HotelController {
         if (hotel == null) {
            throw new HotelNotFoundException();
         }
-        Iterable<Comment> hotelComments = comments.getComments(id);
+        List<Comment> hotelComments = comments.getCommentsOfHotel(id);
         model.addAttribute("booking", new Booking());
         model.addAttribute("comments", hotelComments);
-        model.addAttribute("hotel", hotel );
+        model.addAttribute("hotel", hotel);
         model.addAttribute("reply", new Comment());
         model.addAttribute("users", users.findAll());
         model.addAttribute("roomTypes", roomTypes.findAll());
-        Map<Long, Room> rommsMap = hotel.getRooms();
-        Map<RoomType, Room> roomsTypeMap= new HashMap<>();
-        for (Room room : rommsMap.values()) {
-            roomsTypeMap.put(room.getType(), room);
+        Map<RoomType, Room> roomsTypeMap = new HashMap<>();
+        for (Room room : rooms.findAll()) {
+            if (room.getHotel().getId() == id) {
+                roomsTypeMap.put(room.getType(), room);
+            }
         }
         model.addAttribute("hotelRoomTypes", roomsTypeMap);
         return "hotels/show";

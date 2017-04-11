@@ -5,8 +5,8 @@ import com.geekhub.domain.entities.Booking;
 import java.util.List;
 
 public interface BookingRepository {
-    public List<Booking> findAll();
-    public Booking findOne(Long id);
-    public void save (Booking booking);
-    public void delete (Long id);
+    List<Booking> findAll();
+    Booking findOne(long id);
+    void save(Booking booking);
+    void delete(long id);
 }

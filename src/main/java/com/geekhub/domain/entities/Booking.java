@@ -18,6 +18,6 @@ public class Booking {
     private Set<Room> rooms = new HashSet<>();
 
     public Hotel getHotel() {
-        return new Hotel();
+        return rooms.iterator().next().getHotel();
     }
 }

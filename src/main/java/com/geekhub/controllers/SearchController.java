@@ -36,7 +36,7 @@ public class SearchController {
 
     @RequestMapping(value = "/json", method = RequestMethod.GET, produces = {"application/json"})
     public @ResponseBody List<Room> searchAvailableRooms (
-                                            @RequestParam("hotelId") Long hotelId,
+                                            @RequestParam("hotel") Long hotelId,
                                             @RequestParam("persons") Integer persons,
                                             @RequestParam("beginDate") LocalDate beginDate,
                                             @RequestParam("endDate") LocalDate endDate) {

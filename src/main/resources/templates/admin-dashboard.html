@@ -127,49 +127,49 @@ table tr th {
 					</div>
 					<div class="tab-pane" id="tab_default_2">
 						<div class="col-md-6">
-							<div th:each="hotelId : ${hotels.?[status]}"
+							<div th:each="hotel : ${hotels.?[status]}"
 								class="panel panel-success">
 								<div class="panel-heading">
 									<h3 class="panel-title">
-										<span th:text="${hotelId.name}"></span><small></small><span
-											class="pull-right" th:text="${hotelId.manager.name}"></span>
+										<span th:text="${hotel.name}"></span><small></small><span
+											class="pull-right" th:text="${hotel.manager.name}"></span>
 									</h3>
 								</div>
 								<div class="panel-body">
 									<p>
-										<span th:each="i : ${#numbers.sequence(1, hotelId.rating)}"><i
+										<span th:each="i : ${#numbers.sequence(1, hotel.rating)}"><i
 											class="glyphicon glyphicon-star"></i></span>
 									</p>
-									<p th:text="${hotelId.address}"></p>
+									<p th:text="${hotel.address}"></p>
 									<p>
 										<a class="pull-right"
-											th:href="@{|/hotels/${hotelId.id}/remove|}"><i
+											th:href="@{|/hotels/${hotel.id}/remove|}"><i
 											class="glyphicon glyphicon-trash"></i></a>
 									</p>
 								</div>
 							</div>
 						</div>
 						<div class="col-md-6">
-						<div th:each="hotelId : ${hotels.?[!status]}"
+						<div th:each="hotel : ${hotels.?[!status]}"
 								class="panel panel-warning">
 								 <div class="panel-heading">
 									<h3 class="panel-title">
-										<span th:text="${hotelId.name}"></span><small></small><span
-											class="pull-right" th:text="${hotelId.manager.name}"></span>
+										<span th:text="${hotel.name}"></span><small></small><span
+											class="pull-right" th:text="${hotel.manager.name}"></span>
 									</h3>
 								</div>
 								<div class="panel-body">
 									<p>
-										<span th:each="i : ${#numbers.sequence(1, hotelId.rating)}"><i
+										<span th:each="i : ${#numbers.sequence(1, hotel.rating)}"><i
 											class="glyphicon glyphicon-star"></i></span>
 									</p>
-									<p th:text="${hotelId.address}"></p>
+									<p th:text="${hotel.address}"></p>
 									<p>
 									<a
-											th:href="@{|/hotels/${hotelId.id}/approve|}"><i
+											th:href="@{|/hotels/${hotel.id}/approve|}"><i
 											class="glyphicon glyphicon-ok"></i></a>
 										<a class="pull-right"
-											th:href="@{|/hotels/${hotelId.id}/remove|}"><i
+											th:href="@{|/hotels/${hotel.id}/remove|}"><i
 											class="glyphicon glyphicon-trash"></i></a>
 									</p>
 								</div>

@@ -19,7 +19,7 @@ public class Room implements Comparable<Object> {
     private int price;
     private String roomNumber;
     private RoomType type;
-    private long hotelId;
+    private Hotel hotel;
 
     private Map<LocalDate, Long> reservedDays = new HashMap<>();
     private Set<Booking> bookings = new HashSet<>();

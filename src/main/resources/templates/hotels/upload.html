@@ -8,10 +8,10 @@
 <body>
 	<div th:include="fragments/header"></div>
 	<div class="container">
-		<div class="page-header"><h1>Manage hotelId photos</h1></div>
+		<div class="page-header"><h1>Manage hotel photos</h1></div>
 		
 		<h4>Add photos</h4>
-	    <form method="post" enctype="multipart/form-data" th:action="@{|/hotels/${hotelId.id}/upload/|}">
+	    <form method="post" enctype="multipart/form-data" th:action="@{|/hotels/${hotel.id}/upload/|}">
 			<label>File to upload:</label><input type="file" name="files" multiple accept="image/*"><br />
 			<p><input class="btn btn-primary" type="submit" value="Upload"></p>
 		</form>
@@ -20,12 +20,12 @@
 		
 		<h4>Remove photos</h4>
 		
-		<div class="well well-sm" th:each="image : ${hotelId.images}" >
+		<div class="well well-sm" th:each="image : ${hotel.images}" >
 			<span th:text="${image.value.path}"></span>	
-			<span class="pull-right"><a th:href="@{|/hotels/${hotelId.id}/remove_image/${image.key}|}"><i class="glyphicon glyphicon-remove"></i></a></span>
+			<span class="pull-right"><a th:href="@{|/hotels/${hotel.id}/remove_image/${image.key}|}"><i class="glyphicon glyphicon-remove"></i></a></span>
 		</div>
 					
-		<p><a th:href="@{|/hotels/${hotelId.id}|}">Back</a></p>
+		<p><a th:href="@{|/hotels/${hotel.id}|}">Back</a></p>
     </div>
 </body>
 </html>

@@ -76,7 +76,7 @@ public class HotelRepositoryImpl implements HotelRepository {
         hotels.get(0).setImages(images);
 
         List<Category> categories = this.jdbcTemplate.query(
-                "SELECT hotel.category_id, category.name FROM hotel\n" +
+                "SELECT hotel.category_id AS id, category.name FROM hotel\n" +
                         "LEFT JOIN category ON category.id=hotel.category_id\n" +
                         "WHERE hotel.id=" + id, new CategoryRowMapper());
         hotels.get(0).setCategory(categories.get(0));

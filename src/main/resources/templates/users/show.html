@@ -40,9 +40,9 @@
 						<div sec:authorize="hasAnyRole('HOTEL_MANAGER')" class="col-md-6">
 							<h4><i class="glyphicon glyphicon-home"></i> Registered hotels</h4>
 							<div th:if="${!#sets.isEmpty(user.hotels)}">
-								<div th:each="hotelId : ${user.hotels}">
-									<a th:text="${hotelId.name}" th:href="@{|/hotels/${hotelId.id}|}"></a>
-									<a class="pull-right" th:href="@{|/hotels/${hotelId.id}/remove|}"><i
+								<div th:each="hotel : ${user.hotels}">
+									<a th:text="${hotel.name}" th:href="@{|/hotels/${hotel.id}|}"></a>
+									<a class="pull-right" th:href="@{|/hotels/${hotel.id}/remove|}"><i
 										class="glyphicon glyphicon-trash"></i></a>
 								</div>
 							</div>
@@ -58,8 +58,8 @@
 										<i class="glyphicon glyphicon-time"></i> <span
 											th:text="${#dates.monthNameShort(comment.date)}"></span> <span
 											th:text="${#dates.year(comment.date)}"></span> - <b><a
-											th:text="${comment.hotelId.name}"
-											th:href="@{|/hotels/${comment.hotelId.id}|}"></a></b>
+											th:text="${comment.hotel.name}"
+											th:href="@{|/hotels/${comment.hotel.id}|}"></a></b>
 									</p>
 									<p th:text="${comment.text}"></p>
 								</div>
@@ -91,8 +91,8 @@
 										<span th:text="${#dates.monthName(booking.endDate)}"></span>
 										<span th:text="${#dates.year(booking.endDate)}"></span></td>
 									 <td>
-										 <a th:text="${booking.hotelId.name}"
-											th:href="@{|/hotels/${booking.hotelId.id}|}"></a>
+										 <a th:text="${booking.hotel.name}"
+											th:href="@{|/hotels/${booking.hotel.id}|}"></a>
 									</td>
 									<td><span th:text="${booking.roomType}"></span></td>
 									<td>
@@ -129,8 +129,8 @@
 										<span th:text="${#dates.monthName(booking.endDate)}"></span>
 										<span th:text="${#dates.year(booking.endDate)}"></span></td>
 									<td>
-										 <a th:text="${booking.hotelId.name}"
-											th:href="@{|/hotels/${booking.hotelId.id}|}"></a>
+										 <a th:text="${booking.hotel.name}"
+											th:href="@{|/hotels/${booking.hotel.id}|}"></a>
 									</td>
 									<td><span th:text="${booking.roomType}"></span></td>
 									<td>

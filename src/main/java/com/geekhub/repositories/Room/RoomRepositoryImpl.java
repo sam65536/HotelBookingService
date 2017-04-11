@@ -1,5 +1,6 @@
 package com.geekhub.repositories.Room;
 
+import com.geekhub.domain.entities.Hotel;
 import com.geekhub.domain.entities.Room;
 import com.geekhub.domain.entities.RoomType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,16 +22,24 @@ public class RoomRepositoryImpl implements RoomRepository{
 
     @Override
     public List<Room> findAll() {
-        List<Room> rooms = this.jdbcTemplate.query("SELECT room.id, room.type_id, " +
-                "room_type.description, room_type.occupancy FROM room " +
-                "LEFT JOIN room_type ON room.type_id = room_type.id", (rs, rowNum) -> {
+        List<Room> rooms = this.jdbcTemplate.query(
+                "SELECT room.id, room.room_number, room.price, room.hotel_id, hotel.name AS hotel_name,\n" +
+                        "room.type_id, room_type.description, room_type.occupancy FROM room\n" +
+                        "LEFT JOIN room_type ON room.type_id = room_type.id\n" +
+                        "LEFT JOIN hotel ON room.hotel_id = hotel.id", (rs, rowNum) -> {
                     Room room = new Room();
-                    room.setId(rs.getLong("id"));
                     RoomType roomType = new RoomType();
+                    Hotel hotel = new Hotel();
+                    room.setId(rs.getLong("id"));
+                    room.setRoomNumber(rs.getString("room_number"));
+                    room.setPrice(rs.getInt("price"));
+                    hotel.setId(rs.getLong("hotel_id"));
+                    hotel.setName(rs.getString("hotel_name"));
                     roomType.setId(rs.getLong("type_id"));
                     roomType.setDescription(rs.getString("description"));
                     roomType.setOccupancy(rs.getString("occupancy"));
                     room.setType(roomType);
+                    room.setHotel(hotel);
                     return room;
                 });
         return rooms;

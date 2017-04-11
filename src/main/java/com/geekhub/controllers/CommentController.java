@@ -78,7 +78,7 @@ public class CommentController {
     @RequestMapping(value = "{id}/comments", method = RequestMethod.GET)
     public String showComments(@PathVariable("id") long id, Model model) {
         Hotel hotel = hotels.findOne(id);
-        Iterable<Comment> hotelComments = comments.getComments(id);
+        Iterable<Comment> hotelComments = comments.getCommentsOfHotel(id);
         model.addAttribute("comments", hotelComments);
         model.addAttribute("hotel", hotel);
         model.addAttribute("reply", new Comment());
