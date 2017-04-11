@@ -14,7 +14,6 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,12 +32,22 @@ public class HotelRepositoryImpl implements HotelRepository {
     public List<Hotel> findAll() {
         String sql = "SELECT id, address, name, rating, status FROM hotel";
         List<Hotel> hotels = this.jdbcTemplate.query(sql, new HotelRowMapper());
+        List<Image> images = this.jdbcTemplate.query("SELECT image.id, path, hotel_id FROM image\n" +
+                            "LEFT JOIN hotel ON image.hotel_id = hotel.id",
+                (rs, rowNum) -> {
+            Image image = new Image();
+            image.setId(rs.getLong("id"));
+            image.setPath(rs.getString("path"));
+            image.setHotel(hotels.get(rs.getInt("hotel_id") - 1));
+            return image;
+        });
         for (Hotel hotel : hotels) {
-            List<Image> images = this.jdbcTemplate.query(
-                    "SELECT image.id, image.insertion_date, image.path FROM image WHERE image.hotel_id=" + hotel.getId(), new ImageRowMapper());
-            Map<Long, Image> imagesMap = images.stream().collect(
-                    Collectors.toMap(image -> image.getId(), image -> image));
-            hotel.setImages(imagesMap);
+            hotel.setImages(new ArrayList<>());
+            for (Image image : images) {
+                if (hotel.getId() == image.getHotel().getId()) {
+                    hotel.getImages().add(image);
+                }
+            }
         }
         return hotels;
     }
@@ -63,10 +72,8 @@ public class HotelRepositoryImpl implements HotelRepository {
         hotels.get(0).setComments(commentsMap);
 
         List<Image> images = this.jdbcTemplate.query(
-                "SELECT image.id, image.path FROM image WHERE image.hotel_id=" + id, new ImageRowMapper());
-        Map<Long, Image> imagesMap = images.stream().collect(
-                Collectors.toMap(image -> image.getId(), image -> image));
-        hotels.get(0).setImages(imagesMap);
+                "SELECT image.id, image.insertion_date, image.path FROM image WHERE image.hotel_id=" + id, new ImageRowMapper());
+        hotels.get(0).setImages(images);
 
         List<Category> categories = this.jdbcTemplate.query(
                 "SELECT hotel.category_id, category.name FROM hotel\n" +

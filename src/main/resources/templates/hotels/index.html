@@ -20,9 +20,9 @@
 			<p><i>No hotels to show</i></p>
 		</div>
 		
-		<div class="list-group" th:each="hotel : ${hotels}">
-			<a class="list-group-item" th:if="${hotel.status}" th:text="${hotel.name}"
-				th:href="@{|/hotels/${hotel.id}|}"></a>
+		<div class="list-group" th:each="hotelId : ${hotels}">
+			<a class="list-group-item" th:if="${hotelId.status}" th:text="${hotelId.name}"
+				th:href="@{|/hotels/${hotelId.id}|}"></a>
 		</div>
 		
 		<p sec:authorize="hasAnyRole('HOTEL_MANAGER')">

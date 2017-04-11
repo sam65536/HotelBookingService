@@ -11,7 +11,7 @@
 <body>
 	<div class="container">
 		<div th:fragment="roomform(url)">
-			<form action="#" th:action="@{|/hotels/${hotel.id}/rooms/|}"
+			<form action="#" th:action="@{|/hotels/${hotelId.id}/rooms/|}"
 				th:object="${room}" method="post">
 				<p>
 					<input type="hidden" th:field="*{id}" />
@@ -33,10 +33,10 @@
 		        	</select>	
 				</p>
 				<p>
-					<input class="btn btn-primary" type="submit" value="Submit" /> 
+					<input class="btn btn-primary" type="submit" value="Submit" />
 					<input class="btn btn-default" type="reset" value="Reset" />
 				</p>
-				<p><a th:href="@{|/hotels/${hotel.id}/rooms/|}">Back</a></p>
+				<p><a th:href="@{|/hotels/${hotelId.id}/rooms/|}">Back</a></p>
 			</form>
 		</div>
 	</div>

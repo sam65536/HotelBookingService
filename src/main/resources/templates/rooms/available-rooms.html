@@ -21,12 +21,12 @@
             </thead>
             <tbody>
             <tr th:each="room : ${rooms}">
-                <td><a th:text="${room.hotel.name}" th:href="@{|/hotels/${room.hotel.id}|}"></a></td>
+                <td><a th:text="${room.hotelId.name}" th:href="@{|/hotels/${room.hotelId.id}|}"></a></td>
                 <td th:text="${room.roomNumber}"></td>
                 <td th:text="${room.price + ' €/night'}"></td>
                 <td><span th:each="i  : ${#numbers.sequence(1, room.type.occupancy)}">
                     <i class="glyphicon glyphicon-user"></i></span></td>
-                <td><a th:text="Book" class="btn btn-default" th:href="@{|/bookings/new/${room.hotel.id}/|}"></a></td>
+                <td><a th:text="Book" class="btn btn-default" th:href="@{|/bookings/new/${room.hotelId.id}/|}"></a></td>
             </tr>
             </tbody>
         </table>

@@ -1,6 +1,8 @@
 package com.geekhub.domain;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -15,7 +17,7 @@ public class Hotel {
     private boolean status;
     private City city;
     private Category category;
-    
+
     @JsonBackReference
     private User manager;
     
@@ -25,14 +27,13 @@ public class Hotel {
     @JsonManagedReference
     private Map<Long, Comment> comments = new HashMap<>();
 
-    @JsonManagedReference
-    private Map<Long, Image> images = new HashMap<>();
+    private List<Image> images = new ArrayList<>();
  
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -108,11 +109,11 @@ public class Hotel {
         this.comments = comments;
     }
 
-    public Map<Long, Image> getImages() {
+    public List<Image> getImages() {
         return images;
     }
 
-    public void setImages(Map<Long, Image> images) {
+    public void setImages(List<Image> images) {
         this.images = images;
     }
 

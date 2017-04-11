@@ -41,7 +41,7 @@
 				<td><span th:text="${#dates.day(booking.endDate)}"></span> <span
 					th:text="${#dates.monthNameShort(booking.endDate)}"></span> <span
 					th:text="${#dates.year(booking.endDate)}"></span></td>
-				<td><span th:text="${booking.hotel.name}"></span></td>
+				<td><span th:text="${booking.hotelId.name}"></span></td>
 				<td><span th:text="${booking.roomType}"></span></td>
 				<td>
 					<div th:each="room : ${booking.rooms}">

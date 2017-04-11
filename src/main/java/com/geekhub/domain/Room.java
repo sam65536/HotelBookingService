@@ -8,37 +8,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 public class Room implements Comparable<Object> {
 
     private Long id;
     private int floor;
     private int price;
     private String roomNumber;
-
-    @JsonManagedReference
-    private Hotel hotel;
-
-    @JsonManagedReference
     private RoomType type;
+    private long hotelId;
 
     private Map<LocalDate, Long> reservedDays = new HashMap<>();
-
-    @JsonBackReference
     private Set<Booking> bookings = new HashSet<>();
-
-    public Room() {
-    }
-
-    public Room(int floor, int price, String roomNumber, Hotel hotel, RoomType type) {
-        this.floor = floor;
-        this.price = price;
-        this.roomNumber = roomNumber;
-        this.hotel = hotel;
-        this.type = type;
-    }
 
     public Long getId() {
         return id;
@@ -72,12 +52,12 @@ public class Room implements Comparable<Object> {
         this.roomNumber = roomNumber;
     }
 
-    public Hotel getHotel() {
-        return hotel;
+    public long getHotelId() {
+        return hotelId;
     }
 
-    public void setHotel(Hotel hotel) {
-        this.hotel = hotel;
+    public void setHotelId(long hotelId) {
+        this.hotelId = hotelId;
     }
 
     public RoomType getType() {

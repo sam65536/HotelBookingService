@@ -4,20 +4,12 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.*;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 public class Booking {
 
-
     private Long id;
-
     private LocalDate beginDate;
     private LocalDate endDate;
     private boolean state;
-
-
     private User user;
 
     private Set<Room> rooms = new HashSet<>();
@@ -34,11 +26,11 @@ public class Booking {
     }
 
     public Hotel getHotel() {
-        return rooms.stream().findAny().get().getHotel();
+        return new Hotel();
     }
 
     public RoomType getRoomType() {
-        return rooms.stream().findAny().get().getType();
+        return rooms.iterator().next().getType();
     }
 
     public Long getId() {

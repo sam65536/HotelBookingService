@@ -30,7 +30,7 @@ public class SearchController {
     public @ResponseBody Map<Long, String> getHotelsOfCity(@PathVariable("cityId") long id) {
         City city = cities.findOne(id);
         Map<Long, String> result = new HashMap<>();
-        city.getHotels().values().forEach(hotel -> result.put(hotel.getId(), hotel.getName()));
+        city.getHotels().forEach(hotel -> result.put(hotel.getId(), hotel.getName()));
         return result;
     }
 
@@ -57,7 +57,7 @@ public class SearchController {
 
         List<Room> roomsList = searchService.searchAvailableRooms(hotelId, persons, beginDate, endDate);
         model.addAttribute("cities", cities.findAll());
-        model.addAttribute("hotels", cities.findOne(cityId).getHotels().values());
+        model.addAttribute("hotels", cities.findOne(cityId).getHotels());
         model.addAttribute("rooms", roomsList);
         return "rooms/available-rooms";
     }

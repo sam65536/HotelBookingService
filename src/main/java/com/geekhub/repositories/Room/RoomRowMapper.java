@@ -15,6 +15,7 @@ public class RoomRowMapper implements RowMapper<Room> {
         room.setFloor(rs.getInt("floor"));
         room.setPrice(rs.getInt("price"));
         room.setRoomNumber(rs.getString("room_number"));
+        room.setHotelId(rs.getLong("hotel_id"));
         return room;
     }
 }

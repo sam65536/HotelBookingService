@@ -1,11 +1,16 @@
 package com.geekhub.repositories.Room;
 
 import com.geekhub.domain.Room;
+import com.geekhub.domain.RoomType;
+import com.geekhub.repositories.RoomType.RoomTypeRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 @Repository
@@ -20,8 +25,18 @@ public class RoomRepositoryImpl implements RoomRepository{
 
     @Override
     public List<Room> findAll() {
-        String sql = "SELECT id, floor, price, room_number FROM room";
-        List<Room> rooms = this.jdbcTemplate.query(sql, new RoomRowMapper());
+        List<Room> rooms = this.jdbcTemplate.query("SELECT room.id, room.type_id, " +
+                "room_type.description, room_type.occupancy FROM room " +
+                "LEFT JOIN room_type ON room.type_id = room_type.id", (rs, rowNum) -> {
+                    Room room = new Room();
+                    room.setId(rs.getLong("id"));
+                    RoomType roomType = new RoomType();
+                    roomType.setId(rs.getLong("type_id"));
+                    roomType.setDescription(rs.getString("description"));
+                    roomType.setOccupancy(rs.getString("occupancy"));
+                    room.setType(roomType);
+                    return room;
+                });
         return rooms;
     }
 

@@ -12,11 +12,11 @@
 	<div th:include="fragments/header"></div>
 
 	<div class="container">
-		<div th:include="hotels/show :: hotel-header" class="page-header"></div>
+		<div th:include="hotels/show :: hotelId-header" class="page-header"></div>
 
 		<div class="col-md-6">
 			<h3>Rooms</h3>
-			<div th:if="${#maps.isEmpty(hotel.rooms)}">
+			<div th:if="${#maps.isEmpty(hotelId.rooms)}">
 				<p>
 					<i>No existing rooms</i>
 				</p>
@@ -27,14 +27,14 @@
 						th:text="${room.roomNumber + ' - ' + room.type.description + ' - ' +
  		 	room.price + ' €/night'}"></span><a
 						class="pull-right"
-						th:href="@{|/hotels/${hotel.id}/rooms/${room.id}/remove|}"><i
+						th:href="@{|/hotels/${hotelId.id}/rooms/${room.id}/remove|}"><i
 						class="glyphicon glyphicon-trash"></i></a>
 				</div>
 			</div>
 
 			<p>
 				<a class="btn btn-primary"
-					th:href="@{|/hotels/${hotel.id}/rooms/new|}">Add room</a>
+					th:href="@{|/hotels/${hotelId.id}/rooms/new|}">Add room</a>
 			</p>
 		</div>
 	</div>

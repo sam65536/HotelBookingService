@@ -23,26 +23,26 @@
 <body>
 	<div th:include="fragments/header"></div>
 	<div class="container">
-		<div th:fragment="hotel-header" class="page-header">
+		<div th:fragment="hotelId-header" class="page-header">
 			<h1>
-				<span th:text="${hotel.name}"></span> <small> <span
-					th:each="i : ${#numbers.sequence(1, hotel.rating)}"><i
+				<span th:text="${hotelId.name}"></span> <small> <span
+					th:each="i : ${#numbers.sequence(1, hotelId.rating)}"><i
 						class="glyphicon glyphicon-star"></i></span> <span
 					sec:authorize="${#authorization.expression(T(com.geekhub.security.AllowedForManageHotel).condition2)}" class="pull-right"> <a
-						th:href="@{|/hotels/${hotel.id}/upload|}"><i
+						th:href="@{|/hotels/${hotelId.id}/upload|}"><i
 							class="glyphicon glyphicon-picture"></i></a> · <a
-						th:href="@{|/hotels/${hotel.id}/edit|}"> <i
+						th:href="@{|/hotels/${hotelId.id}/edit|}"> <i
 							class="glyphicon glyphicon-pencil"></i>
 					</a>
 				</span>
 
-				</small> <br /> <small> <span th:text="${hotel.category}"></span> ·
-					<span id="address" th:text="${hotel.address}"></span>
+				</small> <br /> <small> <span th:text="${hotelId.category}"></span> ·
+					<span id="address" th:text="${hotelId.address}"></span>
 				</small>
 			</h1>
 		</div>
 
-		<div th:if="${!hotel.status}" class="alert alert-warning" role="alert">This hotel wasn't approved yet by an admin.</div>
+		<div th:if="${!hotelId.status}" class="alert alert-warning" role="alert">This hotelId wasn't approved yet by an admin.</div>
 
 		<div class="row">
 			<div class="col-md-6">
@@ -58,7 +58,7 @@
 						<div class="tab-content">
 							<div class="tab-pane active" id="tab_default_1">
 								<div class="slider">
-									<img th:each="img : ${hotel.images}"
+									<img th:each="img : ${hotelId.images}"
 										th:src="${'/static/' + img.value.path}"
 										class="img-responsive img-rounded" alt="Hotel photo" />
 								</div>
@@ -90,12 +90,12 @@
 					<span sec:authorize="hasAnyRole('USER')">
 						<a
 						class="btn btn-default"
-						th:href="@{|/hotels/${hotel.id}/comments/new|}">Leave a
+						th:href="@{|/hotels/${hotelId.id}/comments/new|}">Leave a
 							comment</a>
 					</span>
 					<span>
 						<a class="btn btn-default"
-						th:href="@{|/hotels/${hotel.id}/comments/|}">View all comments</a>
+						th:href="@{|/hotels/${hotelId.id}/comments/|}">View all comments</a>
 					</span>
 					<span>
 						<a class="btn btn-default"
@@ -105,7 +105,7 @@
 					<br><br>
 					<span>
 						<a sec:authorize="${#authorization.expression(T(com.geekhub.security.AllowedForManageHotel).condition2)}" class="btn btn-primary"
-						th:href="@{|/hotels/${hotel.id}/rooms|}">Manage rooms</a>
+						th:href="@{|/hotels/${hotelId.id}/rooms|}">Manage rooms</a>
 					</span>
 					<span><a
 						class="btn btn-primary" sec:authorize="${#authorization.expression(T(com.geekhub.security.AllowedForManageHotel).condition2)}" href="#" data-toggle="modal"
@@ -128,7 +128,7 @@
 					</div>
 					<div class="modal-body">
 
-						<form th:object="${booking}" th:action="@{|/hotels/${hotel.id}/map|}" method="post">
+						<form th:object="${booking}" th:action="@{|/hotels/${hotelId.id}/map|}" method="post">
 							<p>
 								<input type="hidden" th:field="*{id}" />
 							<div style="display: inline-block">
@@ -149,7 +149,7 @@
 
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>						
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 					</div>
 				</div>
 			</div>

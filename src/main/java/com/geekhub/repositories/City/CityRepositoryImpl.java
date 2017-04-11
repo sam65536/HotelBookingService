@@ -2,7 +2,6 @@ package com.geekhub.repositories.City;
 
 import com.geekhub.domain.City;
 import com.geekhub.domain.Hotel;
-import com.geekhub.domain.Image;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -46,9 +45,7 @@ public class CityRepositoryImpl implements CityRepository {
                     return hotel;
                 });
 
-        Map<Long, Hotel> hotelsMap = hotels.stream().collect(
-                Collectors.toMap(hotel -> hotel.getId(), hotel -> hotel));
-        cities.get(0).setHotels(hotelsMap);
+        cities.get(0).setHotels(hotels);
         return cities.get(0);
     }
 

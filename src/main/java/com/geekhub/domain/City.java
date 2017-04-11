@@ -1,21 +1,19 @@
 package com.geekhub.domain;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class City {
 
     private Long id;
-
     private String name;
+    private List<Hotel> hotels = new ArrayList<>();
 
-    private Map<Long, Hotel> hotels = new HashMap<>();
-
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -27,11 +25,11 @@ public class City {
         this.name = name;
     }
 
-    public Map<Long, Hotel> getHotels() {
+    public List<Hotel> getHotels() {
         return hotels;
     }
 
-    public void setHotels(Map<Long, Hotel> hotels) {
+    public void setHotels(List<Hotel> hotels) {
         this.hotels = hotels;
     }
 }

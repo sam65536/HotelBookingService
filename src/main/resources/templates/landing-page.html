@@ -19,24 +19,22 @@
         <hr/>
 
 		<div>
-			<div class="col-md-4" th:each="hotel, hstat : ${hotels}"
-				th:unless="${hstat.index > 2}">
+			<div class="col-md-4" th:each="i : ${#numbers.sequence(0, 2)}">
 				<h3 align="center">
-					<span th:text="${hotel.name}"></span>
+					<span th:text="${hotels.get(i).name}"></span>
 				</h3>
 				<div class="starshome">
-					<span th:each="i : ${#numbers.sequence(1, hotel.rating)}"><i
+					<span th:each="j : ${#numbers.sequence(1, hotels.get(i).rating)}"><i
 						class="starshome glyphicon glyphicon-star"></i> </span>
 				</div>
 				<figure>
 					<img width="350px" height="235px"
-						th:each="img, istat : ${hotel.images}"
-						th:src="${'/static/' + img.value.path}" class="img-rounded"
-						alt="Hotel photo" th:unless="${istat.index > 0}" />
+						th:src="${'/static/' + hotels.get(i).images.get(0).path}"
+						 class="img-rounded" alt="Hotel photo" />
 				</figure>
 				<br>
 				<div class="text-center">
-					<a class="seehotel btn btn-default" th:href="@{|/hotels/${hotel.id}|}">See more info</a>
+					<a class="seehotel btn btn-default" th:href="@{|/hotels/${hotels.get(i).id}|}">See more info</a>
 				</div></div>
 		</div>
 	</div>

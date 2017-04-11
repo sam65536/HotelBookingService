@@ -55,7 +55,7 @@ public class RoomController {
     @AllowedForManageHotel
     public String saveRoom(@PathVariable("id") long id, @ModelAttribute Room room) {
     	Hotel hotel = hotels.findOne(id);    	
-    	room.setHotel(hotel);    	
+    	room.setHotelId(id);
     	rooms.save(room);
     	return "redirect:/hotels/" + id + "/rooms";
     }

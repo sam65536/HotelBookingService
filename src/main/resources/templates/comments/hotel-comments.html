@@ -16,7 +16,7 @@
 
     <div class="container">
 	<div class="page-header">
-  		<h1><span th:text="${hotel.name}"></span> <br/> <small><span>Comments</span></small></h1>
+  		<h1><span th:text="${hotelId.name}"></span> <br/> <small><span>Comments</span></small></h1>
 	</div>
 	
 	<div class="row">
@@ -42,7 +42,7 @@
 		 	   		</p>
 		 	   		
 		 	   		<div class="collapse" th:id="|${comment.id}-reply|">
-			 	   		<form action="#" th:action="@{|/hotels/${hotel.id}/comments/${comment.id}/reply|}" th:object="${reply}" method="post">
+			 	   		<form action="#" th:action="@{|/hotels/${hotelId.id}/comments/${comment.id}/reply|}" th:object="${reply}" method="post">
 				    		<p>
 						    	<input type="hidden" th:field="*{id}" />
 					        	<p><textarea  rows="5" class="form-control" placeholder="Comment" th:field="*{text}" ></textarea></p>		        	
@@ -60,7 +60,7 @@
   		</div>
   	</div>
 	
-	<p><a th:href="@{|/hotels/${hotel.id}|}">Back</a></p>
+	<p><a th:href="@{|/hotels/${hotelId.id}|}">Back</a></p>
 	</div>
 </body>
 </html>

@@ -13,15 +13,18 @@ public class Image {
     @JsonBackReference
     private Hotel hotel;
 
+    public Image() {
+    }
+
     public Image(String path) {
         this.path = path;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

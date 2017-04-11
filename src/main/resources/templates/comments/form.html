@@ -8,16 +8,16 @@
 <body>
 	<div class="container">
 	<h1>Hotel Form</h1>
-	<h2><label>Hotel Name</label> <span th:text="${hotel.name}"></span></h2>
+	<h2><label>Hotel Name</label> <span th:text="${hotelId.name}"></span></h2>
 		<div th:fragment="commentform(url)">
-	    	<form action="#" th:action="@{|/hotels/${hotel.id}/comments|}" th:object="${comment}" method="post">
+	    	<form action="#" th:action="@{|/hotels/${hotelId.id}/comments|}" th:object="${comment}" method="post">
 	    		<p>
-			    	<input type="hidden" th:field="*{id}" />		        	
+			    	<input type="hidden" th:field="*{id}" />
 		        	<p><textarea  rows="10" class="form-control" placeholder="Comment" th:field="*{text}" ></textarea></p>		        	
 	        	</p>
 	    	    <p><input class="btn btn-primary" type="submit" value="Submit" /> <input class="btn btn-default" type="reset" value="Reset" /></p>
 		    </form>
-		    <p><a th:href="@{|/hotels/${hotel.id}|}">Back</a></p>
+		    <p><a th:href="@{|/hotels/${hotelId.id}|}">Back</a></p>
 	    </div>
     </div>
 </body>
