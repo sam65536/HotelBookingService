@@ -1,6 +1,6 @@
 package com.geekhub.repositories.City;
 
-import com.geekhub.domain.City;
+import com.geekhub.domain.entities.City;
 
 import java.util.List;
 

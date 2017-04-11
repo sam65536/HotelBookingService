@@ -1,4 +1,4 @@
-package com.geekhub.domain;
+package com.geekhub.domain.entities;
 
 import lombok.Getter;
 import lombok.Setter;

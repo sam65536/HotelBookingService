@@ -1,6 +1,6 @@
 package com.geekhub.repositories.RoomType;
 
-import com.geekhub.domain.RoomType;
+import com.geekhub.domain.entities.RoomType;
 
 import java.util.List;
 

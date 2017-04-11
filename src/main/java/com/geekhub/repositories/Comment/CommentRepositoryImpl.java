@@ -1,6 +1,6 @@
 package com.geekhub.repositories.Comment;
 
-import com.geekhub.domain.Comment;
+import com.geekhub.domain.entities.Comment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

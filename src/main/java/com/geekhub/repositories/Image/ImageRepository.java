@@ -1,6 +1,6 @@
 package com.geekhub.repositories.Image;
 
-import com.geekhub.domain.Image;
+import com.geekhub.domain.entities.Image;
 
 import java.util.List;
 

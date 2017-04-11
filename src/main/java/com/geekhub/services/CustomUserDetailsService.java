@@ -3,9 +3,9 @@ package com.geekhub.services;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.geekhub.domain.Authority;
+import com.geekhub.domain.entities.Authority;
 import com.geekhub.domain.CustomUserDetail;
-import com.geekhub.domain.User;
+import com.geekhub.domain.entities.User;
 import com.geekhub.repositories.User.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

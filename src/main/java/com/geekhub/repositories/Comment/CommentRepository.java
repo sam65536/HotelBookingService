@@ -1,6 +1,6 @@
 package com.geekhub.repositories.Comment;
 
-import com.geekhub.domain.Comment;
+import com.geekhub.domain.entities.Comment;
 
 import java.util.List;
 

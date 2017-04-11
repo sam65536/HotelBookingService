@@ -1,16 +1,12 @@
 package com.geekhub.repositories.Room;
 
-import com.geekhub.domain.Room;
-import com.geekhub.domain.RoomType;
-import com.geekhub.repositories.RoomType.RoomTypeRowMapper;
+import com.geekhub.domain.entities.Room;
+import com.geekhub.domain.entities.RoomType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 @Repository

@@ -1,6 +1,6 @@
 package com.geekhub.repositories.RoomType;
 
-import com.geekhub.domain.RoomType;
+import com.geekhub.domain.entities.RoomType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

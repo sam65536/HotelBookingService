@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.geekhub.domain.Booking;
-import com.geekhub.domain.Hotel;
-import com.geekhub.domain.Room;
+import com.geekhub.domain.entities.Booking;
+import com.geekhub.domain.entities.Hotel;
+import com.geekhub.domain.entities.Room;
 import com.geekhub.security.AllowedForManageHotel;
 
 @Controller

@@ -1,6 +1,6 @@
 package com.geekhub.repositories.Authority;
 
-import com.geekhub.domain.Authority;
+import com.geekhub.domain.entities.Authority;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

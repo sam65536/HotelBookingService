@@ -1,6 +1,6 @@
 package com.geekhub.repositories.Authority;
 
-import com.geekhub.domain.Authority;
+import com.geekhub.domain.entities.Authority;
 
 import java.util.List;
 

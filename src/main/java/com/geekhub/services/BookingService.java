@@ -1,6 +1,7 @@
 package com.geekhub.services;
 
 import com.geekhub.domain.*;
+import com.geekhub.domain.entities.*;
 import com.geekhub.repositories.Hotel.HotelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

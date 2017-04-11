@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.geekhub.repositories.*;
 import com.geekhub.repositories.Booking.BookingRepository;
 import com.geekhub.repositories.Category.CategoryRepository;
 import com.geekhub.repositories.City.CityRepository;
@@ -28,12 +27,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.geekhub.domain.Booking;
-import com.geekhub.domain.Comment;
-import com.geekhub.domain.Hotel;
-import com.geekhub.domain.Image;
-import com.geekhub.domain.Room;
-import com.geekhub.domain.RoomType;
+import com.geekhub.domain.entities.Booking;
+import com.geekhub.domain.entities.Comment;
+import com.geekhub.domain.entities.Hotel;
+import com.geekhub.domain.entities.Image;
+import com.geekhub.domain.entities.Room;
+import com.geekhub.domain.entities.RoomType;
 import com.geekhub.security.AllowedForAdmin;
 import com.geekhub.security.AllowedForHotelManager;
 import com.geekhub.security.AllowedForManageHotel;

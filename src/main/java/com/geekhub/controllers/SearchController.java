@@ -1,7 +1,7 @@
 package com.geekhub.controllers;
 
-import com.geekhub.domain.City;
-import com.geekhub.domain.Room;
+import com.geekhub.domain.entities.City;
+import com.geekhub.domain.entities.Room;
 import com.geekhub.repositories.City.CityRepository;
 import com.geekhub.services.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;

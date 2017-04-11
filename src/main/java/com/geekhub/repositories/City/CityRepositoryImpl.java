@@ -1,7 +1,7 @@
 package com.geekhub.repositories.City;
 
-import com.geekhub.domain.City;
-import com.geekhub.domain.Hotel;
+import com.geekhub.domain.entities.City;
+import com.geekhub.domain.entities.Hotel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -11,8 +11,6 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Repository
 public class CityRepositoryImpl implements CityRepository {

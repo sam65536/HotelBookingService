@@ -1,6 +1,6 @@
 package com.geekhub.repositories.User;
 
-import com.geekhub.domain.User;
+import com.geekhub.domain.entities.User;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

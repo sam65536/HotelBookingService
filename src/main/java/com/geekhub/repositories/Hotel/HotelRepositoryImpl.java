@@ -1,6 +1,6 @@
 package com.geekhub.repositories.Hotel;
 
-import com.geekhub.domain.*;
+import com.geekhub.domain.entities.*;
 import com.geekhub.repositories.Category.CategoryRowMapper;
 import com.geekhub.repositories.Comment.CommentRowMapper;
 import com.geekhub.repositories.Image.ImageRowMapper;

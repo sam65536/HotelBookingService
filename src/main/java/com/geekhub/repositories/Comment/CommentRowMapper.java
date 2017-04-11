@@ -1,6 +1,6 @@
 package com.geekhub.repositories.Comment;
 
-import com.geekhub.domain.Comment;
+import com.geekhub.domain.entities.Comment;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -14,7 +14,7 @@ public class CommentRowMapper implements RowMapper<Comment> {
         comment.setDate(rs.getTimestamp("date").toLocalDateTime());
         comment.setStatus(rs.getBoolean("status"));
         comment.setText(rs.getString("text"));
-        comment.setAnswer(rs.getBoolean("is_answer"));
+        comment.setIsAnswer(rs.getBoolean("is_answer"));
         return comment;
     }
 }

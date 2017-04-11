@@ -1,8 +1,8 @@
 package com.geekhub;
 
-import com.geekhub.domain.Booking;
-import com.geekhub.domain.Room;
-import com.geekhub.domain.User;
+import com.geekhub.domain.entities.Booking;
+import com.geekhub.domain.entities.Room;
+import com.geekhub.domain.entities.User;
 import com.geekhub.repositories.Booking.BookingRepository;
 import com.geekhub.repositories.Room.RoomRepository;
 import com.geekhub.repositories.User.UserRepository;

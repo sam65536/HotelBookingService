@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.geekhub.domain.Comment;
+import com.geekhub.domain.entities.Comment;
 import com.geekhub.domain.CustomUserDetail;
-import com.geekhub.domain.Hotel;
-import com.geekhub.domain.User;
+import com.geekhub.domain.entities.Hotel;
+import com.geekhub.domain.entities.User;
 import com.geekhub.security.AllowedForApprovedComments;
 import com.geekhub.security.AllowedForCommentModerator;
 import com.geekhub.security.AllowedForManageComment;
@@ -48,7 +48,7 @@ public class CommentController {
         reply.setDate(date);
         reply.setUser(getCurrentUser());
         reply.setHotel(hotel);
-        reply.setAnswer(true);
+        reply.setIsAnswer(true);
         reply.setStatus(false);
         comments.save(reply);
         comment.setReply(reply);

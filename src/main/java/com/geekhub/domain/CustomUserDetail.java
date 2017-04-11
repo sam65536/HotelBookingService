@@ -3,6 +3,7 @@ package com.geekhub.domain;
 import java.util.Collection;
 import java.util.Set;
 
+import com.geekhub.domain.entities.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

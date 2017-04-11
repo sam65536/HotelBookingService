@@ -1,6 +1,6 @@
 package com.geekhub.repositories.Hotel;
 
-import com.geekhub.domain.Hotel;
+import com.geekhub.domain.entities.Hotel;
 
 import java.util.List;
 

@@ -25,12 +25,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import com.geekhub.domain.Booking;
+import com.geekhub.domain.entities.Booking;
 import com.geekhub.domain.CustomUserDetail;
-import com.geekhub.domain.Hotel;
-import com.geekhub.domain.Room;
-import com.geekhub.domain.RoomType;
-import com.geekhub.domain.User;
+import com.geekhub.domain.entities.Hotel;
+import com.geekhub.domain.entities.Room;
+import com.geekhub.domain.entities.RoomType;
+import com.geekhub.domain.entities.User;
 import com.geekhub.security.AllowedForApprovingBookings;
 import com.geekhub.security.AllowedForHotelManager;
 import com.geekhub.security.AllowedForRemovingBookings;

@@ -1,6 +1,6 @@
 package com.geekhub.repositories.Booking;
 
-import com.geekhub.domain.Booking;
+import com.geekhub.domain.entities.Booking;
 
 import java.util.List;
 

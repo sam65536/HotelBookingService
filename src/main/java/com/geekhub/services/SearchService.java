@@ -1,6 +1,6 @@
 package com.geekhub.services;
 
-import com.geekhub.domain.Room;
+import com.geekhub.domain.entities.Room;
 import com.geekhub.repositories.Room.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

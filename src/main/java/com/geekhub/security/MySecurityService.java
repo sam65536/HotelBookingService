@@ -7,11 +7,11 @@ import com.geekhub.repositories.User.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.geekhub.domain.Booking;
-import com.geekhub.domain.Comment;
+import com.geekhub.domain.entities.Booking;
+import com.geekhub.domain.entities.Comment;
 import com.geekhub.domain.CustomUserDetail;
-import com.geekhub.domain.Hotel;
-import com.geekhub.domain.User;
+import com.geekhub.domain.entities.Hotel;
+import com.geekhub.domain.entities.User;
 
 @Component("mySecurityService")
 public class MySecurityService {

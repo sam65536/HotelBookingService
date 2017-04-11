@@ -1,6 +1,6 @@
 package com.geekhub.repositories.Category;
 
-import com.geekhub.domain.Category;
+import com.geekhub.domain.entities.Category;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

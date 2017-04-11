@@ -1,9 +1,9 @@
 package com.geekhub.services;
 
 import com.geekhub.domain.CustomUserDetail;
-import com.geekhub.domain.Hotel;
-import com.geekhub.domain.Room;
-import com.geekhub.domain.User;
+import com.geekhub.domain.entities.Hotel;
+import com.geekhub.domain.entities.Room;
+import com.geekhub.domain.entities.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;

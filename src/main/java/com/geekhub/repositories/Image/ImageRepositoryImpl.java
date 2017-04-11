@@ -1,6 +1,6 @@
 package com.geekhub.repositories.Image;
 
-import com.geekhub.domain.Image;
+import com.geekhub.domain.entities.Image;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

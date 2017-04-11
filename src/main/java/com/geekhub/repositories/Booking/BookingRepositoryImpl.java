@@ -1,6 +1,6 @@
 package com.geekhub.repositories.Booking;
 
-import com.geekhub.domain.Booking;
+import com.geekhub.domain.entities.Booking;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
