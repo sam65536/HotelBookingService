@@ -4,9 +4,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.geekhub.repositories.Booking.BookingRepository;
 import com.geekhub.repositories.Category.CategoryRepository;
@@ -113,13 +111,11 @@ public class HotelController {
         model.addAttribute("reply", new Comment());
         model.addAttribute("users", users.findAll());
         model.addAttribute("roomTypes", roomTypes.findAll());
-        Map<RoomType, Room> roomsTypeMap = new HashMap<>();
-        for (Room room : rooms.findAll()) {
-            if (room.getHotel().getId() == id) {
-                roomsTypeMap.put(room.getType(), room);
-            }
-        }
-        model.addAttribute("hotelRoomTypes", roomsTypeMap);
+        Map<Long, Room> roomsByType = new HashMap<>();
+                rooms.findAll().stream()
+                .filter(room -> room.getHotel().getId() == id)
+                .forEach(room -> roomsByType.putIfAbsent(room.getType().getId(), room));
+        model.addAttribute("hotelRoomTypes", roomsByType.values());
         return "hotels/show";
     }
 

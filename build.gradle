@@ -19,7 +19,6 @@ dependencies {
     compile group: 'com.h2database', name: 'h2', version:'1.4.188'
     compile group: 'org.springframework', name: 'spring-jdbc', version:'4.2.1.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version:'1.3.0.M5'
-    compile group: 'mysql', name: 'mysql-connector-java', version:'5.1.36'
     compile group: 'postgresql', name: 'postgresql', version: '9.4.1208-jdbc42-atlassian-hosted'
     compile group: 'net.sourceforge.nekohtml', name: 'nekohtml', version:'1.9.21'
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version:'2.7.3'

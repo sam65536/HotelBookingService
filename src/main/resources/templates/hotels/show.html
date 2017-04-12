@@ -177,10 +177,10 @@
 								</tr>
 
 								<tr th:each="hotelRoomType : ${hotelRoomTypes}">
-									<td th:text="${hotelRoomType.key.description}"></td>
-									<td><span th:text="${hotelRoomType.value.price}"></span> €/night</td>
+									<td th:text="${hotelRoomType.type.description}"></td>
+									<td><span th:text="${hotelRoomType.price}"></span> €/night</td>
 									<td><span
-										th:each="i : ${#numbers.sequence(1, hotelRoomType.key.occupancy)}"><i
+										th:each="i : ${#numbers.sequence(1, hotelRoomType.type.occupancy)}"><i
 											class="glyphicon glyphicon-user"></i></span></td>
 								</tr>
 						</table>

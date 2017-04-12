@@ -1,4 +1,4 @@
-package com.geekhub.security;
+package com.geekhub.config;
 
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;

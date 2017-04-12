@@ -4,12 +4,9 @@ import com.geekhub.domain.entities.Comment;
 import com.geekhub.domain.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 @Repository
@@ -60,8 +57,7 @@ public class CommentRepositoryImpl implements CommentRepository {
 
     @Override
     public void save(Comment comment) {
-        String sql = "INSERT INTO comment" + "(id, date, status, text, is_answer) " +
-                "VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO comment (id, date, status, text, is_answer) VALUES (?, ?, ?, ?, ?)";
         this.jdbcTemplate.update(sql, new Object[] {comment.getId(), comment.getDate(),
                 comment.getStatus(), comment.getText(), comment.getIsAnswer()});
     }
