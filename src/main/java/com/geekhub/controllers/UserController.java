@@ -63,8 +63,8 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String saveIt(@ModelAttribute User user, Model model) {
-
+    public String signUp(@ModelAttribute User user) {
+        try {
             Authority authority = authorities.findByRole("ROLE_USER");
             user.setAuthority(authority);
             String password = user.getPassword();
@@ -75,7 +75,9 @@ public class UserController {
             authenticationManager.authenticate(auth);
             SecurityContextHolder.getContext().setAuthentication(auth);
             return "redirect:/users/me";
-
+        } catch (Exception e) {
+            return "error";
+        }
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)

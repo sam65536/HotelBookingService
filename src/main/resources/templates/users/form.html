@@ -11,6 +11,7 @@
 		<div th:fragment="userform(url)">
 	    	<form action="#" th:action="${url}" th:object="${user}" method="post">
 	    		<div>
+			    	<input type="hidden" th:field="*{id}" />
 		        	<p><label>Name</label><input class="form-control" placeholder="Name" type="text" th:field="*{name}" /></p>
 		        	<p><label>Username</label><input class="form-control" placeholder="Username" type="text" th:field="*{username}" /></p>
 		        	<p><label>E-mail</label><input class="form-control" placeholder="Email" type="email" th:field="*{email}" /></p>

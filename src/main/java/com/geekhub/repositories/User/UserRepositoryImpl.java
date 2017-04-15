@@ -45,8 +45,15 @@ public class UserRepositoryImpl implements UserRepository {
     }
     @Override
     public void save(User user) {
-        String sql = "INSERT INTO \"user\" (email, name, password, username) VALUES (?, ?, ?, ?)";
-        this.jdbcTemplate.update(sql, new Object[]{user.getEmail(), user.getName(), user.getPassword(), user.getUsername()});
+        if (user.getId() == null) {
+            String sql = "INSERT INTO \"user\" (email, name, password, username, authority_id) VALUES (?, ?, ?, ?, ?)";
+            this.jdbcTemplate.update(sql, new Object[]{user.getEmail(), user.getName(), user.getPassword(),
+                user.getUsername(), user.getAuthority().getId()});
+        } else {
+            String sql = "UPDATE \"user\" SET email = ?, name = ?, password = ?, username = ?, authority_id = ? WHERE id = " + user.getId();
+            this.jdbcTemplate.update(sql, new Object[]{user.getEmail(), user.getName(), user.getPassword(),
+                user.getUsername(), user.getAuthority().getId()});
+        }
     }
 
     @Override

@@ -48,10 +48,10 @@ public class MvcLoader implements CommandLineRunner {
         String applicationVersion = environment.getProperty("web.site.version");
         logger.info(String.format("MVC Application Version: %s", applicationVersion));
 
-//        for (User user : users.findAll()) {
-//            String password = user.getPassword();
-//            user.setPassword(SecurityConfig.encoder.encode(password));
-//            users.save(user);
-//        }
+        for (User user : users.findAll()) {
+            String password = user.getPassword();
+            user.setPassword(SecurityConfig.encoder.encode(password));
+            users.save(user);
+        }
     }
 }
