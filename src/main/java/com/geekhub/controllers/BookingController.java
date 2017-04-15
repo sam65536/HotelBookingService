@@ -63,7 +63,7 @@ public class BookingController {
         User user = bookingService.getCurrentUser();
         List<Booking> bookingList = new ArrayList<>();
         for (Booking booking : bookings.findAll()) {
-            if (booking.getHotel().getManager().getId() == user.getId()) {
+            if (booking.getRoom().getHotel().getManager().getId() == user.getId()) {
                 bookingList.add(booking);
             }
         }
@@ -76,50 +76,50 @@ public class BookingController {
         return roomTypes.findAll();
     }
 
-    @RequestMapping(value = "/new/{hotelId}", method = RequestMethod.GET, produces = {"text/plain", "application/json"})
-    public @ResponseBody Booking bookRoomJSON(@PathVariable("hotelId") long hotelId) {
-        long firstRoomType = 1;
-        int numberRooms = 2;
-        Booking booking = new Booking();
-        booking.setBeginDate(LocalDate.parse("2016-02-28"));
-        booking.setEndDate(LocalDate.parse("2016-03-02"));
-        RoomType currentRoomType = roomTypes.findOne(firstRoomType);
-        List<LocalDate> dates = bookingService.getBookingDays(booking);
-        booking.setUser(users.findOne((long) 1));
-        Hotel hotel = hotels.findOne(hotelId);
-        List<Room> availableRooms = bookingService.getAvailableRooms(numberRooms, hotel, currentRoomType, booking, dates);
-        Set<Room> roomsBooking = new HashSet<>(availableRooms);
-        booking.setRooms(roomsBooking);
-        bookings.save(booking);
-        return booking;
-    }
-
-    @RequestMapping(value = "/new/{hotelId}", method = RequestMethod.GET)
-    @AllowedForSystemUsers
-    public String bookRoom(Model model, @PathVariable("hotelId") long hotelId,
-                           @ModelAttribute("booking") Booking booking,
-                           @ModelAttribute("numberRooms") int numberRooms,
-                           @ModelAttribute("roomType") long roomType, Authentication authentication) {
-        RoomType currentRoomType = roomTypes.findOne(roomType);
-        List<LocalDate> dates = bookingService.getBookingDays(booking);
-        booking.setUser(bookingService.getCurrentUser());
-        Hotel hotel = hotels.findOne(hotelId);
-        List<Room> availableRooms = bookingService.getAvailableRooms(numberRooms, hotel, currentRoomType, booking, dates);
-        Set<Room> bookedRooms = new HashSet<>(availableRooms);
-        booking.setRooms(bookedRooms);
-        bookings.save(booking);
-        model.addAttribute("bookings", bookings.findAll());
-        CustomUserDetail principal = (authentication != null) ? (CustomUserDetail) authentication.getPrincipal() : null;
-        if (principal != null) {
-            String authority = (principal.getAuthorities().iterator().next()).getAuthority();
-            if (authority.equals("ROLE_USER")
-                    || authority.equals("ROLE_COMMENT_MODERATOR")
-                    || authority.equals("ROLE_ADMIN")) {
-                return "redirect:/users/me";
-            }
-        }
-        return "redirect:/bookings";
-    }
+//    @RequestMapping(value = "/new/{hotelId}", method = RequestMethod.GET, produces = {"text/plain", "application/json"})
+//    public @ResponseBody Booking bookRoomJSON(@PathVariable("hotelId") long hotelId) {
+//        long firstRoomType = 1;
+//        int numberRooms = 2;
+//        Booking booking = new Booking();
+//        booking.setBeginDate(LocalDate.parse("2016-02-28"));
+//        booking.setEndDate(LocalDate.parse("2016-03-02"));
+//        RoomType currentRoomType = roomTypes.findOne(firstRoomType);
+//        List<LocalDate> dates = bookingService.getBookingDays(booking);
+//        booking.setUser(users.findOne((long) 1));
+//        Hotel hotel = hotels.findOne(hotelId);
+//        List<Room> availableRooms = bookingService.getAvailableRooms(numberRooms, hotel, currentRoomType, booking, dates);
+//        Set<Room> roomsBooking = new HashSet<>(availableRooms);
+//        booking.setRooms(roomsBooking);
+//        bookings.save(booking);
+//        return booking;
+//    }
+//
+//    @RequestMapping(value = "/new/{hotelId}", method = RequestMethod.GET)
+//    @AllowedForSystemUsers
+//    public String bookRoom(Model model, @PathVariable("hotelId") long hotelId,
+//                           @ModelAttribute("booking") Booking booking,
+//                           @ModelAttribute("numberRooms") int numberRooms,
+//                           @ModelAttribute("roomType") long roomType, Authentication authentication) {
+//        RoomType currentRoomType = roomTypes.findOne(roomType);
+//        List<LocalDate> dates = bookingService.getBookingDays(booking);
+//        booking.setUser(bookingService.getCurrentUser());
+//        Hotel hotel = hotels.findOne(hotelId);
+//        List<Room> availableRooms = bookingService.getAvailableRooms(numberRooms, hotel, currentRoomType, booking, dates);
+//        Set<Room> bookedRooms = new HashSet<>(availableRooms);
+//        booking.setRooms(bookedRooms);
+//        bookings.save(booking);
+//        model.addAttribute("bookings", bookings.findAll());
+//        CustomUserDetail principal = (authentication != null) ? (CustomUserDetail) authentication.getPrincipal() : null;
+//        if (principal != null) {
+//            String authority = (principal.getAuthorities().iterator().next()).getAuthority();
+//            if (authority.equals("ROLE_USER")
+//                    || authority.equals("ROLE_COMMENT_MODERATOR")
+//                    || authority.equals("ROLE_ADMIN")) {
+//                return "redirect:/users/me";
+//            }
+//        }
+//        return "redirect:/bookings";
+//    }
 
     @RequestMapping(value = "/new", method = RequestMethod.GET)
     public String newBooking(Model model) {
@@ -167,32 +167,32 @@ public class BookingController {
         return "redirect:/bookings/";
     }
 
-    @RequestMapping(value = "/{bookingId}/remove", method = RequestMethod.GET)
-    @AllowedForRemovingBookings
-    public String removeBooking(Model model, @PathVariable("bookingId") long bookingId, Authentication authentication) {
-        Booking booking = bookings.findOne(bookingId);
-        if (booking == null) {
-            throw new BookingNotFoundException();
-        }
-        Set<Room> rooms = booking.getRooms();
-        Iterator<Room> iterator = rooms.iterator();
-        while (iterator.hasNext()) {
-            Room room = iterator.next();
-            Map<LocalDate, Long> daysReserved = room.getReservedDays();
-            List<LocalDate> dates = bookingService.getBookingDays(booking);
-            for (LocalDate date : dates) {
-                daysReserved.remove(date);
-            }
-            room.setReservedDays(daysReserved);
-        }
-        bookings.delete(booking.getId());
-        CustomUserDetail principal = (authentication != null) ? (CustomUserDetail) authentication.getPrincipal() : null;
-        if (principal != null) {
-            String authority = (principal.getAuthorities().iterator().next()).getAuthority();
-            if (authority.equals(("ROLE_USER"))) {
-                return "redirect:/users/me";
-            }
-        }
-        return "redirect:/bookings";
-    }
+//    @RequestMapping(value = "/{bookingId}/remove", method = RequestMethod.GET)
+//    @AllowedForRemovingBookings
+//    public String removeBooking(Model model, @PathVariable("bookingId") long bookingId, Authentication authentication) {
+//        Booking booking = bookings.findOne(bookingId);
+//        if (booking == null) {
+//            throw new BookingNotFoundException();
+//        }
+//        Set<Room> rooms = booking.getRooms();
+//        Iterator<Room> iterator = rooms.iterator();
+//        while (iterator.hasNext()) {
+//            Room room = iterator.next();
+//            Map<LocalDate, Long> daysReserved = room.getReservedDays();
+//            List<LocalDate> dates = bookingService.getBookingDays(booking);
+//            for (LocalDate date : dates) {
+//                daysReserved.remove(date);
+//            }
+//            room.setReservedDays(daysReserved);
+//        }
+//        bookings.delete(booking.getId());
+//        CustomUserDetail principal = (authentication != null) ? (CustomUserDetail) authentication.getPrincipal() : null;
+//        if (principal != null) {
+//            String authority = (principal.getAuthorities().iterator().next()).getAuthority();
+//            if (authority.equals(("ROLE_USER"))) {
+//                return "redirect:/users/me";
+//            }
+//        }
+//        return "redirect:/bookings";
+//    }
 }

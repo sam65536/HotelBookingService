@@ -1,13 +1,8 @@
 package com.geekhub.common;
 
-import com.geekhub.domain.entities.Booking;
-import com.geekhub.domain.entities.Room;
 import com.geekhub.domain.entities.User;
-import com.geekhub.repositories.Booking.BookingRepository;
-import com.geekhub.repositories.Room.RoomRepository;
 import com.geekhub.repositories.User.UserRepository;
 import com.geekhub.security.SecurityConfig;
-import com.geekhub.services.BookingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +11,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.env.SimpleCommandLinePropertySource;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Component
 public class MvcLoader implements CommandLineRunner {
@@ -31,28 +21,10 @@ public class MvcLoader implements CommandLineRunner {
     Environment environment;
 
     private UserRepository users;
-    private BookingRepository bookings;
-    private RoomRepository rooms;
-    private BookingService bookingService;
 
     @Autowired
     public void setUsers(UserRepository users) {
         this.users = users;
-    }
-
-    @Autowired
-    public void setBookings(BookingRepository bookings) {
-        this.bookings = bookings;
-    }
-
-    @Autowired
-    public void setRooms(RoomRepository rooms) {
-        this.rooms = rooms;
-    }
-
-    @Autowired
-    public void setBookingService(BookingService bookingService) {
-        this.bookingService = bookingService;
     }
 
     @Override
@@ -76,23 +48,10 @@ public class MvcLoader implements CommandLineRunner {
         String applicationVersion = environment.getProperty("web.site.version");
         logger.info(String.format("MVC Application Version: %s", applicationVersion));
 
-        for (User user : users.findAll()) {
-            String password = user.getPassword();
-            user.setPassword(SecurityConfig.encoder.encode(password));
-            users.save(user);
-        }
-
-        for (Booking booking : bookings.findAll()) {
-            List<LocalDate> bookingDays = bookingService.getBookingDays(booking);
-            Map<LocalDate, Long> tmpMap = new HashMap<>();
-            for (LocalDate date : bookingDays) {
-                tmpMap.put(date, booking.getId());
-            }
-            for (Room room : booking.getRooms()) {
-                room.setReservedDays(tmpMap);
-                rooms.save(room);
-            }
-            bookings.save(booking);
-        }
+//        for (User user : users.findAll()) {
+//            String password = user.getPassword();
+//            user.setPassword(SecurityConfig.encoder.encode(password));
+//            users.save(user);
+//        }
     }
 }

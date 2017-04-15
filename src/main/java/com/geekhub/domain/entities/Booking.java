@@ -4,8 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -15,9 +13,5 @@ public class Booking {
     private LocalDate endDate;
     private boolean state;
     private User user;
-    private Set<Room> rooms = new HashSet<>();
-
-    public Hotel getHotel() {
-        return rooms.iterator().next().getHotel();
-    }
+    private Room room;
 }

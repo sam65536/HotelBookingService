@@ -37,8 +37,9 @@ public class AuthorityRepositoryImpl implements AuthorityRepository {
 
     @Override
     public Authority findByRole(String role) {
-        String sql = "SELECT id, role from authority WHERE role= " + role;
-        List<Authority> authorities = jdbcTemplate.query(sql, new AuthorityRowMapper());
+        StringBuilder sql = new StringBuilder("SELECT id, role from authority WHERE role=");
+        sql.append("\'").append(role).append("\'");
+        List<Authority> authorities = jdbcTemplate.query(sql.toString(), new AuthorityRowMapper());
         return authorities.get(0);
     }
 

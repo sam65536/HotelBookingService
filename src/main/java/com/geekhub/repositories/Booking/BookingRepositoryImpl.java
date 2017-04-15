@@ -20,14 +20,18 @@ public class BookingRepositoryImpl implements BookingRepository {
 
     @Override
     public List<Booking> findAll() {
-        String sql = "SELECT id, begin_date, end_date, state FROM booking";
+        String sql = "SELECT booking.id, begin_date, end_date, state, user_id, room_id, hotel_id, manager_id\n" +
+                "FROM booking LEFT JOIN room ON booking.room_id = room.id\n" +
+                "LEFT JOIN hotel ON room.hotel_id = hotel.id";
         List<Booking> bookings = this.jdbcTemplate.query(sql, new BookingRowMapper());
         return bookings;
     }
 
     @Override
     public Booking findOne(long id) {
-        String sql = "SELECT id, begin_date, end_date, state FROM booking WHERE id=" + id;
+        String sql = "SELECT booking.id, begin_date, end_date, state, user_id, room_id, hotel_id, manager_id\n" +
+                "FROM booking LEFT JOIN room ON booking.room_id = room.id\n" +
+                "LEFT JOIN hotel ON room.hotel_id = hotel.id WHERE booking.id=" + id;
         List<Booking> bookings = this.jdbcTemplate.query(sql, new BookingRowMapper());
         return bookings.get(0);
     }

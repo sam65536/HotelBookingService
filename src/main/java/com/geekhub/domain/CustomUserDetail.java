@@ -26,7 +26,7 @@ public class CustomUserDetail implements UserDetails {
     }
 
     public void setAuthorities(Set<GrantedAuthority> authorities) {
-        this.authorities=authorities;
+        this.authorities = authorities;
     }
 
     @Override

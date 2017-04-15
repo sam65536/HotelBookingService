@@ -30,8 +30,11 @@ public class HotelRepositoryImpl implements HotelRepository {
 
     @Override
     public List<Hotel> findAll() {
-        String sql = "SELECT id, address, name, rating, status FROM hotel";
+        String sql = "SELECT hotel.id, address,  hotel.name, rating, status, city_id, manager_id, \"user\".name FROM hotel\n" +
+                "LEFT JOIN \"user\" ON \"user\".id=manager_id";
         List<Hotel> hotels = this.jdbcTemplate.query(sql, new HotelRowMapper());
+
+
         List<Image> images = this.jdbcTemplate.query("SELECT image.id, path, hotel_id FROM image\n" +
                             "LEFT JOIN hotel ON image.hotel_id = hotel.id",
                 (rs, rowNum) -> {
@@ -54,7 +57,8 @@ public class HotelRepositoryImpl implements HotelRepository {
 
     @Override
     public Hotel findOne(Long id) {
-        String sql = "SELECT id, address, name, rating, status FROM hotel WHERE id= " + id;
+        String sql = "SELECT hotel.id, address,  hotel.name, rating, status, city_id, manager_id, \"user\".name FROM hotel\n" +
+                "LEFT JOIN \"user\" ON \"user\".id=manager_id WHERE hotel.id= " + id;
         List<Hotel> hotels = this.jdbcTemplate.query(sql, new HotelRowMapper());
 
         List<Room> rooms = this.jdbcTemplate.query(
@@ -81,17 +85,6 @@ public class HotelRepositoryImpl implements HotelRepository {
                         "WHERE hotel.id=" + id, new CategoryRowMapper());
         hotels.get(0).setCategory(categories.get(0));
 
-        List<City> cities = this.jdbcTemplate.query(
-                "SELECT hotel.city_id, city.name FROM hotel\n" +
-                        "LEFT JOIN city ON city.id=hotel.city_id\n" +
-                        "WHERE hotel.id=" +id,
-                (rs, rowNum) -> {
-                    City city = new City();
-                    city.setId(rs.getLong("city_id"));
-                    city.setName(rs.getString("name"));
-                    return city;
-                });
-        hotels.get(0).setCity(cities.get(0));
         return hotels.get(0);
     }
 
@@ -115,11 +108,18 @@ public class HotelRepositoryImpl implements HotelRepository {
         @Override
         public Hotel mapRow(ResultSet rs, int rowNum) throws SQLException {
             Hotel hotel = new Hotel();
+            User user = new User();
+            City city = new City();
             hotel.setId(rs.getLong("id"));
             hotel.setAddress(rs.getString("address"));
             hotel.setName(rs.getString("name"));
             hotel.setRating(rs.getInt("rating"));
             hotel.setStatus(rs.getBoolean("status"));
+            city.setId(rs.getLong("city_id"));
+            user.setId(rs.getLong("manager_id"));
+            user.setName(rs.getString("name"));
+            hotel.setCity(city);
+            hotel.setManager(user);
             return hotel;
         }
     }
