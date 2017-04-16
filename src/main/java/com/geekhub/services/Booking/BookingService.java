@@ -1,4 +1,4 @@
-package com.geekhub.repositories.Booking;
+package com.geekhub.services.Booking;
 
 import com.geekhub.domain.entities.Booking;
 
@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
-public interface BookingRepository {
+public interface BookingService {
     List<Booking> findAll();
     Booking findOne(Long id);
     List<Booking> getUserBookings(Long userId);

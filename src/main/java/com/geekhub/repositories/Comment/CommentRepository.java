@@ -8,6 +8,7 @@ public interface CommentRepository {
     public List<Comment> findAll();
     public Comment findOne(Long id);
     public List<Comment> getCommentsOfHotel(Long hotelId);
+    public List<Comment> getCommentsOfUser(Long userId);
     public void save (Comment comment);
     public void delete (Long id);
 }

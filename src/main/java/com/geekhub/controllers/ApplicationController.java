@@ -34,11 +34,6 @@ public class ApplicationController {
        return "landing-page";
    }
 	
-   @RequestMapping(value = "/angular")
-   public String angular() {
-       return "angular-interface";
-   }
-	
    @RequestMapping(value = "/signedin")
    public String signedIn(Model model, Authentication authentication) {
        CustomUserDetail principal = (authentication != null) ? (CustomUserDetail) authentication.getPrincipal() : null;

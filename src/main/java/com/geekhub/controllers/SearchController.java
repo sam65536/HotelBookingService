@@ -34,17 +34,6 @@ public class SearchController {
         return result;
     }
 
-    @RequestMapping(value = "/json", method = RequestMethod.GET, produces = {"application/json"})
-    public @ResponseBody List<Room> searchAvailableRooms (
-                                            @RequestParam("hotel") Long hotelId,
-                                            @RequestParam("persons") Integer persons,
-                                            @RequestParam("beginDate") LocalDate beginDate,
-                                            @RequestParam("endDate") LocalDate endDate) {
-
-        List<Room> roomsList = searchService.searchAvailableRooms(hotelId, persons, beginDate, endDate);
-        return roomsList;
-    }
-
     @RequestMapping(value = "/rooms", method = RequestMethod.GET)
     public String searchAvailableRooms (Model model,
                                         @RequestParam("cityId") Long cityId,

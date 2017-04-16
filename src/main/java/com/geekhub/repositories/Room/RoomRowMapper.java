@@ -1,6 +1,7 @@
 package com.geekhub.repositories.Room;
 
 import com.geekhub.domain.entities.Room;
+import com.geekhub.domain.entities.RoomType;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -15,6 +16,11 @@ public class RoomRowMapper implements RowMapper<Room> {
         room.setFloor(rs.getInt("floor"));
         room.setPrice(rs.getInt("price"));
         room.setRoomNumber(rs.getString("room_number"));
+        RoomType roomType = new RoomType();
+        roomType.setId(rs.getLong("type_id"));
+        roomType.setDescription(rs.getString("description"));
+        roomType.setOccupancy(rs.getString("occupancy"));
+        room.setType(roomType);
         return room;
     }
 }

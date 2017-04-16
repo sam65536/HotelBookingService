@@ -5,10 +5,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 @Getter
@@ -21,7 +18,7 @@ public class Room implements Comparable<Object> {
     private RoomType type;
     private Hotel hotel;
 
-    private Map<LocalDate, Long> reservedDays = new HashMap<>();
+    private Set<LocalDate> reservedDays = new TreeSet<>();
     private Set<Booking> bookings = new HashSet<>();
 
     public int getCapacity() {
@@ -31,7 +28,7 @@ public class Room implements Comparable<Object> {
     public boolean isAvailable(LocalDate start, LocalDate end) {
         long reservedDays = Stream.iterate(start, date -> date.plusDays(1))
                 .limit(ChronoUnit.DAYS.between(start, end) + 1)
-                .filter(localDate -> getReservedDays().keySet().contains(localDate))
+                .filter(localDate -> getReservedDays().contains(localDate))
                 .count();
        return (reservedDays == 0);
     }

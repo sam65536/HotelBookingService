@@ -89,6 +89,19 @@ public class HotelRepositoryImpl implements HotelRepository {
     }
 
     @Override
+    public List<Hotel> getUserHotels(Long userId) {
+        String sql = "SELECT hotel.id, hotel.name FROM hotel\n" +
+                "LEFT JOIN \"user\" ON manager_id=\"user\".id WHERE \"user\".id=" + userId;
+        List<Hotel> hotels = this.jdbcTemplate.query(sql,  (rs, rowNum) -> {
+            Hotel hotel = new Hotel();
+            hotel.setId(rs.getLong("id"));
+            hotel.setName(rs.getString("name"));
+            return hotel;
+        });
+        return hotels;
+    }
+
+    @Override
     public void save(Hotel hotel) {
         String sql = "INSERT INTO hotel" +
                 "(id, address, name, rating, status, category_id, city_id, manager_id) " +

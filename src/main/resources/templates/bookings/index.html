@@ -35,18 +35,11 @@
 				th:each="booking : ${bookings}">
 				<td><span th:text="${booking.id}"></span></td>
 				<td><span th:text="${booking.user.name}"></span></td>
-				<td><span th:text="${#dates.day(booking.beginDate)}"></span> <span
-					th:text="${#dates.monthNameShort(booking.beginDate)}"></span> <span
-					th:text="${#dates.year(booking.beginDate)}"></span></td>
-				<td><span th:text="${#dates.day(booking.endDate)}"></span> <span
-					th:text="${#dates.monthNameShort(booking.endDate)}"></span> <span
-					th:text="${#dates.year(booking.endDate)}"></span></td>
-				<td><span th:text="${booking.hotel.name}"></span></td>
-				<td><span th:text="${booking.roomType}"></span></td>
-				<td>
-					<div th:each="room : ${booking.rooms}">
-						<span th:text="${room.roomNumber}"></span><br>
-					</div>
+				<td><span th:text="${booking.beginDate}"></span> <span
+				<td><span th:text="${booking.endDate}"></span> <span
+				<td><span th:text="${booking.room.hotel.name}"></span></td>
+				<td><span th:text="${booking.room.type}"></span></td>
+				<td><span th:text="${booking.room.roomNumber}"></span><br>
 				</td>
 				<td><span th:if="${booking.state}"><i
 						class="glyphicon glyphicon-ok"></i></span></td>

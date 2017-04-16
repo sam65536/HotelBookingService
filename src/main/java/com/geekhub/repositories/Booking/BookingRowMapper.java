@@ -1,9 +1,6 @@
 package com.geekhub.repositories.Booking;
 
-import com.geekhub.domain.entities.Booking;
-import com.geekhub.domain.entities.Hotel;
-import com.geekhub.domain.entities.Room;
-import com.geekhub.domain.entities.User;
+import com.geekhub.domain.entities.*;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -18,6 +15,7 @@ public class BookingRowMapper implements RowMapper<Booking> {
         Room room = new Room();
         Hotel hotel = new Hotel();
         User manager = new User();
+        RoomType roomType = new RoomType();
         booking.setId(rs.getLong("id"));
         booking.setBeginDate(rs.getDate("begin_date").toLocalDate());
         booking.setEndDate(rs.getDate("end_date").toLocalDate());
@@ -25,8 +23,12 @@ public class BookingRowMapper implements RowMapper<Booking> {
         user.setId(rs.getLong("user_id"));
         booking.setUser(user);
         room.setId(rs.getLong("room_id"));
+        room.setRoomNumber(rs.getString("room_number"));
         hotel.setId(rs.getLong("hotel_id"));
+        hotel.setName(rs.getString("name"));
         manager.setId(rs.getLong("manager_id"));
+        roomType.setDescription(rs.getString("description"));
+        room.setType(roomType);
         hotel.setManager(manager);
         room.setHotel(hotel);
         booking.setRoom(room);

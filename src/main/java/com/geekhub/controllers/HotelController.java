@@ -3,6 +3,7 @@ package com.geekhub.controllers;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -15,8 +16,8 @@ import com.geekhub.repositories.Image.ImageRepository;
 import com.geekhub.repositories.Room.RoomRepository;
 import com.geekhub.repositories.RoomType.RoomTypeRepository;
 import com.geekhub.repositories.User.UserRepository;
-import com.geekhub.services.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -32,7 +33,6 @@ import com.geekhub.domain.entities.Comment;
 import com.geekhub.domain.entities.Hotel;
 import com.geekhub.domain.entities.Image;
 import com.geekhub.domain.entities.Room;
-import com.geekhub.domain.entities.RoomType;
 import com.geekhub.security.AllowedForAdmin;
 import com.geekhub.security.AllowedForHotelManager;
 import com.geekhub.security.AllowedForManageHotel;
@@ -209,11 +209,16 @@ public class HotelController {
 
     @RequestMapping(value = "{id}/map", method = RequestMethod.POST)
     @AllowedForHotelManager
-    public String hotelMap(@PathVariable("id") long id, Model model, @ModelAttribute Booking booking) {
-        model.addAttribute("beginDate", booking.getBeginDate());
-        model.addAttribute("endDate", booking.getEndDate());
+    public String hotelMap(@PathVariable("id") long id, Model model,
+                           @RequestParam("beginDate")
+                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate beginDate,
+                           @RequestParam("endDate")
+                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+
+        model.addAttribute("beginDate", beginDate);
+        model.addAttribute("endDate", endDate);
         model.addAttribute("hotel", hotels.findOne(id));
-        model.addAttribute("occupancy", hotelService.getOccupancy(hotels.findOne(id), booking.getBeginDate(), booking.getEndDate()));
+        model.addAttribute("occupancy", hotelService.getOccupancy(hotels.findOne(id), beginDate, endDate));
         return "hotels/map";
     }
 }

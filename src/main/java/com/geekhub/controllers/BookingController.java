@@ -1,40 +1,26 @@
 package com.geekhub.controllers;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import com.geekhub.repositories.Booking.BookingRepository;
 import com.geekhub.repositories.Hotel.HotelRepository;
 import com.geekhub.repositories.RoomType.RoomTypeRepository;
 import com.geekhub.repositories.User.UserRepository;
-import com.geekhub.services.BookingService;
+import com.geekhub.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.geekhub.domain.entities.Booking;
-import com.geekhub.domain.CustomUserDetail;
-import com.geekhub.domain.entities.Hotel;
-import com.geekhub.domain.entities.Room;
 import com.geekhub.domain.entities.RoomType;
 import com.geekhub.domain.entities.User;
 import com.geekhub.security.AllowedForApprovingBookings;
 import com.geekhub.security.AllowedForHotelManager;
-import com.geekhub.security.AllowedForRemovingBookings;
-import com.geekhub.security.AllowedForSystemUsers;
 import com.geekhub.exceptions.BookingNotFoundException;
 
 @Controller
@@ -45,14 +31,16 @@ public class BookingController {
     private final BookingRepository bookings;
     private final HotelRepository hotels;
     private final UserRepository users;
+    private final UserService userService;
     private final RoomTypeRepository roomTypes;
     private final BookingService bookingService;
 
     @Autowired
-    public BookingController(BookingRepository bookings, HotelRepository hotels, UserRepository users, RoomTypeRepository roomTypes, BookingService bookingService) {
+    public BookingController(BookingRepository bookings, HotelRepository hotels, UserRepository users, UserService userService, RoomTypeRepository roomTypes, BookingService bookingService) {
         this.bookings = bookings;
         this.hotels = hotels;
         this.users = users;
+        this.userService = userService;
         this.roomTypes = roomTypes;
         this.bookingService = bookingService;
     }
@@ -61,12 +49,7 @@ public class BookingController {
     @AllowedForHotelManager
     public String index(Model model) {
         User user = bookingService.getCurrentUser();
-        List<Booking> bookingList = new ArrayList<>();
-        for (Booking booking : bookings.findAll()) {
-            if (booking.getRoom().getHotel().getManager().getId() == user.getId()) {
-                bookingList.add(booking);
-            }
-        }
+        List<Booking> bookingList = userService.getUserBookings(user.getId());
         model.addAttribute("bookings", bookingList);
         return "bookings/index";
     }
@@ -128,32 +111,32 @@ public class BookingController {
         return "bookings/create";
     }
 
-    @RequestMapping(value = "/search", method = RequestMethod.POST)
-    @AllowedForSystemUsers
-    public String searchRooms(@ModelAttribute Booking booking, Model model,
-                              @RequestParam("roomType") long roomType,
-                              @RequestParam("numberRooms") int numberRooms) {
-        RoomType currentRoomType = roomTypes.findOne(roomType);
-        List<LocalDate> dates = bookingService.getBookingDays(booking);
-        List<Room> availableRooms = bookingService.getAvailableRooms(numberRooms, currentRoomType, dates);
-        model.addAttribute("rooms", availableRooms);
-        model.addAttribute("booking", booking);
-        model.addAttribute("roomType", currentRoomType);
-        model.addAttribute("numberRooms", numberRooms);
-        return "bookings/results";
-    }
-
-    @RequestMapping(value = "/search", method = RequestMethod.GET, produces = {"text/plain", "application/json"})
-    public @ResponseBody Iterable<Room> searchRoomsJSON(LocalDate checkin, LocalDate checkout, String rooms, long roomType) {
-        int numberRooms = Integer.parseInt(rooms);
-        Booking booking = new Booking();
-        booking.setBeginDate(checkin);
-        booking.setEndDate(checkout);
-        RoomType currentRoomType = roomTypes.findOne(roomType);
-        List<LocalDate> dates = bookingService.getBookingDays(booking);
-        List<Room> availableRooms = bookingService.getAvailableRooms(numberRooms, currentRoomType, dates);
-        return availableRooms;
-    }
+//    @RequestMapping(value = "/search", method = RequestMethod.POST)
+//    @AllowedForSystemUsers
+//    public String searchRooms(@ModelAttribute Booking booking, Model model,
+//                              @RequestParam("roomType") long roomType,
+//                              @RequestParam("numberRooms") int numberRooms) {
+//        RoomType currentRoomType = roomTypes.findOne(roomType);
+//        List<LocalDate> dates = bookingService.getBookingDays(booking);
+//        List<Room> availableRooms = bookingService.getAvailableRooms(numberRooms, currentRoomType, dates);
+//        model.addAttribute("rooms", availableRooms);
+//        model.addAttribute("booking", booking);
+//        model.addAttribute("roomType", currentRoomType);
+//        model.addAttribute("numberRooms", numberRooms);
+//        return "bookings/results";
+//    }
+//
+//    @RequestMapping(value = "/search", method = RequestMethod.GET, produces = {"text/plain", "application/json"})
+//    public @ResponseBody Iterable<Room> searchRoomsJSON(LocalDate checkin, LocalDate checkout, String rooms, long roomType) {
+//        int numberRooms = Integer.parseInt(rooms);
+//        Booking booking = new Booking();
+//        booking.setBeginDate(checkin);
+//        booking.setEndDate(checkout);
+//        RoomType currentRoomType = roomTypes.findOne(roomType);
+//        List<LocalDate> dates = bookingService.getBookingDays(booking);
+//        List<Room> availableRooms = bookingService.getAvailableRooms(numberRooms, currentRoomType, dates);
+//        return availableRooms;
+//    }
 
     @RequestMapping(value = "/{bookingId}/approve", method = RequestMethod.GET)
     @AllowedForApprovingBookings

@@ -128,20 +128,19 @@
 					</div>
 					<div class="modal-body">
 
-						<form th:object="${booking}" th:action="@{|/hotels/${hotel.id}/map|}" method="post">
-							<p>
-								<input type="hidden" th:field="*{id}" />
+						<form th:action="@{|/hotels/${hotel.id}/map|}" method="post">
 							<div style="display: inline-block">
 								<label for="start"><i
-									class='glyphicon glyphicon-calendar'></i> Check-in:</label> <input
-									type="text" class="form-control" id="start" th:field="*{beginDate}">
+									class='glyphicon glyphicon-calendar'></i> Check-in:</label>
+								<input type="text" class="form-control" id="start" name="beginDate"/>
 							</div>
 
 							<p></p>
 
 							<div style="display: inline-block">
-								<label for="end"><i class='glyphicon glyphicon-calendar'></i>
-									Check-out:</label> <input type="text" class="form-control" id="end" th:field="*{endDate}" />
+								<label for="end"><i
+									class='glyphicon glyphicon-calendar'></i> Check-out:</label>
+								<input type="text" class="form-control" id="end" name="endDate"/>
 							</div>
 							<p></p>
 							<input class="btn btn-primary" type="submit" value="See occupancy map" />

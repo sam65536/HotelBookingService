@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.geekhub.domain.entities.Authority;
 import com.geekhub.domain.CustomUserDetail;
-import com.geekhub.security.CustomUserDetailsService;
+import com.geekhub.services.CustomUserDetailsService;
 import com.geekhub.domain.entities.User;
 import com.geekhub.security.AllowedForAdmin;
 import com.geekhub.security.AllowedForManageUser;
@@ -33,7 +33,6 @@ public class UserController {
 
     private final UserRepository users;
     private final UserService userService;
-    private final BookingRepository bookings;
     private final AuthorityRepository authorities;
     private final AuthenticationManager authenticationManager;
     private final CustomUserDetailsService customUserDetailsService;
@@ -43,7 +42,6 @@ public class UserController {
                           AuthenticationManager authMgr, CustomUserDetailsService customUserDetailsService) {
         this.users = users;
         this.userService = userService;
-        this.bookings = bookings;
         this.authorities = authorities;
         this.authenticationManager = authMgr;
         this.customUserDetailsService = customUserDetailsService;
@@ -93,7 +91,9 @@ public class UserController {
             throw new HotelNotFoundException();
         }
         model.addAttribute("user", user);
-        model.addAttribute("bookings", userService.getUserBookings(user.getId()));
+        model.addAttribute("hotels", userService.getUserHotels(id));
+        model.addAttribute("comments", userService.getUserComments(id));
+        model.addAttribute("bookings", userService.getUserBookings(id));
         return "users/show";
     }
 
@@ -102,8 +102,10 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetail myUser = (CustomUserDetail) authentication.getPrincipal();
         User user = users.findOne(myUser.getUser().getId());
-        model.addAttribute("bookings", userService.getUserBookings(user.getId()));
         model.addAttribute("user", user);
+        model.addAttribute("hotels", userService.getUserHotels(user.getId()));
+        model.addAttribute("comments", userService.getUserComments(user.getId()));
+        model.addAttribute("bookings", userService.getUserBookings(user.getId()));
         return "users/show";
     }
 

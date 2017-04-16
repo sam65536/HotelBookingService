@@ -1,6 +1,7 @@
 package com.geekhub.repositories.Comment;
 
 import com.geekhub.domain.entities.Comment;
+import com.geekhub.domain.entities.Hotel;
 import com.geekhub.domain.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -52,6 +53,31 @@ public class CommentRepositoryImpl implements CommentRepository {
             comment.setUser(user);
             return comment;
         });
+        return comments;
+    }
+
+    @Override
+    public List<Comment> getCommentsOfUser(Long userId) {
+        String sql = "SELECT comment.id, date, is_answer, comment.status, text, hotel_id, hotel.name AS hotel_name, user_id,\n" +
+                "\"user\".name FROM comment LEFT JOIN \"user\" ON user_id=\"user\".id\n" +
+                "LEFT JOIN hotel ON comment.hotel_id = hotel.id WHERE user_id=" + userId;
+        List<Comment> comments = this.jdbcTemplate.query(sql, (rs, rowNum) -> {
+                    Comment comment = new Comment();
+                    comment.setId(rs.getLong("id"));
+                    comment.setDate(rs.getTimestamp("date").toLocalDateTime());
+                    comment.setIsAnswer(rs.getBoolean("is_answer"));
+                    comment.setStatus(rs.getBoolean("status"));
+                    comment.setText(rs.getString("text"));
+                    Hotel hotel = new Hotel();
+                    hotel.setId(rs.getLong("hotel_id"));
+                    hotel.setName(rs.getString("hotel_name"));
+                    comment.setHotel(hotel);
+                    User user = new User();
+                    user.setId(rs.getLong("user_id"));
+                    user.setName(rs.getString("name"));
+                    comment.setUser(user);
+                    return comment;
+                });
         return comments;
     }
 

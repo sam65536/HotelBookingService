@@ -5,8 +5,9 @@ import com.geekhub.domain.entities.Hotel;
 import java.util.List;
 
 public interface HotelRepository {
-    public List<Hotel> findAll();
-    public Hotel findOne(Long id);
-    public void save (Hotel hotel);
-    public void delete (Long id);
+    List<Hotel> findAll();
+    Hotel findOne(Long id);
+    List<Hotel> getUserHotels(Long userId);
+    void save(Hotel hotel);
+    void delete(Long id);
 }

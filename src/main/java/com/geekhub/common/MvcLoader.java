@@ -1,8 +1,9 @@
 package com.geekhub.common;
 
-import com.geekhub.domain.entities.User;
+import com.geekhub.repositories.Booking.BookingRepository;
+import com.geekhub.repositories.Room.RoomRepository;
 import com.geekhub.repositories.User.UserRepository;
-import com.geekhub.security.SecurityConfig;
+import com.geekhub.services.Booking.BookingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,29 @@ public class MvcLoader implements CommandLineRunner {
     Environment environment;
 
     private UserRepository users;
+    private BookingRepository bookings;
+    private RoomRepository rooms;
+    private BookingService bookingService;
+
 
     @Autowired
     public void setUsers(UserRepository users) {
         this.users = users;
+    }
+
+    @Autowired
+    public void setBookings(BookingRepository bookings) {
+        this.bookings = bookings;
+    }
+
+    @Autowired
+    public void setRooms(RoomRepository rooms) {
+        this.rooms = rooms;
+    }
+
+    @Autowired
+    public void setBookingService(BookingService bookingService) {
+        this.bookingService = bookingService;
     }
 
     @Override
@@ -48,10 +68,16 @@ public class MvcLoader implements CommandLineRunner {
         String applicationVersion = environment.getProperty("web.site.version");
         logger.info(String.format("MVC Application Version: %s", applicationVersion));
 
-        for (User user : users.findAll()) {
-            String password = user.getPassword();
-            user.setPassword(SecurityConfig.encoder.encode(password));
-            users.save(user);
-        }
+//        for (User user : users.findAll()) {
+//            String password = user.getPassword();
+//            user.setPassword(SecurityConfig.encoder.encode(password));
+//            users.save(user);
+//        }
+
+//        for (Booking booking : bookings.findAll()) {
+//            Room room = rooms.findOne(booking.getRoom().getId());
+//            room.setReservedDays(bookingService.getBookingDays(booking));
+//            room.getBookings().add(booking);
+//        }
     }
 }

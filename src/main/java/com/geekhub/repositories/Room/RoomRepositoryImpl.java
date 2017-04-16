@@ -46,8 +46,9 @@ public class RoomRepositoryImpl implements RoomRepository{
     }
 
     @Override
-    public Room findOne(long id) {
-        String sql = "SELECT id, floor, price, room_number FROM room WHERE id=" + id;
+    public Room findOne(Long id) {
+        String sql = "SELECT room.id, floor, price, room_number, type_id, room_type.description, room_type.occupancy\n" +
+                "FROM room LEFT JOIN room_type ON room.type_id = room_type.id WHERE id=" + id;
         List<Room> rooms = this.jdbcTemplate.query(sql, new RoomRowMapper());
         return rooms.get(0);
     }
@@ -67,8 +68,16 @@ public class RoomRepositoryImpl implements RoomRepository{
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         String sql = "DELETE FROM room WHERE id=" + id;
         this.jdbcTemplate.update(sql);
+    }
+
+    @Override
+    public List<Room> getHotelRooms(Long hotelId) {
+        String sql = "SELECT room.id, floor, price, room_number, type_id, room_type.description, room_type.occupancy\n" +
+                "FROM room LEFT JOIN room_type ON room.type_id = room_type.id WHERE hotel_id=" + hotelId;
+        List<Room> rooms = this.jdbcTemplate.query(sql, new RoomRowMapper());
+        return rooms;
     }
 }

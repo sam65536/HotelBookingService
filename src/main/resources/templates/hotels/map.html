@@ -45,14 +45,10 @@
 			</thead>
 			<tbody>
 				<tr>
-					<td><i class="glyphicon glyphicon-time"></i> <span
-						th:text="${#dates.day(beginDate)}"></span> <span
-						th:text="${#dates.monthNameShort(beginDate)}"></span> <span
-						th:text="${#dates.year(beginDate)}"></span></td>
-					<td><i class="glyphicon glyphicon-time"></i> <span
-						th:text="${#dates.day(endDate)}"></span> <span
-						th:text="${#dates.monthNameShort(endDate)}"></span> <span
-						th:text="${#dates.year(endDate)}"></span></td>
+					<td><i class="glyphicon glyphicon-time"></i>
+						<span th:text="${beginDate}"></span>
+					<td><i class="glyphicon glyphicon-time"></i>
+						<span th:text="${endDate}"></span>
 				</tr>			
 			</tbody>
 		</table>
@@ -63,7 +59,7 @@
 					th:if="${oStat.index < 1}">
 					<th>Room Number</th>
 					<th th:each="o : ${ocDates.value}"><span
-						th:text="${#dates.day(o.key) + ' ' + #dates.monthNameShort(o.key)}"></span>
+						th:text="${o.key}"></span>
 					</th>
 				<tr>
 			</thead>
