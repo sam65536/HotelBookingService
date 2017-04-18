@@ -28,7 +28,8 @@ public class RoomController {
     private final BookingService bookingService;
 
     @Autowired
-    public RoomController(HotelService hotelService, RoomTypeRepository roomTypes, RoomService roomService, BookingService bookingService) {
+    public RoomController(HotelService hotelService, RoomTypeRepository roomTypes,
+						  RoomService roomService, BookingService bookingService) {
 		this.hotelService = hotelService;
 		this.roomTypes = roomTypes;
 		this.roomService = roomService;
