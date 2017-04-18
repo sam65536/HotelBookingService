@@ -29,7 +29,7 @@ public class RoomController {
 
     @Autowired
     public RoomController(HotelService hotelService, RoomTypeRepository roomTypes,
-						  RoomService roomService, BookingService bookingService) {
+                          RoomService roomService, BookingService bookingService) {
         this.hotelService = hotelService;
         this.roomTypes = roomTypes;
         this.roomService = roomService;
