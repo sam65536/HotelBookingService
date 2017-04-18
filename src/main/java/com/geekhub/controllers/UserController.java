@@ -1,9 +1,19 @@
 package com.geekhub.controllers;
 
+import com.geekhub.domain.CustomUserDetail;
+import com.geekhub.domain.entities.Authority;
+import com.geekhub.domain.entities.User;
+import com.geekhub.exceptions.HotelNotFoundException;
+import com.geekhub.exceptions.UserNotFoundException;
 import com.geekhub.repositories.Authority.AuthorityRepository;
-import com.geekhub.repositories.Booking.BookingRepository;
-import com.geekhub.repositories.User.UserRepository;
-import com.geekhub.services.UserService;
+import com.geekhub.security.AllowedForAdmin;
+import com.geekhub.security.AllowedForManageUser;
+import com.geekhub.security.SecurityConfig;
+import com.geekhub.services.Booking.BookingService;
+import com.geekhub.services.Comment.CommentService;
+import com.geekhub.services.CustomUserDetailsService;
+import com.geekhub.services.Hotel.HotelService;
+import com.geekhub.services.User.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,40 +27,35 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.geekhub.domain.entities.Authority;
-import com.geekhub.domain.CustomUserDetail;
-import com.geekhub.services.CustomUserDetailsService;
-import com.geekhub.domain.entities.User;
-import com.geekhub.security.AllowedForAdmin;
-import com.geekhub.security.AllowedForManageUser;
-import com.geekhub.security.SecurityConfig;
-import com.geekhub.exceptions.HotelNotFoundException;
-import com.geekhub.exceptions.UserNotFoundException;
-
 @Controller
 @RequestMapping(value = "/users")
 public class UserController {
 
-    private final UserRepository users;
     private final UserService userService;
     private final AuthorityRepository authorities;
     private final AuthenticationManager authenticationManager;
     private final CustomUserDetailsService customUserDetailsService;
+    private final HotelService hotelService;
+    private final CommentService commentService;
+    private final BookingService bookingService;
 
     @Autowired
-    public UserController(UserRepository users, UserService userService, BookingRepository bookings, AuthorityRepository authorities,
-                          AuthenticationManager authMgr, CustomUserDetailsService customUserDetailsService) {
-        this.users = users;
+    public UserController(UserService userService, AuthorityRepository authorities, AuthenticationManager authenticationManager,
+                          CustomUserDetailsService customUserDetailsService, HotelService hotelService, CommentService commentService,
+                          BookingService bookingService) {
         this.userService = userService;
         this.authorities = authorities;
-        this.authenticationManager = authMgr;
+        this.authenticationManager = authenticationManager;
         this.customUserDetailsService = customUserDetailsService;
+        this.hotelService = hotelService;
+        this.commentService = commentService;
+        this.bookingService = bookingService;
     }
 
     @RequestMapping(method = RequestMethod.GET)
     @AllowedForAdmin
     public String index(Model model) {
-        model.addAttribute("users", users.findAll());
+        model.addAttribute("users", userService.findAll());
         return "users/index";
     }
 
@@ -67,7 +72,7 @@ public class UserController {
             user.setAuthority(authority);
             String password = user.getPassword();
             user.setPassword(SecurityConfig.encoder.encode(user.getPassword()));
-            users.save(user);
+            userService.save(user);
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(user.getUsername());
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
             authenticationManager.authenticate(auth);
@@ -86,14 +91,14 @@ public class UserController {
     @RequestMapping(value = "{id}", method = RequestMethod.GET)
     @AllowedForManageUser
     public String show(@PathVariable("id") long id, Model model) {
-        User user = users.findOne(id);
+        User user = userService.findOne(id);
         if (user == null) {
             throw new HotelNotFoundException();
         }
         model.addAttribute("user", user);
-        model.addAttribute("hotels", userService.getUserHotels(id));
-        model.addAttribute("comments", userService.getUserComments(id));
-        model.addAttribute("bookings", userService.getUserBookings(id));
+        model.addAttribute("hotels", hotelService.getUserHotels(id));
+        model.addAttribute("comments", commentService.getUserComments(id));
+        model.addAttribute("bookings", bookingService.getUserBookings(id));
         return "users/show";
     }
 
@@ -101,29 +106,29 @@ public class UserController {
     public String showActiveProfile(Model model) throws HotelNotFoundException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetail myUser = (CustomUserDetail) authentication.getPrincipal();
-        User user = users.findOne(myUser.getUser().getId());
+        User user = userService.findOne(myUser.getUser().getId());
         model.addAttribute("user", user);
-        model.addAttribute("hotels", userService.getUserHotels(user.getId()));
-        model.addAttribute("comments", userService.getUserComments(user.getId()));
-        model.addAttribute("bookings", userService.getUserBookings(user.getId()));
+        model.addAttribute("hotels", hotelService.getUserHotels(user.getId()));
+        model.addAttribute("comments", commentService.getUserComments(user.getId()));
+        model.addAttribute("bookings", bookingService.getUserBookings(user.getId()));
         return "users/show";
     }
 
     @RequestMapping(value = "{id}/remove", method = RequestMethod.GET)
     @AllowedForManageUser
     public String remove(@PathVariable("id") Long id, Model model) {
-        User user = users.findOne(id);
+        User user = userService.findOne(id);
         if (user == null) {
             throw new UserNotFoundException();
         }
-        users.delete(user.getId());
-        model.addAttribute("users", users.findAll());
+        userService.delete(user.getId());
+        model.addAttribute("users", userService.findAll());
         return "users/index";
 	}
 
     @RequestMapping(value = "{id}/edit", method = RequestMethod.GET)
     public String edit(@PathVariable("id") Long id, Model model) {
-        User user = users.findOne(id);
+        User user = userService.findOne(id);
         model.addAttribute("user", user);
         model.addAttribute("authorities", authorities.findAll());
         return "users/edit";
@@ -131,7 +136,7 @@ public class UserController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
     public String edit(@PathVariable("id") Long id, @ModelAttribute User user, Model model) {
-        users.save(user);
+        userService.save(user);
         model.addAttribute("user", user);
         return "redirect:/admin";
     }

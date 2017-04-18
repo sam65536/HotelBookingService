@@ -1,46 +1,34 @@
 package com.geekhub.controllers;
 
+import com.geekhub.domain.entities.*;
+import com.geekhub.exceptions.HotelNotFoundException;
+import com.geekhub.repositories.Category.CategoryRepository;
+import com.geekhub.repositories.City.CityRepository;
+import com.geekhub.repositories.Image.ImageRepository;
+import com.geekhub.security.AllowedForAdmin;
+import com.geekhub.security.AllowedForHotelManager;
+import com.geekhub.security.AllowedForManageHotel;
+import com.geekhub.services.Comment.CommentService;
+import com.geekhub.services.CustomUserDetailsService;
+import com.geekhub.services.Hotel.HotelService;
+import com.geekhub.services.Room.RoomService;
+import com.geekhub.services.RoomTypeService.RoomTypeService;
+import com.geekhub.services.User.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
-
-import com.geekhub.repositories.Booking.BookingRepository;
-import com.geekhub.repositories.Category.CategoryRepository;
-import com.geekhub.repositories.City.CityRepository;
-import com.geekhub.repositories.Comment.CommentRepository;
-import com.geekhub.repositories.Hotel.HotelRepository;
-import com.geekhub.repositories.Image.ImageRepository;
-import com.geekhub.repositories.Room.RoomRepository;
-import com.geekhub.repositories.RoomType.RoomTypeRepository;
-import com.geekhub.repositories.User.UserRepository;
-import com.geekhub.services.Booking.BookingService;
-import com.geekhub.services.CustomUserDetailsService;
-import com.geekhub.services.Hotel.HotelService;
-import com.geekhub.services.Room.RoomService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.geekhub.domain.entities.Booking;
-import com.geekhub.domain.entities.Comment;
-import com.geekhub.domain.entities.Hotel;
-import com.geekhub.domain.entities.Image;
-import com.geekhub.domain.entities.Room;
-import com.geekhub.security.AllowedForAdmin;
-import com.geekhub.security.AllowedForHotelManager;
-import com.geekhub.security.AllowedForManageHotel;
-import com.geekhub.exceptions.HotelNotFoundException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/hotels")
@@ -48,28 +36,30 @@ public class HotelController {
 
     private final HotelService hotelService;
     private final RoomService roomService;
-    private final CategoryRepository categories;
-    private final RoomTypeRepository roomTypes;
-    private final UserRepository users;
-    private final ImageRepository images;
-    private final CommentRepository comments;
-    private final CityRepository cities;
+    private final RoomTypeService roomTypeService;
+    private final CommentService commentService;
+    private final UserService userService;
     private final CustomUserDetailsService customUserDetailsService;
 
+    private final CategoryRepository categories;
+    private final CityRepository cities;
+    private final ImageRepository images;
+
+
     @Autowired
-    public HotelController(HotelService hotelService, RoomService roomService, BookingService bookingService,
-                           CategoryRepository categories, RoomTypeRepository roomTypes, UserRepository users,
-                           ImageRepository images, CommentRepository comments, CityRepository cities,
-                           CustomUserDetailsService customUserDetailsService) {
+    public HotelController(HotelService hotelService, RoomService roomService, RoomTypeService roomTypeService,
+                           CommentService commentService, UserService userService, CustomUserDetailsService customUserDetailsService,
+                           CityRepository cities, CategoryRepository categories, ImageRepository images) {
         this.hotelService = hotelService;
         this.roomService = roomService;
-        this.categories = categories;
-        this.roomTypes = roomTypes;
-        this.users = users;
-        this.images = images;
-        this.comments = comments;
-        this.cities = cities;
+        this.roomTypeService = roomTypeService;
+        this.commentService = commentService;
+        this.userService = userService;
         this.customUserDetailsService = customUserDetailsService;
+
+        this.categories = categories;
+        this.images = images;
+        this.cities = cities;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -109,13 +99,13 @@ public class HotelController {
         }
         hotel.setRooms(roomService.getHotelRooms(id));
 
-        List<Comment> hotelComments = comments.getCommentsOfHotel(id);
+        List<Comment> hotelComments = commentService.getHotelComments(id);
         model.addAttribute("booking", new Booking());
         model.addAttribute("comments", hotelComments);
         model.addAttribute("hotel", hotel);
         model.addAttribute("reply", new Comment());
-        model.addAttribute("users", users.findAll());
-        model.addAttribute("roomTypes", roomTypes.findAll());
+        model.addAttribute("users", userService.findAll());
+        model.addAttribute("roomTypes", roomTypeService.findAll());
         Map<Long, Room> roomsByType = new HashMap<>();
                 roomService.findAll().stream()
                 .filter(room -> room.getHotel().getId() == id)
@@ -140,7 +130,7 @@ public class HotelController {
         model.addAttribute("hotel", hotel);
         model.addAttribute("categories", categories.findAll());
         model.addAttribute("cities", cities.findAll());
-        model.addAttribute("users", users.findAll());
+        model.addAttribute("users", userService.findAll());
         return "hotels/edit";
     }
 

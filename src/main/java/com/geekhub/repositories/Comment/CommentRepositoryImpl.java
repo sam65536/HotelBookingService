@@ -35,7 +35,7 @@ public class CommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
-    public List<Comment> getCommentsOfHotel(Long hotelId) {
+    public List<Comment> getHotelComments(Long hotelId) {
         String sql = "SELECT comment.id, date, is_answer, status, text, user_id, "
                 + "\"user\".name FROM comment LEFT JOIN \"user\" ON user_id=\"user\".id "
                 + "WHERE hotel_id=" + hotelId + "ORDER BY date DESC";
@@ -57,7 +57,7 @@ public class CommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
-    public List<Comment> getCommentsOfUser(Long userId) {
+    public List<Comment> getUserComments(Long userId) {
         String sql = "SELECT comment.id, date, is_answer, comment.status, text, hotel_id, hotel.name AS hotel_name, user_id,\n" +
                 "\"user\".name FROM comment LEFT JOIN \"user\" ON user_id=\"user\".id\n" +
                 "LEFT JOIN hotel ON comment.hotel_id = hotel.id WHERE user_id=" + userId;

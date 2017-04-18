@@ -1,35 +1,34 @@
 package com.geekhub.controllers;
 
+import com.geekhub.domain.CustomUserDetail;
 import com.geekhub.repositories.City.CityRepository;
-import com.geekhub.repositories.Hotel.HotelRepository;
-import com.geekhub.repositories.User.UserRepository;
+import com.geekhub.security.AllowedForAdmin;
+import com.geekhub.security.AllowedForCommentModerator;
+import com.geekhub.services.Hotel.HotelService;
+import com.geekhub.services.User.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.geekhub.domain.CustomUserDetail;
-import com.geekhub.security.AllowedForAdmin;
-import com.geekhub.security.AllowedForCommentModerator;
-
 @Controller
 public class ApplicationController {
 
-   private final HotelRepository hotels;
-   private final UserRepository users;
+   private final HotelService hotelService;
+   private final UserService userService;
    private final CityRepository cities;
 
    @Autowired
-   public ApplicationController(HotelRepository hotels, UserRepository users, CityRepository cities) {
-       this.hotels = hotels;
-       this.users = users;
+   public ApplicationController(HotelService hotelService, UserService userService, CityRepository cities) {
+       this.hotelService = hotelService;
+       this.userService = userService;
        this.cities = cities;
    }
 
    @RequestMapping(value = "/")
    public String root(Model model) {
-       model.addAttribute("hotels", hotels.findAll());
+       model.addAttribute("hotels", hotelService.findAll());
        model.addAttribute("cities", cities.findAll());
        return "landing-page";
    }
@@ -55,15 +54,15 @@ public class ApplicationController {
    @RequestMapping(value = "/comments/moderation")
    @AllowedForCommentModerator
    public String moderateComments(Model model) {
-       model.addAttribute("hotels", hotels.findAll());
+       model.addAttribute("hotels", hotelService.findAll());
        return "comments/comment-moderating";
    }
 	
    @RequestMapping(value = "/admin")
    @AllowedForAdmin
    public String manageUsers(Model model) {
-       model.addAttribute("users", users.findAll());
-       model.addAttribute("hotels", hotels.findAll());
+       model.addAttribute("users", userService.findAll());
+       model.addAttribute("hotels", hotelService.findAll());
        return "admin-dashboard";
    }
 }

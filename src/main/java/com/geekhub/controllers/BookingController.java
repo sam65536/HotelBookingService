@@ -1,29 +1,20 @@
 package com.geekhub.controllers;
 
-import java.util.List;
-
-import com.geekhub.repositories.Hotel.HotelRepository;
-import com.geekhub.repositories.RoomType.RoomTypeRepository;
-import com.geekhub.repositories.User.UserRepository;
-import com.geekhub.services.Booking.BookingService;
-import com.geekhub.services.CustomUserDetailsService;
-import com.geekhub.services.Hotel.HotelService;
-import com.geekhub.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
-
 import com.geekhub.domain.entities.Booking;
 import com.geekhub.domain.entities.RoomType;
 import com.geekhub.domain.entities.User;
+import com.geekhub.exceptions.BookingNotFoundException;
 import com.geekhub.security.AllowedForApprovingBookings;
 import com.geekhub.security.AllowedForHotelManager;
-import com.geekhub.exceptions.BookingNotFoundException;
+import com.geekhub.services.Booking.BookingService;
+import com.geekhub.services.CustomUserDetailsService;
+import com.geekhub.services.Hotel.HotelService;
+import com.geekhub.services.RoomTypeService.RoomTypeService;
+import com.geekhub.services.User.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping(value = "/bookings")
@@ -32,21 +23,17 @@ public class BookingController {
 
     private final HotelService hotelService;
     private final BookingService bookingService;
-    private final UserRepository users;
     private final UserService userService;
-    private final RoomTypeRepository roomTypes;
+    private final RoomTypeService roomTypeService;
     private final CustomUserDetailsService customUserDetailsService;
 
     @Autowired
-    public BookingController(BookingService bookingService, HotelService hotelService, UserRepository users, UserService userService,
-                             RoomTypeRepository roomTypes, CustomUserDetailsService customUserDetailsService) {
-
-
+    public BookingController(BookingService bookingService, HotelService hotelService, UserService userService,
+                             RoomTypeService roomTypeService, CustomUserDetailsService customUserDetailsService) {
         this.bookingService = bookingService;
         this.hotelService = hotelService;
-        this.users = users;
+        this.roomTypeService = roomTypeService;
         this.userService = userService;
-        this.roomTypes = roomTypes;
         this.customUserDetailsService = customUserDetailsService;
     }
 
@@ -60,7 +47,7 @@ public class BookingController {
 
     @RequestMapping(value = "/roomTypes", method = RequestMethod.GET, produces = {"text/plain", "application/json"})
     public @ResponseBody Iterable<RoomType> getRoomTypes() {
-        return roomTypes.findAll();
+        return roomTypeService.findAll();
     }
 
 //    @RequestMapping(value = "/new/{hotelId}", method = RequestMethod.GET, produces = {"text/plain", "application/json"})
@@ -111,7 +98,7 @@ public class BookingController {
     @RequestMapping(value = "/new", method = RequestMethod.GET)
     public String newBooking(Model model) {
         model.addAttribute("booking", new Booking());
-        model.addAttribute("roomTypes", roomTypes.findAll());
+        model.addAttribute("roomTypes", roomTypeService.findAll());
         return "bookings/create";
     }
 

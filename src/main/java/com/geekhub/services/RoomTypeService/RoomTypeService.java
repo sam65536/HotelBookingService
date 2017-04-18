@@ -1,10 +1,10 @@
-package com.geekhub.repositories.RoomType;
+package com.geekhub.services.RoomTypeService;
 
 import com.geekhub.domain.entities.RoomType;
 
 import java.util.List;
 
-public interface RoomTypeRepository {
+public interface RoomTypeService {
     List<RoomType> findAll();
     RoomType findOne(Long id);
 }

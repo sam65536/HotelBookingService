@@ -3,11 +3,11 @@ package com.geekhub.controllers;
 import com.geekhub.domain.entities.Booking;
 import com.geekhub.domain.entities.Hotel;
 import com.geekhub.domain.entities.Room;
-import com.geekhub.repositories.RoomType.RoomTypeRepository;
 import com.geekhub.security.AllowedForManageHotel;
 import com.geekhub.services.Booking.BookingService;
 import com.geekhub.services.Hotel.HotelService;
 import com.geekhub.services.Room.RoomService;
+import com.geekhub.services.RoomTypeService.RoomTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,15 +23,15 @@ import java.util.List;
 public class RoomController {
 
     private final HotelService hotelService;
-    private final RoomTypeRepository roomTypes;
+    private final RoomTypeService roomTypeService;
     private final RoomService roomService;
     private final BookingService bookingService;
 
     @Autowired
-    public RoomController(HotelService hotelService, RoomTypeRepository roomTypes,
+    public RoomController(HotelService hotelService, RoomTypeService roomTypeService,
                           RoomService roomService, BookingService bookingService) {
         this.hotelService = hotelService;
-        this.roomTypes = roomTypes;
+        this.roomTypeService = roomTypeService;
         this.roomService = roomService;
         this.bookingService = bookingService;
     }
@@ -42,7 +42,7 @@ public class RoomController {
     	Room room = new Room();
     	model.addAttribute("hotel", hotelService.findOne(id));
     	model.addAttribute("room", room);
-    	model.addAttribute("roomTypes", roomTypes.findAll());
+    	model.addAttribute("roomTypes", roomTypeService.findAll());
     	return "rooms/create";
     }
 
@@ -71,7 +71,7 @@ public class RoomController {
     	Hotel hotel = hotelService.findOne(id);
     	model.addAttribute("hotel", hotel);
     	model.addAttribute("room", roomService.getHotelRooms(id).get((int) roomId));
-    	model.addAttribute("roomTypes", roomTypes.findAll()); 
+    	model.addAttribute("roomTypes", roomTypeService.findAll());
     	return "rooms/edit";
     }
     
