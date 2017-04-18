@@ -20,8 +20,8 @@ public class Hotel {
     private Category category;
     private User manager;
     private List<Image> images = new ArrayList<>();
+    private List<Room> rooms = new ArrayList<>();
 
-    private Map<Long, Room> rooms = new HashMap<>();
     private Map<Long, Comment> comments = new HashMap<>();
 
     @Override

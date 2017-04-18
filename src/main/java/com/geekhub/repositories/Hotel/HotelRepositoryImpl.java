@@ -61,12 +61,12 @@ public class HotelRepositoryImpl implements HotelRepository {
                 "LEFT JOIN \"user\" ON \"user\".id=manager_id WHERE hotel.id= " + id;
         List<Hotel> hotels = this.jdbcTemplate.query(sql, new HotelRowMapper());
 
-        List<Room> rooms = this.jdbcTemplate.query(
-                "SELECT room.id, room.floor, room.price, room.room_number FROM room " +
-                        "WHERE room.hotel_id=" + id, new RoomRowMapper());
-        Map<Long, Room> roomsMap = rooms.stream().collect(
-                Collectors.toMap(room -> room.getId(), room -> room));
-        hotels.get(0).setRooms(roomsMap);
+//        List<Room> rooms = this.jdbcTemplate.query(
+//                "SELECT room.id, room.floor, room.price, room.room_number FROM room " +
+//                        "WHERE room.hotel_id=" + id, new RoomRowMapper());
+//        Map<Long, Room> roomsMap = rooms.stream().collect(
+//                Collectors.toMap(room -> room.getId(), room -> room));
+//        hotels.get(0).setRooms(roomsMap);
 
         List<Comment> comments = this.jdbcTemplate.query(
                 "SELECT comment.id, comment.date, comment.is_answer, comment.status, comment.text" +

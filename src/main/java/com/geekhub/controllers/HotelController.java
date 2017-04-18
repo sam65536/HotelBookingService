@@ -16,6 +16,10 @@ import com.geekhub.repositories.Image.ImageRepository;
 import com.geekhub.repositories.Room.RoomRepository;
 import com.geekhub.repositories.RoomType.RoomTypeRepository;
 import com.geekhub.repositories.User.UserRepository;
+import com.geekhub.services.Booking.BookingService;
+import com.geekhub.services.CustomUserDetailsService;
+import com.geekhub.services.Hotel.HotelService;
+import com.geekhub.services.Room.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -42,42 +46,41 @@ import com.geekhub.exceptions.HotelNotFoundException;
 @RequestMapping(value = "/hotels")
 public class HotelController {
 
-    private final HotelRepository hotels;
+    private final HotelService hotelService;
+    private final RoomService roomService;
     private final CategoryRepository categories;
-    private final RoomRepository rooms;
     private final RoomTypeRepository roomTypes;
     private final UserRepository users;
     private final ImageRepository images;
     private final CommentRepository comments;
-    private final BookingRepository bookings;
     private final CityRepository cities;
-    private final HotelService hotelService;
+    private final CustomUserDetailsService customUserDetailsService;
 
     @Autowired
-    public HotelController(HotelRepository hotels, CategoryRepository categories, RoomRepository rooms, RoomTypeRepository roomTypes,
-                           UserRepository users, ImageRepository images, CommentRepository comments,
-                           BookingRepository bookings, CityRepository cities, HotelService hotelService) {
-        this.hotels = hotels;
+    public HotelController(HotelService hotelService, RoomService roomService, BookingService bookingService,
+                           CategoryRepository categories, RoomTypeRepository roomTypes, UserRepository users,
+                           ImageRepository images, CommentRepository comments, CityRepository cities,
+                           CustomUserDetailsService customUserDetailsService) {
+        this.hotelService = hotelService;
+        this.roomService = roomService;
         this.categories = categories;
-        this.rooms = rooms;
         this.roomTypes = roomTypes;
         this.users = users;
         this.images = images;
         this.comments = comments;
-        this.bookings = bookings;
         this.cities = cities;
-        this.hotelService = hotelService;
+        this.customUserDetailsService = customUserDetailsService;
     }
 
     @RequestMapping(method = RequestMethod.GET)
     public String index(Model model) {
-        model.addAttribute("hotels", hotels.findAll());
+        model.addAttribute("hotels", hotelService.findAll());
         return "hotels/index";
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = {"text/plain", "application/json"})
     public @ResponseBody Iterable<Hotel> indexJSON(Model model) {
-        return hotels.findAll();
+        return hotelService.findAll();
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.GET)
@@ -92,18 +95,20 @@ public class HotelController {
     @RequestMapping(method = RequestMethod.POST)
     @AllowedForHotelManager
     public String saveIt(@ModelAttribute Hotel hotel, Model model) {
-        hotel.setManager(hotelService.getCurrentUser());
-        hotels.save(hotel);
+        hotel.setManager(customUserDetailsService.getCurrentUser());
+        hotelService.save(hotel);
         model.addAttribute("hotel", hotel);
         return "redirect:/hotels";
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET)
     public String show(@PathVariable("id") long id, Model model) {
-        Hotel hotel = hotels.findOne(id);
+        Hotel hotel = hotelService.findOne(id);
         if (hotel == null) {
            throw new HotelNotFoundException();
         }
+        hotel.setRooms(roomService.getHotelRooms(id));
+
         List<Comment> hotelComments = comments.getCommentsOfHotel(id);
         model.addAttribute("booking", new Booking());
         model.addAttribute("comments", hotelComments);
@@ -112,7 +117,7 @@ public class HotelController {
         model.addAttribute("users", users.findAll());
         model.addAttribute("roomTypes", roomTypes.findAll());
         Map<Long, Room> roomsByType = new HashMap<>();
-                rooms.findAll().stream()
+                roomService.findAll().stream()
                 .filter(room -> room.getHotel().getId() == id)
                 .forEach(room -> roomsByType.putIfAbsent(room.getType().getId(), room));
         model.addAttribute("hotelRoomTypes", roomsByType.values());
@@ -121,7 +126,7 @@ public class HotelController {
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = {"text/plain", "application/json"})
     public @ResponseBody Hotel showJSON(@PathVariable("id") long id, Model model) {
-        Hotel hotel = hotels.findOne(id);
+        Hotel hotel = hotelService.findOne(id);
         if (hotel == null) {
            throw new HotelNotFoundException();
         }
@@ -131,7 +136,7 @@ public class HotelController {
     @RequestMapping(value = "{id}/edit", method = RequestMethod.GET)
     @AllowedForManageHotel
     public String edit(@PathVariable("id") long id, Model model) {
-        Hotel hotel = hotels.findOne(id);
+        Hotel hotel = hotelService.findOne(id);
         model.addAttribute("hotel", hotel);
         model.addAttribute("categories", categories.findAll());
         model.addAttribute("cities", cities.findAll());
@@ -143,28 +148,23 @@ public class HotelController {
     @AllowedForManageHotel
     public String editSave(@PathVariable("id") long id, @ModelAttribute("hotel") Hotel hotel) {
         hotel.setStatus(false);
-        hotels.save(hotel);
+        hotelService.save(hotel);
         return "redirect:/hotels/{id}";
     }
 
     @RequestMapping(value = "{id}/remove", method = RequestMethod.GET)
     @AllowedForManageHotel
     public String remove(@PathVariable("id") long id, Model model) {
-        for (Room room : hotels.findOne(id).getRooms().values()) {
-            for(Booking booking : room.getBookings()) {
-                bookings.delete(booking.getId());
-            }
-        }
-        hotels.delete(id);
+        hotelService.delete(id);
         return "redirect:/hotels";
     }
 	
     @RequestMapping(value = "{id}/approve", method = RequestMethod.GET)
     @AllowedForAdmin
     public String approve(@PathVariable("id") long id, Model model) {
-        Hotel hotel = hotels.findOne(id);
+        Hotel hotel = hotelService.findOne(id);
         hotel.setStatus(true);
-        hotels.save(hotel);
+        hotelService.save(hotel);
         return "redirect:/admin";
     }
 
@@ -181,7 +181,7 @@ public class HotelController {
                    stream.write(bytes);
                    stream.close();
                    Image image = new Image();
-                   image.setHotel(hotels.findOne(id));
+                   image.setHotel(hotelService.findOne(id));
                    image.setInsertionDate(LocalDateTime.now());
                    image.setPath(file.getOriginalFilename());
                    images.save(image);
@@ -194,7 +194,7 @@ public class HotelController {
     @RequestMapping(value = "{id}/upload", method = RequestMethod.GET)
     @AllowedForManageHotel
     public String uploadForm(@PathVariable("id") long id, Model model) {
-        Hotel hotel = hotels.findOne(id);
+        Hotel hotel = hotelService.findOne(id);
         model.addAttribute("hotel", hotel);
         return "hotels/upload";
     }
@@ -217,8 +217,8 @@ public class HotelController {
 
         model.addAttribute("beginDate", beginDate);
         model.addAttribute("endDate", endDate);
-        model.addAttribute("hotel", hotels.findOne(id));
-        model.addAttribute("occupancy", hotelService.getOccupancy(hotels.findOne(id), beginDate, endDate));
+        model.addAttribute("hotel", hotelService.findOne(id));
+        model.addAttribute("occupancy", hotelService.getOccupancy(hotelService.findOne(id), beginDate, endDate));
         return "hotels/map";
     }
 }

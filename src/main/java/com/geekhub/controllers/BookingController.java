@@ -2,10 +2,12 @@ package com.geekhub.controllers;
 
 import java.util.List;
 
-import com.geekhub.repositories.Booking.BookingRepository;
 import com.geekhub.repositories.Hotel.HotelRepository;
 import com.geekhub.repositories.RoomType.RoomTypeRepository;
 import com.geekhub.repositories.User.UserRepository;
+import com.geekhub.services.Booking.BookingService;
+import com.geekhub.services.CustomUserDetailsService;
+import com.geekhub.services.Hotel.HotelService;
 import com.geekhub.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,29 +30,31 @@ import com.geekhub.exceptions.BookingNotFoundException;
 @SessionAttributes({"booking", "numberRooms", "roomType"})
 public class BookingController {
 
-    private final BookingRepository bookings;
-    private final HotelRepository hotels;
+    private final HotelService hotelService;
+    private final BookingService bookingService;
     private final UserRepository users;
     private final UserService userService;
     private final RoomTypeRepository roomTypes;
-    private final BookingService bookingService;
+    private final CustomUserDetailsService customUserDetailsService;
 
     @Autowired
-    public BookingController(BookingRepository bookings, HotelRepository hotels, UserRepository users, UserService userService, RoomTypeRepository roomTypes, BookingService bookingService) {
-        this.bookings = bookings;
-        this.hotels = hotels;
+    public BookingController(BookingService bookingService, HotelService hotelService, UserRepository users, UserService userService,
+                             RoomTypeRepository roomTypes, CustomUserDetailsService customUserDetailsService) {
+
+
+        this.bookingService = bookingService;
+        this.hotelService = hotelService;
         this.users = users;
         this.userService = userService;
         this.roomTypes = roomTypes;
-        this.bookingService = bookingService;
+        this.customUserDetailsService = customUserDetailsService;
     }
 
     @RequestMapping(method = RequestMethod.GET)
     @AllowedForHotelManager
     public String index(Model model) {
-        User user = bookingService.getCurrentUser();
-        List<Booking> bookingList = userService.getUserBookings(user.getId());
-        model.addAttribute("bookings", bookingList);
+        User user = customUserDetailsService.getCurrentUser();
+        model.addAttribute("bookings", bookingService.getUserBookings(user.getId()));
         return "bookings/index";
     }
 
@@ -141,12 +145,12 @@ public class BookingController {
     @RequestMapping(value = "/{bookingId}/approve", method = RequestMethod.GET)
     @AllowedForApprovingBookings
     public String approveBooking(Model model, @PathVariable("bookingId") long bookingId) {
-        Booking booking = bookings.findOne(bookingId);
+        Booking booking = bookingService.findOne(bookingId);
         if (booking == null) {
             throw new BookingNotFoundException();
         }
         booking.setState(true);
-        bookings.save(booking);
+        bookingService.save(booking);
         return "redirect:/bookings/";
     }
 

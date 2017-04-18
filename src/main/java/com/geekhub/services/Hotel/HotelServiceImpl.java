@@ -75,28 +75,3 @@ public class HotelServiceImpl implements HotelService {
         return result;
     }
 }
-//    public Map<Room, Map<LocalDate, Boolean>> getOccupancy(Hotel hotel, LocalDate start, LocalDate end) {
-//        List<LocalDate> datesRange = new LinkedList<>();
-//
-//        Stream.iterate(start, date -> date.plusDays(1))
-//                .limit(ChronoUnit.DAYS.between(start, end) + 1)
-//                .forEach(datesRange::add);
-//
-//        Map<Room, Map<LocalDate, Boolean>> result = new TreeMap<>();
-//        for (Room room : hotel.getRooms().values()) {
-//            List<LocalDate> reservedDays = room.getReservedDays();
-//            Map<LocalDate, Boolean> roomOccupied = new TreeMap<>();
-//            for (LocalDate date : datesRange) {
-//                for (LocalDate reservedDay : reservedDays) {
-//                    if (date.equals(reservedDay)) {
-//                        roomOccupied.putIfAbsent(date, true);
-//                    }
-//                }
-//                if (reservedDays.isEmpty()) {
-//                    roomOccupied.put(date, false);
-//                }
-//            }
-//            result.put(room, roomOccupied);
-//        }
-//        return result;
-//    }
