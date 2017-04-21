@@ -12,5 +12,5 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @Documented
 @PreAuthorize(AllowedForSystemUsers.condition)
 public @interface AllowedForSystemUsers {
-    String condition = "hasAnyRole({'ROLE_ADMIN', 'ROLE_USER','ROLE_COMMENT_MODERATOR','ROLE_HOTEL_MANAGER'})";
+    String condition = "hasAnyRole(T(com.geekhub.domain.UserRole).values())";
 }

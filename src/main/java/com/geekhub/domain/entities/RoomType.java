@@ -8,7 +8,7 @@ import lombok.Setter;
 public class RoomType {
     private long id;
     private String description;
-    private String occupancy;
+    private int occupancy;
 
     @Override
     public String toString() {

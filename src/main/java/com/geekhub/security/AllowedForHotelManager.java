@@ -12,5 +12,5 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @Documented
 @PreAuthorize(AllowedForHotelManager.condition)
 public @interface AllowedForHotelManager {
-    String condition = "hasRole('ROLE_HOTEL_MANAGER')";
+    String condition = "hasRole(T(com.geekhub.domain.UserRole).ROLE_COMMENT_MODERATOR.toString())";
 }

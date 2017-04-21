@@ -1,5 +1,6 @@
 package com.geekhub.repositories.Authority;
 
+import com.geekhub.domain.UserRole;
 import com.geekhub.domain.entities.Authority;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -36,9 +37,9 @@ public class AuthorityRepositoryImpl implements AuthorityRepository {
     }
 
     @Override
-    public Authority findByRole(String role) {
+    public Authority findByRole(UserRole role) {
         StringBuilder sql = new StringBuilder("SELECT id, role from authority WHERE role=");
-        sql.append("\'").append(role).append("\'");
+        sql.append("\'").append(String.valueOf(role)).append("\'");
         List<Authority> authorities = jdbcTemplate.query(sql.toString(), new AuthorityRowMapper());
         return authorities.get(0);
     }
@@ -60,7 +61,7 @@ public class AuthorityRepositoryImpl implements AuthorityRepository {
         public Authority mapRow(ResultSet rs, int rowNum) throws SQLException {
             Authority authority = new Authority();
             authority.setId(rs.getLong("id"));
-            authority.setRole(rs.getString("role"));
+            authority.setRole(UserRole.valueOf(rs.getString("role")));
             return authority;
         }
     }

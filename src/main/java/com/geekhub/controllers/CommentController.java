@@ -1,18 +1,15 @@
 package com.geekhub.controllers;
 
-import com.geekhub.domain.CustomUserDetail;
 import com.geekhub.domain.entities.Comment;
 import com.geekhub.domain.entities.Hotel;
-import com.geekhub.domain.entities.User;
 import com.geekhub.security.AllowedForApprovedComments;
 import com.geekhub.security.AllowedForCommentModerator;
 import com.geekhub.security.AllowedForManageComment;
 import com.geekhub.services.Comment.CommentService;
+import com.geekhub.services.CustomUserDetailsService;
 import com.geekhub.services.Hotel.HotelService;
 import com.geekhub.services.User.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -29,23 +26,25 @@ public class CommentController {
     private final HotelService hotelService;
     private final CommentService commentService;
     private final UserService userService;
+    private final CustomUserDetailsService customUserDetailsService;
 
     @Autowired
-    public CommentController(HotelService hotelService, CommentService commentService, UserService userService) {
+    public CommentController(HotelService hotelService, CommentService commentService, UserService userService, CustomUserDetailsService customUserDetailsService) {
         this.hotelService = hotelService;
         this.commentService = commentService;
         this.userService = userService;
+        this.customUserDetailsService = customUserDetailsService;
     }
 
     @RequestMapping(value = "/{id}/comments/{commentId}/reply", method = RequestMethod.POST)
     @AllowedForApprovedComments
     public String createReply(@ModelAttribute Comment reply, @PathVariable("id") long id,
-                              Model model, @PathVariable("commentId") long commentId) {
+                              @PathVariable("commentId") long commentId) {
         Hotel hotel = hotelService.findOne(id);
         Comment comment = commentService.findOne(commentId);
         LocalDateTime date = LocalDateTime.now();
         reply.setDate(date);
-        reply.setUser(getCurrentUser());
+        reply.setUser(customUserDetailsService.getCurrentUser());
         reply.setHotel(hotel);
         reply.setIsAnswer(true);
         reply.setStatus(false);
@@ -60,7 +59,7 @@ public class CommentController {
         Hotel hotel = hotelService.findOne(id);
         LocalDateTime date = LocalDateTime.now();
         comment.setDate(date);
-        comment.setUser(getCurrentUser());
+        comment.setUser(customUserDetailsService.getCurrentUser());
         comment.setHotel(hotel);
         commentService.save(comment);
         return "redirect:/hotels/{id}";
@@ -87,7 +86,7 @@ public class CommentController {
 
     @RequestMapping(value = "{id}/comments/{commentId}/edit", method = RequestMethod.GET)
     @AllowedForManageComment
-    public String editComment(@PathVariable("id") long id, @PathVariable("coomentId") long commentId, Model model) {
+    public String editComment(@PathVariable("id") long id, @PathVariable("commentId") long commentId, Model model) {
         Hotel hotel = hotelService.findOne(id);
         model.addAttribute("hotel", hotel);
         model.addAttribute("comment", hotel.getComments().get(commentId));
@@ -96,23 +95,17 @@ public class CommentController {
 
     @RequestMapping(value = "{id}/comments/{commentId}/remove", method = RequestMethod.GET)
     @AllowedForManageComment
-    public String removeComment(@PathVariable("id") long id, @PathVariable("commentId") long commentId, Model model) {
+    public String removeComment(@PathVariable("commentId") long commentId) {
         commentService.delete(commentId);
         return "redirect:/comments/moderation";
     }
 
     @RequestMapping(value = "{id}/comments/{commentId}/approve", method = RequestMethod.GET)
     @AllowedForCommentModerator
-    public String approveComment(@PathVariable("id") long id, @PathVariable("commentId") long commentId, Model model) {
+    public String approveComment(@PathVariable("commentId") long commentId) {
         Comment comment = commentService.findOne(commentId);
         comment.setStatus(true);
         commentService.save(comment);
         return "redirect:/comments/moderation";
-    }
-
-    private User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetail myUser = (CustomUserDetail) authentication.getPrincipal();
-        return myUser.getUser();
     }
 }

@@ -2,15 +2,16 @@ package com.geekhub.controllers;
 
 import com.geekhub.domain.entities.*;
 import com.geekhub.exceptions.HotelNotFoundException;
-import com.geekhub.repositories.Category.CategoryRepository;
-import com.geekhub.repositories.City.CityRepository;
-import com.geekhub.repositories.Image.ImageRepository;
+import com.geekhub.exceptions.ImageNotFoundException;
 import com.geekhub.security.AllowedForAdmin;
 import com.geekhub.security.AllowedForHotelManager;
 import com.geekhub.security.AllowedForManageHotel;
+import com.geekhub.services.Category.CategoryService;
+import com.geekhub.services.City.CityService;
 import com.geekhub.services.Comment.CommentService;
 import com.geekhub.services.CustomUserDetailsService;
 import com.geekhub.services.Hotel.HotelService;
+import com.geekhub.services.Image.ImageService;
 import com.geekhub.services.Room.RoomService;
 import com.geekhub.services.RoomTypeService.RoomTypeService;
 import com.geekhub.services.User.UserService;
@@ -26,6 +27,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,26 +42,25 @@ public class HotelController {
     private final CommentService commentService;
     private final UserService userService;
     private final CustomUserDetailsService customUserDetailsService;
-
-    private final CategoryRepository categories;
-    private final CityRepository cities;
-    private final ImageRepository images;
-
+    private final CategoryService categoryService;
+    private final CityService cityService;
+    private final ImageService imageService;
 
     @Autowired
     public HotelController(HotelService hotelService, RoomService roomService, RoomTypeService roomTypeService,
-                           CommentService commentService, UserService userService, CustomUserDetailsService customUserDetailsService,
-                           CityRepository cities, CategoryRepository categories, ImageRepository images) {
+                           CommentService commentService, UserService userService,
+                           CustomUserDetailsService customUserDetailsService, CategoryService categoryService,
+                           CityService cityService, ImageService imageService) {
+
         this.hotelService = hotelService;
         this.roomService = roomService;
         this.roomTypeService = roomTypeService;
         this.commentService = commentService;
         this.userService = userService;
         this.customUserDetailsService = customUserDetailsService;
-
-        this.categories = categories;
-        this.images = images;
-        this.cities = cities;
+        this.categoryService = categoryService;
+        this.cityService = cityService;
+        this.imageService = imageService;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -69,7 +70,7 @@ public class HotelController {
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = {"text/plain", "application/json"})
-    public @ResponseBody Iterable<Hotel> indexJSON(Model model) {
+    public @ResponseBody Iterable<Hotel> indexJSON() {
         return hotelService.findAll();
     }
 
@@ -77,8 +78,8 @@ public class HotelController {
     @AllowedForHotelManager
     public String newHotel(Model model) {
         model.addAttribute("hotel", new Hotel());
-        model.addAttribute("categories", categories.findAll());
-        model.addAttribute("cities", cities.findAll());
+        model.addAttribute("categories", categoryService.findAll());
+        model.addAttribute("cities", cityService.findAll());
         return "hotels/create";
     }
 
@@ -98,7 +99,6 @@ public class HotelController {
            throw new HotelNotFoundException();
         }
         hotel.setRooms(roomService.getHotelRooms(id));
-
         List<Comment> hotelComments = commentService.getHotelComments(id);
         model.addAttribute("booking", new Booking());
         model.addAttribute("comments", hotelComments);
@@ -107,7 +107,7 @@ public class HotelController {
         model.addAttribute("users", userService.findAll());
         model.addAttribute("roomTypes", roomTypeService.findAll());
         Map<Long, Room> roomsByType = new HashMap<>();
-                roomService.findAll().stream()
+        roomService.findAll().stream()
                 .filter(room -> room.getHotel().getId() == id)
                 .forEach(room -> roomsByType.putIfAbsent(room.getType().getId(), room));
         model.addAttribute("hotelRoomTypes", roomsByType.values());
@@ -115,7 +115,7 @@ public class HotelController {
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = {"text/plain", "application/json"})
-    public @ResponseBody Hotel showJSON(@PathVariable("id") long id, Model model) {
+    public @ResponseBody Hotel showJSON(@PathVariable("id") long id) {
         Hotel hotel = hotelService.findOne(id);
         if (hotel == null) {
            throw new HotelNotFoundException();
@@ -128,15 +128,15 @@ public class HotelController {
     public String edit(@PathVariable("id") long id, Model model) {
         Hotel hotel = hotelService.findOne(id);
         model.addAttribute("hotel", hotel);
-        model.addAttribute("categories", categories.findAll());
-        model.addAttribute("cities", cities.findAll());
+        model.addAttribute("categories", categoryService.findAll());
+        model.addAttribute("cities", cityService.findAll());
         model.addAttribute("users", userService.findAll());
         return "hotels/edit";
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.POST)
     @AllowedForManageHotel
-    public String editSave(@PathVariable("id") long id, @ModelAttribute("hotel") Hotel hotel) {
+    public String editSave(@ModelAttribute("hotel") Hotel hotel) {
         hotel.setStatus(false);
         hotelService.save(hotel);
         return "redirect:/hotels/{id}";
@@ -144,14 +144,14 @@ public class HotelController {
 
     @RequestMapping(value = "{id}/remove", method = RequestMethod.GET)
     @AllowedForManageHotel
-    public String remove(@PathVariable("id") long id, Model model) {
+    public String remove(@PathVariable("id") long id) {
         hotelService.delete(id);
         return "redirect:/hotels";
     }
 	
     @RequestMapping(value = "{id}/approve", method = RequestMethod.GET)
     @AllowedForAdmin
-    public String approve(@PathVariable("id") long id, Model model) {
+    public String approve(@PathVariable("id") long id) {
         Hotel hotel = hotelService.findOne(id);
         hotel.setStatus(true);
         hotelService.save(hotel);
@@ -160,23 +160,22 @@ public class HotelController {
 
     @RequestMapping(value = "{id}/upload", method = RequestMethod.POST)
     @AllowedForManageHotel
-    public String uploadImage(@PathVariable("id") long id, Model model, @RequestParam("files") MultipartFile files[]) {
-        if (files.length > 0) {
-           for (int i = 0; i < files.length; i++) {
-               MultipartFile file = files[i];
-               try {
-                   byte[] bytes = file.getBytes();
-                   String path = "src/main/resources/public/static/" + file.getOriginalFilename();
-                   BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(path)));
-                   stream.write(bytes);
-                   stream.close();
-                   Image image = new Image();
-                   image.setHotel(hotelService.findOne(id));
-                   image.setInsertionDate(LocalDateTime.now());
-                   image.setPath(file.getOriginalFilename());
-                   images.save(image);
-               } catch (Exception e) {}
-           }
+    public String uploadImage(@PathVariable("id") long id, @RequestParam("files") MultipartFile files[]) throws ImageNotFoundException {
+        if (Arrays.asList(files).isEmpty()) {
+            throw new ImageNotFoundException();
+        }
+        for (MultipartFile file : files) {
+            String path = "src/main/resources/public/static/" + file.getOriginalFilename();
+            try (BufferedOutputStream stream = new BufferedOutputStream
+                    (new FileOutputStream(new File(path)))) {
+            byte[] bytes = file.getBytes();
+            stream.write(bytes);
+            Image image = new Image();
+            image.setHotel(hotelService.findOne(id));
+            image.setInsertionDate(LocalDateTime.now());
+            image.setPath(file.getOriginalFilename());
+            imageService.save(image);
+            } catch (Exception e) {}
         }
         return "redirect:/users/me";
     }
@@ -191,9 +190,9 @@ public class HotelController {
 	
     @RequestMapping(value="{id}/remove_image/{imageId}", method = RequestMethod.GET)
     @AllowedForManageHotel
-    public String deleteImage(@PathVariable("id") long id, @PathVariable("imageId") long imageId, Model model) {
-        Image image = images.findOne(imageId);
-        images.delete(image.getId());
+    public String deleteImage(@PathVariable("imageId") long imageId) {
+        Image image = imageService.findOne(imageId);
+        imageService.delete(image.getId());
         return "redirect:/hotels/{id}/upload";
     }
 

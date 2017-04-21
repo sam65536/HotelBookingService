@@ -26,7 +26,7 @@ public class ImageRepositoryImpl implements ImageRepository {
     }
 
     @Override
-    public Image findOne(long id) {
+    public Image findOne(Long id) {
         String sql = "SELECT id, insertion_date, path FROM image";
         List<Image> images = this.jdbcTemplate.query(sql, new ImageRowMapper());
         return images.get(0);
@@ -39,7 +39,7 @@ public class ImageRepositoryImpl implements ImageRepository {
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         String sql = "DELETE FROM image WHERE id=" + id;
         this.jdbcTemplate.update(sql);
     }

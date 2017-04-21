@@ -4,29 +4,19 @@ import java.util.Collection;
 import java.util.Set;
 
 import com.geekhub.domain.entities.User;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public class CustomUserDetail implements UserDetails {
+@Data
+public class CustomUserDetails implements UserDetails {
 
-    private User user;
-    private Set<GrantedAuthority> authorities = null;
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
+    private final User user;
+    private final Set<GrantedAuthority> authorities;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
-    }
-
-    public void setAuthorities(Set<GrantedAuthority> authorities) {
-        this.authorities = authorities;
     }
 
     @Override

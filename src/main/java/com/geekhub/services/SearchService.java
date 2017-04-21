@@ -23,7 +23,7 @@ public class SearchService {
         List<Room> roomsList = rooms.findAll();
         List<Room> result = roomsList.stream()
                 .filter(room -> (room.getHotel().getId() == hotelId))
-                .filter(room -> (room.getCapacity() >= persons))
+                .filter(room -> (room.maxCapacity() >= persons))
                 .filter(room -> (room.isAvailable(startDate, endDate)))
                 .collect(Collectors.toList());
         return result;

@@ -26,7 +26,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     }
 
     @Override
-    public Category findOne(long id) {
+    public Category findOne(Long id) {
         String sql = "SELECT id,name FROM category WHERE id=" + id;
         List<Category> categories = this.jdbcTemplate.query(sql, new CategoryRowMapper());
         return categories.get(0);

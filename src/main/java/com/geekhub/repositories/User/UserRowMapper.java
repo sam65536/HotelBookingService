@@ -1,5 +1,6 @@
 package com.geekhub.repositories.User;
 
+import com.geekhub.domain.UserRole;
 import com.geekhub.domain.entities.Authority;
 import com.geekhub.domain.entities.User;
 import org.springframework.jdbc.core.RowMapper;
@@ -18,7 +19,7 @@ public class UserRowMapper implements RowMapper<User> {
         user.setPassword(rs.getString("password"));
         user.setUsername(rs.getString("username"));
         authority.setId(rs.getLong("authority_id"));
-        authority.setRole(rs.getString("role"));
+        authority.setRole(UserRole.valueOf(rs.getString("role")));
         user.setAuthority(authority);
         return user;
     }

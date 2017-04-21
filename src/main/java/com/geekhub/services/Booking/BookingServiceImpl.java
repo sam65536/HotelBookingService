@@ -61,7 +61,7 @@ public class BookingServiceImpl implements BookingService {
 //
 //    public User getCurrentUser() {
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        CustomUserDetail myUser = (CustomUserDetail) authentication.getPrincipal();
+//        CustomUserDetails myUser = (CustomUserDetails) authentication.getPrincipal();
 //        return myUser.getUser();
 //    }
 

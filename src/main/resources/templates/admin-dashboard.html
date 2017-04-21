@@ -46,7 +46,7 @@ table tr th {
 								</tr>
 							</thead>
 							<tr
-								th:each="user : ${users.?[authority.role == 'ROLE_COMMENT_MODERATOR']}">
+								th:each="user : ${users.?[authority.role == T(com.geekhub.domain.UserRole).ROLE_COMMENT_MODERATOR]}">
 								<td><span th:text="${user.name}"></span></td>
 								<td><a th:href="@{|/users/${user.id}|}"><span
 										th:text="${user.username}"></span></a></td>
@@ -69,7 +69,7 @@ table tr th {
 								</tr>
 							</thead>
 							<tr
-								th:each="user : ${users.?[authority.role == 'ROLE_HOTEL_MANAGER']}">
+								th:each="user : ${users.?[authority.role == T(com.geekhub.domain.UserRole).ROLE_HOTEL_MANAGER]}">
 								<td><span th:text="${user.name}"></span></td>
 								<td><a th:href="@{|/users/${user.id}|}"><span
 										th:text="${user.username}"></span></a></td>
@@ -91,7 +91,7 @@ table tr th {
 									<th></th>
 								</tr>
 							</thead>
-							<tr th:each="user : ${users.?[authority.role == 'ROLE_ADMIN']}">
+							<tr th:each="user : ${users.?[authority.role == T(com.geekhub.domain.UserRole).ROLE_ADMIN]}">
 								<td><span th:text="${user.name}"></span></td>
 								<td><a th:href="@{|/users/${user.id}|}"><span
 										th:text="${user.username}"></span></a></td>
@@ -113,7 +113,7 @@ table tr th {
 									<th></th>
 								</tr>
 							</thead>
-							<tr th:each="user : ${users.?[authority.role == 'ROLE_USER']}">
+							<tr th:each="user : ${users.?[authority.role == T(com.geekhub.domain.UserRole).ROLE_USER]}">
 								<td><span th:text="${user.name}"></span></td>
 								<td><a th:href="@{|/users/${user.id}|}"><span
 										th:text="${user.username}"></span></a></td>
@@ -182,4 +182,3 @@ table tr th {
 	</div>
 </body>
 </html>
-

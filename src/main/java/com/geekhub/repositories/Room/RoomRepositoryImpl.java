@@ -37,7 +37,7 @@ public class RoomRepositoryImpl implements RoomRepository{
                     hotel.setName(rs.getString("hotel_name"));
                     roomType.setId(rs.getLong("type_id"));
                     roomType.setDescription(rs.getString("description"));
-                    roomType.setOccupancy(rs.getString("occupancy"));
+                    roomType.setOccupancy(rs.getInt("occupancy"));
                     room.setType(roomType);
                     room.setHotel(hotel);
                     return room;

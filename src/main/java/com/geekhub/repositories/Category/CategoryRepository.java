@@ -5,6 +5,6 @@ import com.geekhub.domain.entities.Category;
 import java.util.List;
 
 public interface CategoryRepository {
-    public List<Category> findAll();
-    public Category findOne(long id);
+    List<Category> findAll();
+    Category findOne(Long id);
 }

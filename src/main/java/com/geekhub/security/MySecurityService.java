@@ -1,5 +1,6 @@
 package com.geekhub.security;
 
+import com.geekhub.domain.CustomUserDetails;
 import com.geekhub.repositories.Booking.BookingRepository;
 import com.geekhub.repositories.Comment.CommentRepository;
 import com.geekhub.repositories.Hotel.HotelRepository;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import com.geekhub.domain.entities.Booking;
 import com.geekhub.domain.entities.Comment;
-import com.geekhub.domain.CustomUserDetail;
 import com.geekhub.domain.entities.Hotel;
 import com.geekhub.domain.entities.User;
 
@@ -41,7 +41,7 @@ public class MySecurityService {
        this.bookings = bookings;
    }
 
-   public boolean canEditHotel(long hotelId, CustomUserDetail user) {
+   public boolean canEditHotel(long hotelId, CustomUserDetails user) {
        Hotel hotel = hotels.findOne(hotelId);
        return (hotel != null) && (hotel.getManager() != null)
             && ( user.getUser().getId() == hotel.getManager().getId() );
@@ -51,19 +51,19 @@ public class MySecurityService {
        return false;
    }
 
-   public boolean canEditUser(long userId, CustomUserDetail user) {
+   public boolean canEditUser(long userId, CustomUserDetails user) {
        User userTmp = users.findOne(userId);
        return (userTmp != null) && (user.getUser() != null)
             && ( user.getUser().getId() == userTmp.getId() );
    }
 
-   public boolean canEditComment(long commentId, CustomUserDetail user) {
+   public boolean canEditComment(long commentId, CustomUserDetails user) {
        Comment comment = comments.findOne(commentId);
        return (comment != null) && (user != null)
             && ( comment.getUser().getId() == user.getUser().getId() );
    }
 
-   public boolean canReplyToComment(long id, long commentId, CustomUserDetail user) {
+   public boolean canReplyToComment(long id, long commentId, CustomUserDetails user) {
        Hotel hotel = hotels.findOne(id);
        Comment comment = comments.findOne(commentId);
        return (comment != null) && (user != null)
@@ -71,13 +71,13 @@ public class MySecurityService {
             && ( hotel.getManager().getId() == user.getUser().getId() );
    }
 
-   public boolean canApproveBooking(long bookingId, CustomUserDetail user) {
+   public boolean canApproveBooking(long bookingId, CustomUserDetails user) {
        Booking booking = bookings.findOne(bookingId);
        return (booking != null) && (user != null)
             && ( booking.getRoom().getHotel().getManager().getId() == user.getUser().getId() );
    }
 
-   public boolean canRemoveBooking(long bookingId, CustomUserDetail user) {
+   public boolean canRemoveBooking(long bookingId, CustomUserDetails user) {
        Booking booking = bookings.findOne(bookingId);
        return (booking != null) && (user != null)
             && (

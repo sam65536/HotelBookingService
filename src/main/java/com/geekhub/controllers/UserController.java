@@ -1,14 +1,14 @@
 package com.geekhub.controllers;
 
-import com.geekhub.domain.CustomUserDetail;
+import com.geekhub.domain.CustomUserDetails;
 import com.geekhub.domain.entities.Authority;
 import com.geekhub.domain.entities.User;
 import com.geekhub.exceptions.HotelNotFoundException;
 import com.geekhub.exceptions.UserNotFoundException;
-import com.geekhub.repositories.Authority.AuthorityRepository;
 import com.geekhub.security.AllowedForAdmin;
 import com.geekhub.security.AllowedForManageUser;
 import com.geekhub.security.SecurityConfig;
+import com.geekhub.services.Authority.AuthorityService;
 import com.geekhub.services.Booking.BookingService;
 import com.geekhub.services.Comment.CommentService;
 import com.geekhub.services.CustomUserDetailsService;
@@ -27,12 +27,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import static com.geekhub.domain.UserRole.ROLE_USER;
+
 @Controller
 @RequestMapping(value = "/users")
 public class UserController {
 
     private final UserService userService;
-    private final AuthorityRepository authorities;
+    private final AuthorityService authorityService;
     private final AuthenticationManager authenticationManager;
     private final CustomUserDetailsService customUserDetailsService;
     private final HotelService hotelService;
@@ -40,11 +42,12 @@ public class UserController {
     private final BookingService bookingService;
 
     @Autowired
-    public UserController(UserService userService, AuthorityRepository authorities, AuthenticationManager authenticationManager,
+    public UserController(UserService userService, AuthorityService authorityService, AuthenticationManager authenticationManager,
                           CustomUserDetailsService customUserDetailsService, HotelService hotelService, CommentService commentService,
                           BookingService bookingService) {
+
         this.userService = userService;
-        this.authorities = authorities;
+        this.authorityService = authorityService;
         this.authenticationManager = authenticationManager;
         this.customUserDetailsService = customUserDetailsService;
         this.hotelService = hotelService;
@@ -68,7 +71,7 @@ public class UserController {
     @RequestMapping(method = RequestMethod.POST)
     public String signUp(@ModelAttribute User user) {
         try {
-            Authority authority = authorities.findByRole("ROLE_USER");
+            Authority authority = authorityService.findByRole(ROLE_USER);
             user.setAuthority(authority);
             String password = user.getPassword();
             user.setPassword(SecurityConfig.encoder.encode(user.getPassword()));
@@ -105,7 +108,7 @@ public class UserController {
     @RequestMapping(value = "/me", method = RequestMethod.GET)
     public String showActiveProfile(Model model) throws HotelNotFoundException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetail myUser = (CustomUserDetail) authentication.getPrincipal();
+        CustomUserDetails myUser = (CustomUserDetails) authentication.getPrincipal();
         User user = userService.findOne(myUser.getUser().getId());
         model.addAttribute("user", user);
         model.addAttribute("hotels", hotelService.getUserHotels(user.getId()));
@@ -130,12 +133,12 @@ public class UserController {
     public String edit(@PathVariable("id") Long id, Model model) {
         User user = userService.findOne(id);
         model.addAttribute("user", user);
-        model.addAttribute("authorities", authorities.findAll());
+        model.addAttribute("authorities", authorityService.findAll());
         return "users/edit";
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
-    public String edit(@PathVariable("id") Long id, @ModelAttribute User user, Model model) {
+    public String edit(@ModelAttribute User user, Model model) {
         userService.save(user);
         model.addAttribute("user", user);
         return "redirect:/admin";

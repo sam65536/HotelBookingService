@@ -12,7 +12,7 @@ public class RoomTypeRowMapper implements RowMapper<RoomType> {
         RoomType roomType = new RoomType();
         roomType.setId(rs.getLong("id"));
         roomType.setDescription(rs.getString("description"));
-        roomType.setOccupancy(rs.getString("occupancy"));
+        roomType.setOccupancy(rs.getInt("occupancy"));
         return roomType;
     }
 }

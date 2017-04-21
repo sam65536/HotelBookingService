@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
 </head>
 <body>
 <div th:fragment="header">
 	<nav class="navbar navbar-default">
 		<div class="container-fluid">
-		    <!-- Brand and toggle get grouped for better mobile display -->
 		    <div class="navbar-header">
 		      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
 		        <span class="sr-only">Toggle navigation</span>
@@ -16,17 +15,16 @@
 		      </button>
 		      <a class="navbar-brand" href="/"><i class="glyphicon glyphicon-home"></i></a>
 		    </div>
-		
-		    <!-- Collect the nav links, forms, and other content for toggling -->
-		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 		      
 		      <ul class="nav navbar-nav">
 		        <li><a href="/hotels">Hotels <span class="sr-only">(current)</span></a></li>
 		        <li sec:authorize="hasAnyRole('ADMIN')"><a href="/users">Users</a></li>
-		        <li sec:authorize="hasAnyRole('HOTEL_MANAGER')"><a href="/bookings">Bookings</a></li>		      
+		        <li sec:authorize="hasAnyRole('HOTEL_MANAGER')"><a href="/bookings">Bookings</a></li>
 		        <li><a href="/bookings/new">Book a room</a></li>
 		        <li sec:authorize="hasAnyRole('COMMENT_MODERATOR')"><a href="/comments/moderation">Moderate comments</a></li>
-		        <li sec:authorize="hasAnyRole('ADMIN')"><a href="/admin">Dashboard (admin)</a></li>		        		        	       
+		        <li sec:authorize="hasAnyRole('ADMIN')"><a href="/admin">Dashboard (admin)</a></li>
 		      </ul>
 		      <ul class="nav navbar-nav navbar-right">	
 			      <li th:if="${#httpServletRequest.remoteUser} != null"><span class="navbar-text" th:utext="'Logged in as <b>' + '<a href=/users/me>' + ${#authentication.principal.user.name} + '</a>' + '</b>'"></span></b></li>
@@ -38,9 +36,8 @@
 				  <li th:if="${#httpServletRequest.remoteUser} == null" ><a href="/users/new">Sign up</a></li> 
 		          <li th:if="${#httpServletRequest.remoteUser} == null" ><a href="/users/login">Log in</a></li>		        
 		      </ul>
-		      
-			</div><!-- /.navbar-collapse -->
-		</div><!-- /.container-fluid -->
+			</div>
+		</div>
 	</nav>
 </div>
 </body>

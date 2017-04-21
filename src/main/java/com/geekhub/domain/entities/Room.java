@@ -21,8 +21,8 @@ public class Room implements Comparable<Object> {
     private Set<LocalDate> reservedDays = new TreeSet<>();
     private Set<Booking> bookings = new HashSet<>();
 
-    public int getCapacity() {
-        return Integer.parseInt(type.getOccupancy());
+    public int maxCapacity() {
+        return type.getOccupancy();
     }
 
     public boolean isAvailable(LocalDate start, LocalDate end) {

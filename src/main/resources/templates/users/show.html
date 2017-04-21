@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
 <title>Hotels</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -22,9 +22,9 @@
 					th:text="${user.username}"></span></small>
 			</h1>
 			<h4>
-				<span th:if="${user.authority.role} == 'ROLE_COMMENT_MODERATOR'">Comment Moderator</span>
-				<span th:if="${user.authority.role} == 'ROLE_ADMIN'">Web Admin</span>
-				<span th:if="${user.authority.role} == 'ROLE_HOTEL_MANAGER'">Hotel Manager</span>
+				<span th:if="${user.authority.role == T(com.geekhub.domain.UserRole).ROLE_COMMENT_MODERATOR}">Comment Moderator</span>
+				<span th:if="${user.authority.role == T(com.geekhub.domain.UserRole).ROLE_ADMIN}">Web Admin</span>
+				<span th:if="${user.authority.role == T(com.geekhub.domain.UserRole).ROLE_HOTEL_MANAGER}">Hotel Manager</span>
 			</h4>
 		</div>
 
@@ -37,7 +37,8 @@
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane active" id="tab_default_1">
-						<div sec:authorize="hasAnyRole('HOTEL_MANAGER')" class="col-md-6">
+						<div sec:authorize="hasAnyRole('HOTEL_MANAGER')"
+                             class="col-md-6">
 							<h4><i class="glyphicon glyphicon-home"></i> Registered hotels</h4>
 							<div th:if="${!#lists.isEmpty(hotels)}">
 								<div th:each="hotel : ${hotels}">

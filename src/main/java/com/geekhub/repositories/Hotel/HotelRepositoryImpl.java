@@ -34,7 +34,6 @@ public class HotelRepositoryImpl implements HotelRepository {
                 "LEFT JOIN \"user\" ON \"user\".id=manager_id";
         List<Hotel> hotels = this.jdbcTemplate.query(sql, new HotelRowMapper());
 
-
         List<Image> images = this.jdbcTemplate.query("SELECT image.id, path, hotel_id FROM image\n" +
                             "LEFT JOIN hotel ON image.hotel_id = hotel.id",
                 (rs, rowNum) -> {
@@ -60,13 +59,6 @@ public class HotelRepositoryImpl implements HotelRepository {
         String sql = "SELECT hotel.id, address,  hotel.name, rating, status, city_id, manager_id, \"user\".name FROM hotel\n" +
                 "LEFT JOIN \"user\" ON \"user\".id=manager_id WHERE hotel.id= " + id;
         List<Hotel> hotels = this.jdbcTemplate.query(sql, new HotelRowMapper());
-
-//        List<Room> rooms = this.jdbcTemplate.query(
-//                "SELECT room.id, room.floor, room.price, room.room_number FROM room " +
-//                        "WHERE room.hotel_id=" + id, new RoomRowMapper());
-//        Map<Long, Room> roomsMap = rooms.stream().collect(
-//                Collectors.toMap(room -> room.getId(), room -> room));
-//        hotels.get(0).setRooms(roomsMap);
 
         List<Comment> comments = this.jdbcTemplate.query(
                 "SELECT comment.id, comment.date, comment.is_answer, comment.status, comment.text" +
