@@ -11,8 +11,7 @@
 <body>
 	<div class="container">
 		<div th:fragment="roomform(url)">
-			<form action="#" th:action="@{|/hotels/${hotel.id}/rooms/|}"
-				th:object="${room}" method="post">
+			<form action="#" th:action="@{|/hotels/${hotel.id}/rooms/|}" th:object="${room}" method="post">
 				<p>
 					<input type="hidden" th:field="*{id}" />
 					<label>Floor</label><input min="1" class="form-control" placeholder="Floor"

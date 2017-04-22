@@ -57,7 +57,7 @@
 								<div th:each="comment : ${comments}">
 									<p>
 										<i class="glyphicon glyphicon-time"></i> <span
-											th:text="${comment.date}"></span> <span
+											th:text="${T(com.geekhub.utils.DateFormatUtils).format(comment.date, 'yyyy-MM-dd HH:mm:ss')}"></span> <span
 											th:text="${comment.hotel.name}"
 											th:href="@{|/hotels/${comment.hotel.id}|}"></a></b>
 									</p>

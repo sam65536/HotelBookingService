@@ -1,4 +1,4 @@
-package com.geekhub.security;
+package com.geekhub.security.annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Inherited;
@@ -10,7 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-@PreAuthorize(AllowedForManageUser.condition)
-public @interface AllowedForManageUser {
-    String condition = "@mySecurityService.canEditUser(#id, principal) or " + AllowedForAdmin.condition;
+@PreAuthorize(AllowedForRemovingBookings.condition)
+public @interface AllowedForRemovingBookings {
+    String condition = "@mySecurityService.canRemoveBooking(#bookingId, principal)";
 }

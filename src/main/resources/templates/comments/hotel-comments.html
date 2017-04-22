@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head> 
     <title>Hotel List</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -27,8 +27,7 @@
 					<span th:text="${comment.user.name}"></span>
 					<span class="pull-right">
 							<i class="glyphicon glyphicon-time"></i> 
-							<span th:text="${#dates.monthNameShort(comment.date)}"></span>
-							<span th:text="${#dates.year(comment.date)}"></span>
+							<span th:text="${T(com.geekhub.utils.DateFormatUtils).format(comment.date, 'yyyy-MM-dd HH:mm:ss')}"></span>
 						</span>
 		 	   	<div class="panel-body">
 		 	   		<p th:text="${comment.text}"></p> 	   	

@@ -1,4 +1,4 @@
-package com.geekhub.security;
+package com.geekhub.security.annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Inherited;

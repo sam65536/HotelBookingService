@@ -3,7 +3,7 @@ package com.geekhub.controllers;
 import com.geekhub.domain.entities.Booking;
 import com.geekhub.domain.entities.Hotel;
 import com.geekhub.domain.entities.Room;
-import com.geekhub.security.AllowedForManageHotel;
+import com.geekhub.security.annotations.AllowedForManageHotel;
 import com.geekhub.services.Booking.BookingService;
 import com.geekhub.services.Hotel.HotelService;
 import com.geekhub.services.Room.RoomService;

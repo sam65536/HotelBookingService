@@ -79,19 +79,12 @@ public class BookingRepositoryImpl implements BookingRepository {
 
     @Override
     public void save(Booking booking) {
-        if (booking.getId() == null) {
-            String sql = "INSERT INTO booking" + "(id, begin_date, end_date, state) " +
-                    "VALUES (?, ?, ?, ?)";
-           this.jdbcTemplate.update(sql, new Object[]{booking.getId(), java.sql.Date.valueOf(booking.getBeginDate()),
-                   java.sql.Date.valueOf(booking.getEndDate()), booking.getState()});
-        } else {
-            String sql = "UPDATE booking SET begin_date = ?, end_date = ?, state = ? " +
-                    "WHERE id = " + booking.getId();
-            this.jdbcTemplate.update(sql,
-                    new Object[]{java.sql.Date.valueOf(booking.getBeginDate()),
-                            java.sql.Date.valueOf(booking.getEndDate()),
-                            booking.getState()});
-        }
+        String sql = "INSERT INTO booking (begin_date, end_date, state, user_id, room_id) " +
+                    "VALUES (?, ?, ?, ?, ?)";
+        this.jdbcTemplate.update(sql,
+                new Object[]{java.sql.Date.valueOf(booking.getBeginDate()),
+                java.sql.Date.valueOf(booking.getEndDate()), booking.getState(),
+                booking.getUser().getId(), booking.getRoom().getId()});
     }
 
     @Override

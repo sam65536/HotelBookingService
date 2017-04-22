@@ -26,7 +26,7 @@
                 <td th:text="${room.price + ' €/night'}"></td>
                 <td><span th:each="i  : ${#numbers.sequence(1, room.type.occupancy)}">
                     <i class="glyphicon glyphicon-user"></i></span></td>
-                <td><a th:text="Book" class="btn btn-default" th:href="@{|/bookings/new/${room.hotel.id}/|}"></a></td>
+                <td><a th:text="Book" class="btn btn-default" th:href="@{|/bookings/new/${room.id}/|}"></a></td>
             </tr>
             </tbody>
         </table>

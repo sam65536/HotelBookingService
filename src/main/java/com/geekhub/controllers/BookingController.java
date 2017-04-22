@@ -1,43 +1,37 @@
 package com.geekhub.controllers;
 
 import com.geekhub.domain.entities.Booking;
+import com.geekhub.domain.entities.Room;
 import com.geekhub.domain.entities.RoomType;
 import com.geekhub.domain.entities.User;
 import com.geekhub.exceptions.BookingNotFoundException;
-import com.geekhub.security.AllowedForApprovingBookings;
-import com.geekhub.security.AllowedForHotelManager;
-import com.geekhub.security.AllowedForSystemUsers;
+import com.geekhub.security.annotations.AllowedForApprovingBookings;
+import com.geekhub.security.annotations.AllowedForHotelManager;
+import com.geekhub.security.annotations.AllowedForSystemUsers;
 import com.geekhub.services.Booking.BookingService;
 import com.geekhub.services.CustomUserDetailsService;
-import com.geekhub.services.Hotel.HotelService;
+import com.geekhub.services.Room.RoomService;
 import com.geekhub.services.RoomTypeService.RoomTypeService;
-import com.geekhub.services.User.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-
 @Controller
 @RequestMapping(value = "/bookings")
-@SessionAttributes({"booking", "numberRooms", "roomType"})
+@SessionAttributes({"booking"})
 public class BookingController {
 
-    private final HotelService hotelService;
+    private final RoomService roomService;
     private final BookingService bookingService;
-    private final UserService userService;
     private final RoomTypeService roomTypeService;
     private final CustomUserDetailsService customUserDetailsService;
 
     @Autowired
-    public BookingController(BookingService bookingService, HotelService hotelService, UserService userService,
-                             RoomTypeService roomTypeService, CustomUserDetailsService customUserDetailsService) {
+    public BookingController(RoomService roomService,BookingService bookingService,RoomTypeService roomTypeService,CustomUserDetailsService customUserDetailsService) {
+        this.roomService = roomService;
         this.bookingService = bookingService;
-        this.hotelService = hotelService;
         this.roomTypeService = roomTypeService;
-        this.userService = userService;
         this.customUserDetailsService = customUserDetailsService;
     }
 
@@ -49,16 +43,22 @@ public class BookingController {
         return "bookings/index";
     }
 
-    @RequestMapping(value = "/roomTypes", method = RequestMethod.GET, produces = {"text/plain", "application/json"})
-    public @ResponseBody Iterable<RoomType> getRoomTypes() {
-        return roomTypeService.findAll();
+    @AllowedForSystemUsers
+    @RequestMapping(value = "/new/{roomId}", method = RequestMethod.GET)
+    public String bookTheRoom(@ModelAttribute Booking booking, @PathVariable long roomId) {
+        Room room = roomService.findOne(roomId);
+        User user = customUserDetailsService.getCurrentUser();
+        booking.setRoom(room);
+        booking.setUser(user);
+        return "bookings/create";
     }
 
-    @RequestMapping(value = "/new", method = RequestMethod.GET)
-    public String newBooking(Model model) {
-        model.addAttribute("booking", new Booking());
-        model.addAttribute("roomTypes", roomTypeService.findAll());
-        return "bookings/create";
+
+    @RequestMapping(value = "/approve", method = RequestMethod.POST)
+    public String approveBooking(@ModelAttribute Booking booking) {
+        booking.setState(false);
+        bookingService.save(booking);
+        return "redirect:/";
     }
 
     @RequestMapping(value = "/{bookingId}/approve", method = RequestMethod.GET)

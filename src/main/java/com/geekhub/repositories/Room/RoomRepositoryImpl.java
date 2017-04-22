@@ -48,7 +48,7 @@ public class RoomRepositoryImpl implements RoomRepository{
     @Override
     public Room findOne(Long id) {
         String sql = "SELECT room.id, floor, price, room_number, type_id, room_type.description, room_type.occupancy\n" +
-                "FROM room LEFT JOIN room_type ON room.type_id = room_type.id WHERE id=" + id;
+                "FROM room LEFT JOIN room_type ON room.type_id = room_type.id WHERE room.id=" + id;
         List<Room> rooms = this.jdbcTemplate.query(sql, new RoomRowMapper());
         return rooms.get(0);
     }

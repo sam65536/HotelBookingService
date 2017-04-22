@@ -2,9 +2,9 @@ package com.geekhub.controllers;
 
 import com.geekhub.domain.entities.Comment;
 import com.geekhub.domain.entities.Hotel;
-import com.geekhub.security.AllowedForApprovedComments;
-import com.geekhub.security.AllowedForCommentModerator;
-import com.geekhub.security.AllowedForManageComment;
+import com.geekhub.security.annotations.AllowedForApprovedComments;
+import com.geekhub.security.annotations.AllowedForCommentModerator;
+import com.geekhub.security.annotations.AllowedForManageComment;
 import com.geekhub.services.Comment.CommentService;
 import com.geekhub.services.CustomUserDetailsService;
 import com.geekhub.services.Hotel.HotelService;

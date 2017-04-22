@@ -23,14 +23,10 @@
 		<tbody>
 			<tr>
 				<td><i class="glyphicon glyphicon-time"></i>
-					<span th:text="${#dates.day(booking.beginDate)}"></span>
-					<span th:text="${#dates.monthNameShort(booking.beginDate)}"></span>
-					<span th:text="${#dates.year(booking.beginDate)}"></span>
+					<span th:text="${booking.beginDate}"></span>
 				</td>
 				<td><i class="glyphicon glyphicon-time"></i>
-					<span th:text="${#dates.day(booking.endDate)}"></span>
-					<span th:text="${#dates.monthNameShort(booking.endDate)}"></span>
-					<span th:text="${#dates.year(booking.endDate)}"></span>
+					<span th:text="${booking.endDate}"></span>
 				</td>
 			</tr>
 			<tr>

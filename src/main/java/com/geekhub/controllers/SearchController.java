@@ -1,5 +1,6 @@
 package com.geekhub.controllers;
 
+import com.geekhub.domain.entities.Booking;
 import com.geekhub.domain.entities.City;
 import com.geekhub.domain.entities.Room;
 import com.geekhub.services.City.CityService;
@@ -17,6 +18,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/search")
+@SessionAttributes({"booking"})
 public class SearchController {
 
     private final CityService cityService;
@@ -50,6 +52,13 @@ public class SearchController {
         model.addAttribute("cities", cityService.findAll());
         model.addAttribute("hotels", cityService.findOne(cityId).getHotels());
         model.addAttribute("rooms", roomsList);
+
+        Booking booking = new Booking();
+        booking.setBeginDate(beginDate);
+        booking.setEndDate(endDate);
+
+        model.addAttribute("booking", booking);
+
         return "rooms/available-rooms";
     }
 }

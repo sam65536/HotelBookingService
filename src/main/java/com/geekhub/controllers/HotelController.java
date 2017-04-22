@@ -3,9 +3,9 @@ package com.geekhub.controllers;
 import com.geekhub.domain.entities.*;
 import com.geekhub.exceptions.HotelNotFoundException;
 import com.geekhub.exceptions.ImageNotFoundException;
-import com.geekhub.security.AllowedForAdmin;
-import com.geekhub.security.AllowedForHotelManager;
-import com.geekhub.security.AllowedForManageHotel;
+import com.geekhub.security.annotations.AllowedForAdmin;
+import com.geekhub.security.annotations.AllowedForHotelManager;
+import com.geekhub.security.annotations.AllowedForManageHotel;
 import com.geekhub.services.Category.CategoryService;
 import com.geekhub.services.City.CityService;
 import com.geekhub.services.Comment.CommentService;
@@ -165,7 +165,7 @@ public class HotelController {
             throw new ImageNotFoundException();
         }
         for (MultipartFile file : files) {
-            String path = "src/main/resources/public/static/" + file.getOriginalFilename();
+            String path = "src/main/resources/static/images/" + file.getOriginalFilename();
             try (BufferedOutputStream stream = new BufferedOutputStream
                     (new FileOutputStream(new File(path)))) {
             byte[] bytes = file.getBytes();

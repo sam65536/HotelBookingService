@@ -2,8 +2,8 @@ package com.geekhub.controllers;
 
 import com.geekhub.domain.CustomUserDetails;
 import com.geekhub.domain.UserRole;
-import com.geekhub.security.AllowedForAdmin;
-import com.geekhub.security.AllowedForCommentModerator;
+import com.geekhub.security.annotations.AllowedForAdmin;
+import com.geekhub.security.annotations.AllowedForCommentModerator;
 import com.geekhub.services.City.CityService;
 import com.geekhub.services.Hotel.HotelService;
 import com.geekhub.services.User.UserService;

@@ -1041,7 +1041,7 @@
                 if (this._o.bound) {
                     removeEvent(document, 'click', this._onClick);
                 }
-                this.el.style.position = 'static'; // reset
+                this.el.style.position = 'images'; // reset
                 this.el.style.left = 'auto';
                 this.el.style.top = 'auto';
                 addClass(this.el, 'is-hidden');

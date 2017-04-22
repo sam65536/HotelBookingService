@@ -1,4 +1,4 @@
-package com.geekhub.security;
+package com.geekhub.security.annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Inherited;
@@ -10,7 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-@PreAuthorize(AllowedForHotelManager.condition)
-public @interface AllowedForHotelManager {
-    String condition = "hasRole(T(com.geekhub.domain.UserRole).ROLE_COMMENT_MODERATOR.toString())";
+@PreAuthorize(AllowedForAdmin.condition)
+public @interface AllowedForAdmin {
+    String condition = "hasRole(T(com.geekhub.domain.UserRole).ROLE_ADMIN.toString())";
 }
